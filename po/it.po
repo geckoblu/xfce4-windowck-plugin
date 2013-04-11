@@ -1,0 +1,46 @@
+# Italian translations for xfce4-windowck-plugin package.
+# Copyright (C) 2013 THE xfce4-windowck-plugin'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the xfce4-windowck-plugin package.
+# Alessio <alepic@geckoblu.net>, 2013.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: xfce4-windowck-plugin 0.0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-04-09 11:39+0200\n"
+"PO-Revision-Date: 2013-04-05 10:39+0100\n"
+"Last-Translator: Alessio Piccoli <alepic@geckoblu.net>\n"
+"Language-Team: Italian\n"
+"Language: it\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ASCII\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: ../panel-plugin/windowck-dialogs.c:37
+#, c-format
+msgid "Unable to open the following url: %s"
+msgstr "Impossibile aprire l'url: %s"
+
+#. create the dialog
+#: ../panel-plugin/windowck-dialogs.c:104
+#: ../panel-plugin/xfce4-windowck-plugin.desktop.in.h:1
+msgid "Window Controls"
+msgstr "Window Controls"
+
+#: ../panel-plugin/windowck-dialogs.c:139
+#: ../panel-plugin/xfce4-windowck-plugin.desktop.in.h:2
+msgid "Put the maximized window title on the panel."
+msgstr "Mostra il titolo della finestra massimizzata sul pannello."
+
+#: ../panel-plugin/windowck-dialogs.c:139
+msgid "Copyright (c) 2013\n"
+msgstr "Copyright (c) 2013\n"
+
+#: ../panel-plugin/windowck-dialogs.glade.h:1
+msgid "Width (in chars)"
+msgstr "Larghezza (in caratteri)"
+
+#: ../panel-plugin/windowck-dialogs.glade.h:2
+msgid "<b>Appearance</b>"
+msgstr "<b>Aspetto</b>"

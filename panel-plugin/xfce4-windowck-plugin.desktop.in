@@ -1,0 +1,9 @@
+[Xfce Panel]
+Type=X-XFCE-PanelPlugin
+Encoding=UTF-8
+_Name=Window Controls
+_Comment=Put the maximized window title on the panel.
+Icon=preferences-system-windows
+X-XFCE-Module=windowck
+X-XFCE-Internal=false
+X-XFCE-Unique=false

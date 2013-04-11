@@ -1,0 +1,10 @@
+This plugin is a porting to XFCE of 'GNOME Window Applet' (http://gnome-look.org/content/show.php?content=103732).
+It's source code is heavily based on that apple.
+
+So authors are:
+
+Andrej Belcijan <andrejx@gmail.com>
+    Author of the original 'GNOME Window Applet' (see link above for details).
+    
+Alessio Piccoli <alepic@geckoblu.net>
+    Author of the porting to XFCE.
