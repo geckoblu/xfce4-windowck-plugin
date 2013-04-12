@@ -3,7 +3,9 @@ What is it?
 
 Xfce panel plugin which allows to put the maximized window title on the panel.
 
-
+This code is heavily based on original 'Window Applets' code of Andrej Belcijan.
+See http://gnome-look.org/content/show.php?content=103732 for details.
+ 
 Installation
 ============
 
