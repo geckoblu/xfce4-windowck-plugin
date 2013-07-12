@@ -42,6 +42,11 @@
 
 G_BEGIN_DECLS
 
+typedef enum SizeMode
+{
+    SHRINK = 1, FIXE = 2, EXPAND = 3
+} SizeMode;
+
 typedef enum Alignment
 {
     LEFT = 0, CENTER = 5, RIGHT = 10
@@ -57,6 +62,8 @@ typedef struct {
     //gboolean custom_style;           // [T/F] Use custom style
     //gboolean show_window_menu;       // [T/F] Show window action menu on right click
     gboolean show_tooltips;            // [T/F] Show tooltips
+
+    SizeMode size_mode;               // Size mode : Length=[MINIMAL,FIXE,EXPAND]
 
     gint title_size;                   // Title size in chars
     gint title_padding;                 // Title padding
@@ -99,6 +106,7 @@ typedef struct {
 } WindowckPlugin;
 
 void windowck_save(XfcePanelPlugin *plugin, WindowckPlugin *wckp);
+void resize_title(WindowckPlugin *wckp);
 
 G_END_DECLS
 

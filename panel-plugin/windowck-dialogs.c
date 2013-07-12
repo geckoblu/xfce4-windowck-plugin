@@ -52,7 +52,34 @@ static void windowck_configure_response(GtkWidget *dialog, gint response, Window
 
 static void on_titlesize_changed(GtkSpinButton *titlesize, WindowckPlugin *wckp) {
     wckp->prefs->title_size = gtk_spin_button_get_value(titlesize);
-    gtk_label_set_width_chars(wckp->title, wckp->prefs->title_size);
+    resize_title(wckp);
+}
+
+static void on_size_mode_changed (GtkComboBox *size_mode, WindowckPlugin *wckp) {
+  gint id;
+
+  id = gtk_combo_box_get_active(size_mode);
+
+  if (id < 0 || id > 2) {
+      g_critical ("Trying to set a default size but got an invalid item");
+      return;
+  }
+
+  if (id == 0) {
+      wckp->prefs->size_mode = SHRINK;
+      xfce_panel_plugin_set_expand (wckp->plugin, FALSE);
+  }
+  else if (id == 1) {
+      wckp->prefs->size_mode = FIXE;
+      xfce_panel_plugin_set_expand (wckp->plugin, FALSE);
+  }
+  else if (id == 2) {
+      wckp->prefs->size_mode = EXPAND;
+      xfce_panel_plugin_set_expand (wckp->plugin, TRUE);
+  }
+
+    // dynamic resizing
+    resize_title(wckp); /* d’ont work for title shrinking -> need to restart the applet */
 }
 
 static void on_title_alignment_changed (GtkComboBox *title_alignment, WindowckPlugin *wckp) {
@@ -88,6 +115,7 @@ static GtkWidget * build_properties_area(WindowckPlugin *wckp, const gchar *buff
     GtkBuilder *builder;
     GObject *area = NULL;
     GtkSpinButton *titlesize;
+    GtkComboBox *size_mode;
     GtkComboBox *title_alignment;
     GtkSpinButton *title_padding;
 
@@ -133,6 +161,24 @@ static GtkWidget * build_properties_area(WindowckPlugin *wckp, const gchar *buff
                 DBG("No widget with the name \"title_padding\" found");
             }
 
+            size_mode = GTK_COMBO_BOX(gtk_builder_get_object(builder, "size_mode"));
+            if (G_LIKELY (size_mode != NULL)) {
+                /* set active item */
+                if ( wckp->prefs->size_mode == SHRINK ) {
+                  gtk_combo_box_set_active(size_mode, 0);
+                }
+                else if( wckp->prefs->size_mode == FIXE ) {
+                  gtk_combo_box_set_active(size_mode, 1);
+                }
+                else if( wckp->prefs->size_mode == EXPAND ) {
+                  gtk_combo_box_set_active(size_mode, 2);
+                }
+
+                g_signal_connect(size_mode, "changed", G_CALLBACK(on_size_mode_changed), wckp);
+            } else {
+                DBG("No widget with the name \"size_mode\" found");
+            }
+
             return GTK_WIDGET(area) ;
         } else {
             g_set_error_literal(&error, 0, 0, "No widget with the name \"contentarea\" found");
@@ -152,6 +198,7 @@ void windowck_configure(XfcePanelPlugin *plugin, WindowckPlugin *wckp) {
     GtkWidget *content_area;
     GtkWidget *ca;
     GObject *titlesize;
+    GObject *size_mode;
     GObject *title_alignment;
     GObject *title_padding;
 

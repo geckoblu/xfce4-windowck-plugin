@@ -27,12 +27,22 @@
 #define DEFAULT_HIDE_ON_UNMAXIMIZED TRUE
 #define DEFAULT_HIDE_TITLE FALSE
 #define DEFAULT_SHOW_TOOLTIPS TRUE
+#define DEFAULT_SIZE_MODE FIXE
 #define DEFAULT_TITLE_SIZE 80
 #define DEFAULT_TITLE_ALIGNMENT CENTER
 #define DEFAULT_TITLE_PADDING 3
 
 /* prototypes */
 static void windowck_construct(XfcePanelPlugin *plugin);
+
+void resize_title(WindowckPlugin *wckp) {
+    if (wckp->prefs->size_mode == SHRINK ) {
+    gtk_label_set_max_width_chars(wckp->title, wckp->prefs->title_size);
+    }
+    else {
+    gtk_label_set_width_chars(wckp->title, wckp->prefs->title_size);
+    }
+}
 
 void windowck_save(XfcePanelPlugin *plugin, WindowckPlugin *wckp) {
     XfceRc *rc;
@@ -57,6 +67,7 @@ void windowck_save(XfcePanelPlugin *plugin, WindowckPlugin *wckp) {
         xfce_rc_write_bool_entry(rc, "hide_on_unmaximized", wckp->prefs->hide_on_unmaximized);
         xfce_rc_write_bool_entry(rc, "hide_title", wckp->prefs->hide_title);
         xfce_rc_write_bool_entry(rc, "show_tooltips", wckp->prefs->show_tooltips);
+        xfce_rc_write_int_entry(rc, "size_mode", wckp->prefs->size_mode);
         xfce_rc_write_int_entry(rc, "title_size", wckp->prefs->title_size);
         xfce_rc_write_int_entry(rc, "title_alignment", wckp->prefs->title_alignment);
         xfce_rc_write_int_entry(rc, "title_padding", wckp->prefs->title_padding);
@@ -90,6 +101,7 @@ static void windowck_read(WindowckPlugin *wckp) {
             wckp->prefs->hide_on_unmaximized = xfce_rc_read_bool_entry(rc, "hide_on_unmaximized", DEFAULT_HIDE_ON_UNMAXIMIZED);
             wckp->prefs->hide_title = xfce_rc_read_bool_entry(rc, "hide_title", DEFAULT_HIDE_TITLE);
             wckp->prefs->show_tooltips = xfce_rc_read_bool_entry(rc, "show_tooltips", DEFAULT_SHOW_TOOLTIPS);
+            wckp->prefs->size_mode = xfce_rc_read_int_entry (rc, "size_mode", DEFAULT_SIZE_MODE);
             wckp->prefs->title_size = xfce_rc_read_int_entry(rc, "title_size", DEFAULT_TITLE_SIZE);
             wckp->prefs->title_alignment = xfce_rc_read_int_entry(rc, "title_alignment", DEFAULT_TITLE_ALIGNMENT);
             wckp->prefs->title_padding = xfce_rc_read_int_entry(rc, "title_padding", DEFAULT_TITLE_PADDING);
@@ -109,6 +121,7 @@ static void windowck_read(WindowckPlugin *wckp) {
     wckp->prefs->hide_on_unmaximized = DEFAULT_HIDE_ON_UNMAXIMIZED;
     wckp->prefs->hide_title = DEFAULT_HIDE_TITLE;
     wckp->prefs->show_tooltips = DEFAULT_SHOW_TOOLTIPS;
+    wckp->prefs->size_mode = DEFAULT_SIZE_MODE;
     wckp->prefs->title_size = DEFAULT_TITLE_SIZE;
     wckp->prefs->title_alignment = DEFAULT_TITLE_ALIGNMENT;
     wckp->prefs->title_padding = DEFAULT_TITLE_PADDING;
@@ -131,6 +144,11 @@ static WindowckPlugin * windowck_new(XfcePanelPlugin *plugin) {
     /* get the current orientation */
     orientation = xfce_panel_plugin_get_orientation(plugin);
 
+    if (wckp->prefs->size_mode == EXPAND) {
+    /* expand the plugin to the maximum space available  */
+    xfce_panel_plugin_set_expand (plugin, TRUE);
+    }
+
     /* create some panel widgets */
     wckp->ebox = gtk_event_box_new();
     gtk_event_box_set_visible_window(GTK_EVENT_BOX(wckp->ebox), FALSE);
@@ -147,8 +165,11 @@ static WindowckPlugin * windowck_new(XfcePanelPlugin *plugin) {
     gtk_box_pack_start(GTK_BOX(wckp->hvbox), label, FALSE, FALSE, 0);
     wckp->title = GTK_LABEL (label);
     gtk_label_set_ellipsize(wckp->title, PANGO_ELLIPSIZE_END);
-    gtk_label_set_width_chars(wckp->title, wckp->prefs->title_size);
-    gtk_misc_set_alignment(GTK_MISC(wckp->title), wckp->prefs->title_alignment / 10.0, 0.5);
+
+    resize_title(wckp);
+
+    if (wckp->prefs->size_mode != SHRINK)
+        gtk_misc_set_alignment(GTK_MISC(wckp->title), wckp->prefs->title_alignment / 10.0, 0.5);
     gtk_misc_set_padding(GTK_MISC(wckp->title), wckp->prefs->title_padding, 0);
 
     return wckp;
