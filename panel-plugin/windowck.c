@@ -44,6 +44,21 @@ void resize_title(WindowckPlugin *wckp) {
     }
 }
 
+void shrink_title(WindowckPlugin *wckp) {
+    if ( wckp->width != wckp->prefs->width) {
+    gint pixchar;
+
+    /* size of title chars*/
+    pixchar = wckp->prefs->width / wckp->prefs->title_size;
+
+    /* shrink title to max size (in char) */
+    wckp->prefs->title_size = wckp->width / pixchar;
+    }
+
+    /* resize title label (in chars) */
+    resize_title(wckp);
+}
+
 void windowck_save(XfcePanelPlugin *plugin, WindowckPlugin *wckp) {
     XfceRc *rc;
     gchar *file;
@@ -75,6 +90,16 @@ void windowck_save(XfcePanelPlugin *plugin, WindowckPlugin *wckp) {
         /* close the rc file */
         xfce_rc_close(rc);
     }
+}
+
+void on_windowck_size_allocated(GtkWidget *widget, GtkAllocation *allocation,  WindowckPlugin *wckp) {
+    wckp->width = allocation->width;
+    if ( wckp->width > 1)
+      shrink_title(wckp);
+}
+
+void on_title_size_allocated(GtkWidget *widget, GtkAllocation *allocation,  WindowckPlugin *wckp) {
+    wckp->prefs->width = allocation->width;
 }
 
 static void windowck_read(WindowckPlugin *wckp) {
@@ -141,6 +166,9 @@ static WindowckPlugin * windowck_new(XfcePanelPlugin *plugin) {
     /* read the user settings */
     windowck_read(wckp);
 
+    /* initialize variables */
+    wckp->width = wckp->prefs->width = DEFAULT_TITLE_SIZE;
+
     /* get the current orientation */
     orientation = xfce_panel_plugin_get_orientation(plugin);
 
@@ -167,6 +195,9 @@ static WindowckPlugin * windowck_new(XfcePanelPlugin *plugin) {
     gtk_label_set_ellipsize(wckp->title, PANGO_ELLIPSIZE_END);
 
     resize_title(wckp);
+    if (wckp->prefs->size_mode == EXPAND) {
+    shrink_title(wckp);
+    }
 
     if (wckp->prefs->size_mode != SHRINK)
         gtk_misc_set_alignment(GTK_MISC(wckp->title), wckp->prefs->title_alignment / 10.0, 0.5);
@@ -211,7 +242,6 @@ static gboolean windowck_size_changed(XfcePanelPlugin *plugin, gint size, Window
     /* we handled the orientation */
     return TRUE;
 }
-
 static void windowck_construct(XfcePanelPlugin *plugin) {
     WindowckPlugin *wckp;
 
@@ -231,6 +261,15 @@ static void windowck_construct(XfcePanelPlugin *plugin) {
     xfce_panel_plugin_add_action_widget(plugin, wckp->ebox);
 
     /* connect plugin signals */
+
+    if (wckp->prefs->size_mode == EXPAND) {
+    /* update wckp->width */
+    g_signal_connect(G_OBJECT (plugin), "size-allocate", G_CALLBACK(on_windowck_size_allocated), wckp);
+
+    /* update wckp->pref->width */
+    g_signal_connect(G_OBJECT (wckp->title), "size-allocate", G_CALLBACK(on_title_size_allocated), wckp);
+    }
+
     g_signal_connect(G_OBJECT (plugin), "free-data", G_CALLBACK (windowck_free), wckp);
 
     g_signal_connect(G_OBJECT (plugin), "save", G_CALLBACK (windowck_save), wckp);

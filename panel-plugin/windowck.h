@@ -74,6 +74,8 @@ typedef struct {
     //gchar *title_inactive_color;     // Custom inactive title color
 
     gint title_alignment;           // Title alignment [0=left, 5=center, 10=right]
+
+    gint width;                   // Title size in pixels
 } WCKPreferences;
 
 /* plugin structure */
@@ -102,11 +104,13 @@ typedef struct {
     gulong umaxed_handler_name;        // umaxedwindow's manechange event handler ID
 
     gboolean focused;                  // [T/F] Window state (focused or unfocused)
+    gint  width;                       // with of the plugin
 
 } WindowckPlugin;
 
 void windowck_save(XfcePanelPlugin *plugin, WindowckPlugin *wckp);
 void resize_title(WindowckPlugin *wckp);
+void shrink_title(WindowckPlugin *wckp);
 
 G_END_DECLS
 
