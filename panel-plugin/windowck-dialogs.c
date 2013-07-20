@@ -51,9 +51,36 @@ static void windowck_configure_response(GtkWidget *dialog, gint response, Window
 }
 
 static void on_titlesize_changed(GtkSpinButton *titlesize, WindowckPlugin *wckp) {
-    gint size = gtk_spin_button_get_value(titlesize);
-    wckp->prefs->title_size = size;
+    wckp->prefs->title_size = gtk_spin_button_get_value(titlesize);
     gtk_label_set_width_chars(wckp->title, wckp->prefs->title_size);
+}
+
+static void on_title_alignment_changed (GtkComboBox *title_alignment, WindowckPlugin *wckp) {
+    gint id;
+
+    id = gtk_combo_box_get_active(title_alignment);
+
+    if (id < 0 || id > 2) {
+        g_critical ("Trying to set a default size but got an invalid item");
+        return;
+    }
+
+    if (id == 0) {
+        wckp->prefs->title_alignment = LEFT;
+    }
+    else if (id == 1) {
+        wckp->prefs->title_alignment = CENTER;
+    }
+    else if (id == 2) {
+        wckp->prefs->title_alignment = RIGHT;
+    }
+
+    gtk_misc_set_alignment(GTK_MISC(wckp->title), wckp->prefs->title_alignment / 10.0, 0.5);
+}
+
+static void on_title_padding_changed(GtkSpinButton *title_padding, WindowckPlugin *wckp) {
+    wckp->prefs->title_padding = gtk_spin_button_get_value(title_padding);
+    gtk_misc_set_padding(GTK_MISC(wckp->title), wckp->prefs->title_padding, 0);
 }
 
 static GtkWidget * build_properties_area(WindowckPlugin *wckp, const gchar *buffer, gsize length) {
@@ -61,6 +88,8 @@ static GtkWidget * build_properties_area(WindowckPlugin *wckp, const gchar *buff
     GtkBuilder *builder;
     GObject *area = NULL;
     GtkSpinButton *titlesize;
+    GtkComboBox *title_alignment;
+    GtkSpinButton *title_padding;
 
     builder = gtk_builder_new();
     if (gtk_builder_add_from_string(builder, buffer, length, &error)) {
@@ -75,6 +104,33 @@ static GtkWidget * build_properties_area(WindowckPlugin *wckp, const gchar *buff
                 g_signal_connect(titlesize, "value-changed", G_CALLBACK(on_titlesize_changed), wckp);
             } else {
                 DBG("No widget with the name \"titlesize\" found");
+            }
+
+ title_alignment = GTK_COMBO_BOX(gtk_builder_get_object(builder, "title_alignment"));
+            if (G_LIKELY (title_alignment != NULL)) {
+                /* set active item */
+                if ( wckp->prefs->title_alignment == LEFT ) {
+                    gtk_combo_box_set_active(title_alignment, 0);
+                }
+                else if( wckp->prefs->title_alignment == CENTER ) {
+                    gtk_combo_box_set_active(title_alignment, 1);
+                }
+                else if( wckp->prefs->title_alignment == RIGHT ) {
+                    gtk_combo_box_set_active(title_alignment, 2);
+                }
+                g_signal_connect(title_alignment, "changed", G_CALLBACK(on_title_alignment_changed), wckp);
+            } else {
+                DBG("No widget with the name \"title_alignment\" found");
+            }
+
+            title_padding = GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "title_padding"));
+            if (G_LIKELY (title_padding != NULL)) {
+                gtk_spin_button_set_range(title_padding, 0, 99);
+                gtk_spin_button_set_increments(title_padding, 1, 1);
+                gtk_spin_button_set_value(title_padding, wckp->prefs->title_padding);
+                g_signal_connect(title_padding, "value-changed", G_CALLBACK(on_title_padding_changed), wckp);
+            } else {
+                DBG("No widget with the name \"title_padding\" found");
             }
 
             return GTK_WIDGET(area) ;
@@ -96,6 +152,8 @@ void windowck_configure(XfcePanelPlugin *plugin, WindowckPlugin *wckp) {
     GtkWidget *content_area;
     GtkWidget *ca;
     GObject *titlesize;
+    GObject *title_alignment;
+    GObject *title_padding;
 
     /* block the plugin menu */
     xfce_panel_plugin_block_menu(plugin);
