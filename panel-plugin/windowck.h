@@ -42,6 +42,11 @@
 
 G_BEGIN_DECLS
 
+typedef enum Alignment
+{
+    LEFT = 0, CENTER = 5, RIGHT = 10
+} Alignment;
+
 typedef struct {
     gboolean only_maximized;           // [T/F] Only track maximized windows
     gboolean hide_on_unmaximized;      // [T/F] Hide when no maximized windows present
@@ -54,13 +59,14 @@ typedef struct {
     gboolean show_tooltips;            // [T/F] Show tooltips
 
     gint title_size;                   // Title size in chars
+    gint title_padding;                 // Title padding
 
     //gchar *title_active_font;        // Custom active title font
     //gchar *title_active_color;       // Custom active title color
     //gchar *title_inactive_font;      // Custom inactive title font
     //gchar *title_inactive_color;     // Custom inactive title color
 
-    gdouble alignment;                 // Title alignment [0=left, 0.5=center, 1=right]
+    gint title_alignment;           // Title alignment [0=left, 5=center, 10=right]
 } WCKPreferences;
 
 /* plugin structure */

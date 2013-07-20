@@ -28,6 +28,8 @@
 #define DEFAULT_HIDE_TITLE FALSE
 #define DEFAULT_SHOW_TOOLTIPS TRUE
 #define DEFAULT_TITLE_SIZE 80
+#define DEFAULT_TITLE_ALIGNMENT CENTER
+#define DEFAULT_TITLE_PADDING 3
 
 /* prototypes */
 static void windowck_construct(XfcePanelPlugin *plugin);
@@ -56,6 +58,8 @@ void windowck_save(XfcePanelPlugin *plugin, WindowckPlugin *wckp) {
         xfce_rc_write_bool_entry(rc, "hide_title", wckp->prefs->hide_title);
         xfce_rc_write_bool_entry(rc, "show_tooltips", wckp->prefs->show_tooltips);
         xfce_rc_write_int_entry(rc, "title_size", wckp->prefs->title_size);
+        xfce_rc_write_int_entry(rc, "title_alignment", wckp->prefs->title_alignment);
+        xfce_rc_write_int_entry(rc, "title_padding", wckp->prefs->title_padding);
 
         /* close the rc file */
         xfce_rc_close(rc);
@@ -87,6 +91,8 @@ static void windowck_read(WindowckPlugin *wckp) {
             wckp->prefs->hide_title = xfce_rc_read_bool_entry(rc, "hide_title", DEFAULT_HIDE_TITLE);
             wckp->prefs->show_tooltips = xfce_rc_read_bool_entry(rc, "show_tooltips", DEFAULT_SHOW_TOOLTIPS);
             wckp->prefs->title_size = xfce_rc_read_int_entry(rc, "title_size", DEFAULT_TITLE_SIZE);
+            wckp->prefs->title_alignment = xfce_rc_read_int_entry(rc, "title_alignment", DEFAULT_TITLE_ALIGNMENT);
+            wckp->prefs->title_padding = xfce_rc_read_int_entry(rc, "title_padding", DEFAULT_TITLE_PADDING);
 
             /* cleanup */
             xfce_rc_close(rc);
@@ -104,6 +110,8 @@ static void windowck_read(WindowckPlugin *wckp) {
     wckp->prefs->hide_title = DEFAULT_HIDE_TITLE;
     wckp->prefs->show_tooltips = DEFAULT_SHOW_TOOLTIPS;
     wckp->prefs->title_size = DEFAULT_TITLE_SIZE;
+    wckp->prefs->title_alignment = DEFAULT_TITLE_ALIGNMENT;
+    wckp->prefs->title_padding = DEFAULT_TITLE_PADDING;
 }
 
 static WindowckPlugin * windowck_new(XfcePanelPlugin *plugin) {
@@ -140,6 +148,8 @@ static WindowckPlugin * windowck_new(XfcePanelPlugin *plugin) {
     wckp->title = GTK_LABEL (label);
     gtk_label_set_ellipsize(wckp->title, PANGO_ELLIPSIZE_END);
     gtk_label_set_width_chars(wckp->title, wckp->prefs->title_size);
+    gtk_misc_set_alignment(GTK_MISC(wckp->title), wckp->prefs->title_alignment / 10.0, 0.5);
+    gtk_misc_set_padding(GTK_MISC(wckp->title), wckp->prefs->title_padding, 0);
 
     return wckp;
 }
