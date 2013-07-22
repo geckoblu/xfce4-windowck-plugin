@@ -75,7 +75,9 @@ typedef struct {
 
     gint title_alignment;           // Title alignment [0=left, 5=center, 10=right]
 
-    gint width;                   // Title size in pixels
+    gint width;                     // Title size in pixels
+    gint  title_size_max;           // Title size max in chars
+
 } WCKPreferences;
 
 /* plugin structure */
@@ -105,12 +107,11 @@ typedef struct {
 
     gboolean focused;                  // [T/F] Window state (focused or unfocused)
     gint  width;                       // with of the plugin
-
 } WindowckPlugin;
 
 void windowck_save(XfcePanelPlugin *plugin, WindowckPlugin *wckp);
 void resize_title(WindowckPlugin *wckp);
-void shrink_title(WindowckPlugin *wckp);
+void expand_title(WindowckPlugin *wckp);
 
 G_END_DECLS
 
