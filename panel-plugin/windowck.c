@@ -160,6 +160,14 @@ static void windowck_read(WindowckPlugin *wckp) {
     wckp->prefs->title_padding = DEFAULT_TITLE_PADDING;
 }
 
+void windowck_initialize(WindowckPlugin *wckp) {
+    if (wckp->prefs->size_mode == EXPAND ) {
+        wckp->prefs->title_size_max = wckp->prefs->title_size;
+        gtk_label_set_width_chars(wckp->title, wckp->prefs->title_size);
+    }
+    resize_title(wckp);
+}
+
 static WindowckPlugin * windowck_new(XfcePanelPlugin *plugin) {
     WindowckPlugin *wckp;
     GtkOrientation orientation;
@@ -202,10 +210,7 @@ static WindowckPlugin * windowck_new(XfcePanelPlugin *plugin) {
     wckp->title = GTK_LABEL (label);
     gtk_label_set_ellipsize(wckp->title, PANGO_ELLIPSIZE_END);
 
-    if (wckp->prefs->size_mode == EXPAND ) {
-      gtk_label_set_width_chars(wckp->title, wckp->prefs->title_size);
-    }
-    resize_title(wckp);
+    windowck_initialize(wckp);
 
     if (wckp->prefs->size_mode != SHRINK)
         gtk_misc_set_alignment(GTK_MISC(wckp->title), wckp->prefs->title_alignment / 10.0, 0.5);
@@ -235,6 +240,10 @@ static void windowck_orientation_changed(XfcePanelPlugin *plugin, GtkOrientation
     xfce_hvbox_set_orientation(XFCE_HVBOX (wckp->hvbox), orientation);
 }
 
+static void windowck_screen_position_changed(XfcePanelPlugin *plugin, XfceScreenPosition *position, WindowckPlugin *wckp) {
+    windowck_initialize(wckp);
+}
+
 static gboolean windowck_size_changed(XfcePanelPlugin *plugin, gint size, WindowckPlugin *wckp) {
     GtkOrientation orientation;
 
@@ -250,6 +259,7 @@ static gboolean windowck_size_changed(XfcePanelPlugin *plugin, gint size, Window
     /* we handled the orientation */
     return TRUE;
 }
+
 static void windowck_construct(XfcePanelPlugin *plugin) {
     WindowckPlugin *wckp;
 
@@ -283,6 +293,8 @@ static void windowck_construct(XfcePanelPlugin *plugin) {
     g_signal_connect(G_OBJECT (plugin), "save", G_CALLBACK (windowck_save), wckp);
 
     g_signal_connect(G_OBJECT (plugin), "size-changed", G_CALLBACK (windowck_size_changed), wckp);
+
+    g_signal_connect(G_OBJECT (plugin), "screen-position-changed", G_CALLBACK (windowck_screen_position_changed), wckp);
 
     g_signal_connect(G_OBJECT (plugin), "orientation-changed", G_CALLBACK (windowck_orientation_changed), wckp);
 
