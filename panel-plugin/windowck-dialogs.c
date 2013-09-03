@@ -103,7 +103,7 @@ static void on_title_alignment_changed (GtkComboBox *title_alignment, WindowckPl
         wckp->prefs->title_alignment = RIGHT;
     }
 
-    gtk_misc_set_alignment(GTK_MISC(wckp->title), wckp->prefs->title_alignment / 10.0, 0.5);
+    gtk_misc_set_alignment(GTK_MISC(wckp->title), alignTitle(wckp), 0.5);
 }
 
 static void on_title_padding_changed(GtkSpinButton *title_padding, WindowckPlugin *wckp) {

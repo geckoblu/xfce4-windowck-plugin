@@ -73,7 +73,7 @@ typedef struct {
     //gchar *title_inactive_font;      // Custom inactive title font
     //gchar *title_inactive_color;     // Custom inactive title color
 
-    gint title_alignment;           // Title alignment [0=left, 5=center, 10=right]
+    gint title_alignment;            // Title alignment [0=left, 5=center, 10=right]
 
     gint width;                     // Title size in pixels
     gint  title_size_max;           // Title size max in chars
@@ -112,6 +112,7 @@ typedef struct {
 void windowck_save(XfcePanelPlugin *plugin, WindowckPlugin *wckp);
 void resize_title(WindowckPlugin *wckp);
 void expand_title(WindowckPlugin *wckp);
+float alignTitle(WindowckPlugin *wckp);
 
 G_END_DECLS
 
