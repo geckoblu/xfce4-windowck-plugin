@@ -110,7 +110,6 @@ typedef struct {
 } WindowckPlugin;
 
 void windowck_save(XfcePanelPlugin *plugin, WindowckPlugin *wckp);
-void windowck_initialize(WindowckPlugin *wckp);
 void resize_title(WindowckPlugin *wckp);
 void expand_title(WindowckPlugin *wckp);
 

@@ -36,18 +36,12 @@
 static void windowck_construct(XfcePanelPlugin *plugin);
 
 void expand_title(WindowckPlugin *wckp) {
-    gint pixchar;
-
-    if ( wckp->width > wckp->prefs->width) {
-
-    /* size of title chars */
-    pixchar = wckp->prefs->width / wckp->prefs->title_size_max;
-
-    /* expand title to max size (in char) */
-    wckp->prefs->title_size_max = wckp->width / pixchar;
+    if (wckp->width > wckp->prefs->width) {
+        /* expand title to max size (in chars) */
+        wckp->prefs->title_size_max = wckp->prefs->title_size_max * wckp->width / wckp->prefs->width - 1; /* add - 1 to fix title overflow */
     }
     else {
-    gtk_label_set_width_chars(wckp->title, wckp->prefs->title_size_max);
+        wckp->prefs->title_size_max = wckp->prefs->title_size;
     }
 
     /* resize title label (in chars) */
@@ -56,24 +50,27 @@ void expand_title(WindowckPlugin *wckp) {
 
 void resize_title(WindowckPlugin *wckp) {
     if (wckp->prefs->size_mode == SHRINK ) {
-    gtk_label_set_max_width_chars(wckp->title, wckp->prefs->title_size);
+        gtk_label_set_max_width_chars(wckp->title, wckp->prefs->title_size);
     }
     else if (wckp->prefs->size_mode == EXPAND ) {
-    expand_title(wckp);
+        expand_title(wckp);
     }
     else {
-    gtk_label_set_width_chars(wckp->title, wckp->prefs->title_size);
+        gtk_label_set_width_chars(wckp->title, wckp->prefs->title_size);
     }
 }
 
 void on_windowck_size_allocated(GtkWidget *widget, GtkAllocation *allocation,  WindowckPlugin *wckp) {
-    wckp->width = allocation->width;
-    if ( wckp->width > 1)
-      resize_title(wckp);
+    if (wckp->width != allocation->width) {
+        wckp->width = allocation->width;
+        expand_title(wckp);
+    }
 }
 
 void on_title_size_allocated(GtkWidget *widget, GtkAllocation *allocation,  WindowckPlugin *wckp) {
-    wckp->prefs->width = allocation->width;
+    if (wckp->prefs->width != allocation->width) {
+        wckp->prefs->width = allocation->width;
+    }
 }
 
 void windowck_save(XfcePanelPlugin *plugin, WindowckPlugin *wckp) {
@@ -160,14 +157,6 @@ static void windowck_read(WindowckPlugin *wckp) {
     wckp->prefs->title_padding = DEFAULT_TITLE_PADDING;
 }
 
-void windowck_initialize(WindowckPlugin *wckp) {
-    if (wckp->prefs->size_mode == EXPAND ) {
-        wckp->prefs->title_size_max = wckp->prefs->title_size;
-        gtk_label_set_width_chars(wckp->title, wckp->prefs->title_size);
-    }
-    resize_title(wckp);
-}
-
 static WindowckPlugin * windowck_new(XfcePanelPlugin *plugin) {
     WindowckPlugin *wckp;
     GtkOrientation orientation;
@@ -196,25 +185,26 @@ static WindowckPlugin * windowck_new(XfcePanelPlugin *plugin) {
     /* create some panel widgets */
     wckp->ebox = gtk_event_box_new();
     gtk_event_box_set_visible_window(GTK_EVENT_BOX(wckp->ebox), FALSE);
-    gtk_widget_show(wckp->ebox);
     gtk_widget_set_name(wckp->ebox, "XfceWindowckPlugin");
 
     wckp->hvbox = xfce_hvbox_new(orientation, FALSE, 2);
-    gtk_widget_show(wckp->hvbox);
-    gtk_container_add(GTK_CONTAINER(wckp->ebox), wckp->hvbox);
 
     /* some wckp widgets */
     label = gtk_label_new("");
-    gtk_widget_show(label);
     gtk_box_pack_start(GTK_BOX(wckp->hvbox), label, FALSE, FALSE, 0);
     wckp->title = GTK_LABEL (label);
-    gtk_label_set_ellipsize(wckp->title, PANGO_ELLIPSIZE_END);
 
-    windowck_initialize(wckp);
+    resize_title(wckp);
 
     if (wckp->prefs->size_mode != SHRINK)
         gtk_misc_set_alignment(GTK_MISC(wckp->title), wckp->prefs->title_alignment / 10.0, 0.5);
     gtk_misc_set_padding(GTK_MISC(wckp->title), wckp->prefs->title_padding, 0);
+
+    gtk_widget_show(wckp->ebox);
+    gtk_widget_show(wckp->hvbox);
+    gtk_container_add(GTK_CONTAINER(wckp->ebox), wckp->hvbox);
+    gtk_widget_show(label);
+    gtk_label_set_ellipsize(wckp->title, PANGO_ELLIPSIZE_END);
 
     return wckp;
 }
@@ -241,7 +231,7 @@ static void windowck_orientation_changed(XfcePanelPlugin *plugin, GtkOrientation
 }
 
 static void windowck_screen_position_changed(XfcePanelPlugin *plugin, XfceScreenPosition *position, WindowckPlugin *wckp) {
-    windowck_initialize(wckp);
+    resize_title(wckp);
 }
 
 static gboolean windowck_size_changed(XfcePanelPlugin *plugin, gint size, WindowckPlugin *wckp) {
