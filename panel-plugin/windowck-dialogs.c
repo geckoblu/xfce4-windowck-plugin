@@ -25,6 +25,7 @@
 
 /* the website url */
 #define PLUGIN_WEBSITE "http://goodies.xfce.org/projects/panel-plugins/xfce4-windowck-plugin"
+#define MIN_TITLE_SIZE 3
 
 static void windowck_configure_response(GtkWidget *dialog, gint response, WindowckPlugin *wckp) {
     gboolean result;
@@ -128,7 +129,7 @@ static GtkWidget * build_properties_area(WindowckPlugin *wckp, const gchar *buff
 
             titlesize = GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "titlesize"));
             if (G_LIKELY (titlesize != NULL)) {
-                gtk_spin_button_set_range(titlesize, 1, 999);
+                gtk_spin_button_set_range(titlesize, MIN_TITLE_SIZE, 999);
                 gtk_spin_button_set_increments(titlesize, 1, 1);
                 gtk_spin_button_set_value(titlesize, wckp->prefs->title_size);
                 g_signal_connect(titlesize, "value-changed", G_CALLBACK(on_titlesize_changed), wckp);
