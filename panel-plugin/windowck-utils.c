@@ -24,6 +24,8 @@
 #include "windowck.h"
 #include "windowck-utils.h"
 
+#define UNFOCUSED_TEXT_ALPHA 0.5
+
 /* Prototypes */
 static WnckWindow *getRootWindow(WnckScreen *);
 static WnckWindow *getUpperMaximized(WindowckPlugin *);
@@ -135,12 +137,23 @@ static void active_window_changed(WnckScreen *screen, WnckWindow *previous, Wind
     }
 }
 
+static void mix(GdkColor  *color2, GdkColor  *color1, float a, GdkColor  *color) {
+  color->red = color1->red * a + color2->red * (1 - a);
+  color->green = color1->green * a + color2->green * (1 - a);
+  color->blue = color1->blue * a + color2->blue * (1 - a);
+}
+
 // Updates the images according to preferences and the window situation
 // Warning! This function is called very often, so it should only do the most necessary things!
 void updateTitle(WindowckPlugin *wckp) {
     WnckWindow *controlledwindow;
     gchar *title_text, *title_color, *title_font;
     GdkPixbuf *icon_pixbuf;
+    GdkColor  color, fgColor, bgColor;
+
+    /* get plugin widget style */
+    fgColor =  GTK_WIDGET(wckp->plugin)->style->fg[GTK_STATE_NORMAL];
+    bgColor =  GTK_WIDGET(wckp->plugin)->style->bg[GTK_STATE_NORMAL];
 
     if (wckp->prefs->only_maximized) {
         controlledwindow = wckp->umaxedwindow;
@@ -169,9 +182,12 @@ void updateTitle(WindowckPlugin *wckp) {
     if (controlledwindow == wckp->activewindow) {
         // window focuseD
         gtk_widget_set_sensitive(GTK_WIDGET(wckp->title), TRUE);
+        title_color = gdk_color_to_string(&fgColor);
     } else {
         // window unfocused
         gtk_widget_set_sensitive(GTK_WIDGET(wckp->title), FALSE);
+        mix(&bgColor, &fgColor, UNFOCUSED_TEXT_ALPHA, &color);
+        title_color = gdk_color_to_string(&color);
     }
 
     // Set tooltips
@@ -203,6 +219,10 @@ void updateTitle(WindowckPlugin *wckp) {
 //      gtk_image_set_from_pixbuf(wckp->icon, ipb2);
 //      g_object_unref(ipb2);   // Unref ipb2 to get it cleared from memory
 //    }
+
+    title_font = "";
+    title_text = g_markup_printf_escaped("<span font=\"%s\" color=\"%s\">%s</span>", title_font, title_color, title_text);
+    gtk_label_set_markup(wckp->title, title_text);
 }
 
 /* Triggers when user changes viewports (Compiz) */
