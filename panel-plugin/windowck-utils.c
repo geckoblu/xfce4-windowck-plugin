@@ -38,7 +38,6 @@ static void umaxed_window_nameicon_changed(WnckWindow *, WindowckPlugin *);
 static void viewports_changed(WnckScreen *, WindowckPlugin *);
 static void window_closed(WnckScreen *, WnckWindow *, WindowckPlugin *);
 static void window_opened(WnckScreen *, WnckWindow *, WindowckPlugin *);
-static void updateTitle(WindowckPlugin *);
 
 void initWnck(WindowckPlugin *wckp) {
     wckp->activescreen = wnck_screen_get_default();
@@ -143,6 +142,18 @@ static void mix(GdkColor  *color2, GdkColor  *color1, float a, GdkColor  *color)
   color->blue = color1->blue * a + color2->blue * (1 - a);
 }
 
+void updateFont(WindowckPlugin *wckp) {
+    PangoFontDescription *font;
+    if (wckp->prefs->custom_font) {
+        font = pango_font_description_from_string(wckp->prefs->title_font);
+        gtk_widget_modify_font(GTK_WIDGET(wckp->title), font);
+        pango_font_description_free(font);
+    }
+    else {
+        gtk_widget_modify_font(GTK_WIDGET(wckp->title), NULL);
+    }
+}
+
 // Updates the images according to preferences and the window situation
 // Warning! This function is called very often, so it should only do the most necessary things!
 void updateTitle(WindowckPlugin *wckp) {
@@ -196,8 +207,6 @@ void updateTitle(WindowckPlugin *wckp) {
         gtk_widget_set_tooltip_text(GTK_WIDGET(wckp->title), title_text);
     }
 
-    gtk_label_set_text(wckp->title, title_text);
-
 //  if (icon_pixbuf == NULL )
 //    {
 //      gtk_image_clear(wckp->icon);
@@ -220,7 +229,12 @@ void updateTitle(WindowckPlugin *wckp) {
 //      g_object_unref(ipb2);   // Unref ipb2 to get it cleared from memory
 //    }
 
-    title_font = "";
+    if (wckp->prefs->custom_font)
+        title_font = wckp->prefs->title_font;
+    else
+        title_font = "";
+
+    updateFont(wckp);
     title_text = g_markup_printf_escaped("<span font=\"%s\" color=\"%s\">%s</span>", title_font, title_color, title_text);
     gtk_label_set_markup(wckp->title, title_text);
 }

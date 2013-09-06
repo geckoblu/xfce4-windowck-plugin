@@ -68,9 +68,9 @@ typedef struct {
     gint title_size;                   // Title size in chars
     gint title_padding;                 // Title padding
 
-    //gchar *title_active_font;        // Custom active title font
+    gboolean custom_font;              // [T/F] Use custom font
+    gchar *title_font;                  // Custom title font
     //gchar *title_active_color;       // Custom active title color
-    //gchar *title_inactive_font;      // Custom inactive title font
     //gchar *title_inactive_color;     // Custom inactive title color
 
     gint title_alignment;            // Title alignment [0=left, 5=center, 10=right]

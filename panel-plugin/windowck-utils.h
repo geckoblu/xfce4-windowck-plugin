@@ -22,6 +22,8 @@
 #include "windowck.h"
 
 void initWnck(WindowckPlugin *);
+void updateTitle(WindowckPlugin *wckp);
+void updateFont(WindowckPlugin *wckp);
 
 gboolean title_clicked(GtkWidget *, GdkEventButton *, WindowckPlugin *);
 

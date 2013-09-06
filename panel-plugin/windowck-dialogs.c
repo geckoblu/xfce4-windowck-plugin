@@ -84,6 +84,27 @@ static void on_size_mode_changed (GtkComboBox *size_mode, WindowckPlugin *wckp) 
     resize_title(wckp); /* d’ont work for title shrinking -> need to restart the applet */
 }
 
+static void on_custom_font_toggled(GtkToggleButton *custom_font, WindowckPlugin *wckp) {
+    GtkFontButton *title_font;
+
+    title_font= g_object_get_data(G_OBJECT(wckp->plugin), "title_font");
+            
+    wckp->prefs->custom_font = gtk_toggle_button_get_active(custom_font);
+    if (wckp->prefs->custom_font)
+        gtk_widget_set_sensitive(GTK_WIDGET(title_font), TRUE );
+    else
+        gtk_widget_set_sensitive(GTK_WIDGET(title_font), FALSE );
+
+    updateTitle(wckp);
+    resize_title(wckp);
+}
+
+static void on_title_font_font_set(GtkFontButton *title_font, WindowckPlugin *wckp) {
+    wckp->prefs->title_font = g_strdup(gtk_font_button_get_font_name(title_font));
+    updateFont(wckp);
+    resize_title(wckp);
+}
+
 static void on_title_alignment_changed (GtkComboBox *title_alignment, WindowckPlugin *wckp) {
     gint id;
 
@@ -119,6 +140,8 @@ static GtkWidget * build_properties_area(WindowckPlugin *wckp, const gchar *buff
     GObject *area = NULL;
     GtkSpinButton *titlesize;
     GtkComboBox *size_mode;
+    GtkToggleButton *custom_font;
+    GtkFontButton *title_font;
     GtkComboBox *title_alignment;
     GtkSpinButton *title_padding;
 
@@ -135,6 +158,27 @@ static GtkWidget * build_properties_area(WindowckPlugin *wckp, const gchar *buff
                 g_signal_connect(titlesize, "value-changed", G_CALLBACK(on_titlesize_changed), wckp);
             } else {
                 DBG("No widget with the name \"titlesize\" found");
+            }
+
+            custom_font = GTK_TOGGLE_BUTTON(gtk_builder_get_object(builder, "custom_font"));
+            title_font = GTK_FONT_BUTTON(gtk_builder_get_object(builder, "title_font"));
+            g_object_set_data(G_OBJECT(wckp->plugin), "title_font", title_font);
+
+            if (!wckp->prefs->custom_font)
+            gtk_widget_set_sensitive(GTK_WIDGET(title_font), FALSE );
+
+            if (G_LIKELY (custom_font != NULL)) {
+                gtk_toggle_button_set_active(custom_font, wckp->prefs->custom_font);
+                g_signal_connect(custom_font, "toggled", G_CALLBACK(on_custom_font_toggled), wckp);
+            } else {
+                DBG("No widget with the name \"custom_font\" found");
+            }
+
+            if (G_LIKELY (title_font != NULL)) {
+                gtk_font_button_set_font_name(title_font, wckp->prefs->title_font);
+                g_signal_connect(title_font, "font-set", G_CALLBACK(on_title_font_font_set), wckp);
+            } else {
+                DBG("No widget with the name \"title_font\" found");
             }
 
             title_alignment = GTK_COMBO_BOX(gtk_builder_get_object(builder, "title_alignment"));

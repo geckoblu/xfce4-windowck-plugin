@@ -31,6 +31,8 @@
 #define DEFAULT_TITLE_SIZE 80
 #define DEFAULT_TITLE_ALIGNMENT CENTER
 #define DEFAULT_TITLE_PADDING 3
+#define DEFAULT_CUSTOM_FONT FALSE
+#define DEFAULT_TITLE_FONT "sans 10"
 
 /* prototypes */
 static void windowck_construct(XfcePanelPlugin *plugin);
@@ -106,6 +108,10 @@ void windowck_save(XfcePanelPlugin *plugin, WindowckPlugin *wckp) {
         xfce_rc_write_bool_entry(rc, "show_tooltips", wckp->prefs->show_tooltips);
         xfce_rc_write_int_entry(rc, "size_mode", wckp->prefs->size_mode);
         xfce_rc_write_int_entry(rc, "title_size", wckp->prefs->title_size);
+        xfce_rc_write_bool_entry(rc, "custom_font", wckp->prefs->custom_font);
+        if (wckp->prefs->title_font)
+            xfce_rc_write_entry(rc, "title_font", wckp->prefs->title_font);
+
         xfce_rc_write_int_entry(rc, "title_alignment", wckp->prefs->title_alignment);
         xfce_rc_write_int_entry(rc, "title_padding", wckp->prefs->title_padding);
 
@@ -117,7 +123,7 @@ void windowck_save(XfcePanelPlugin *plugin, WindowckPlugin *wckp) {
 static void windowck_read(WindowckPlugin *wckp) {
     XfceRc *rc;
     gchar *file;
-    const gchar *value;
+    const gchar *title_font;
 
     /* allocate memory for the preferences structure */
     wckp->prefs = panel_slice_new0(WCKPreferences);
@@ -141,6 +147,9 @@ static void windowck_read(WindowckPlugin *wckp) {
             wckp->prefs->size_mode = xfce_rc_read_int_entry (rc, "size_mode", DEFAULT_SIZE_MODE);
             wckp->prefs->title_size = xfce_rc_read_int_entry(rc, "title_size", DEFAULT_TITLE_SIZE);
             wckp->prefs->title_size_max = wckp->prefs->title_size;
+            wckp->prefs->custom_font = xfce_rc_read_bool_entry(rc, "custom_font", DEFAULT_CUSTOM_FONT);
+            title_font = xfce_rc_read_entry(rc, "title_font", DEFAULT_TITLE_FONT);
+            wckp->prefs->title_font = g_strdup(title_font);
             wckp->prefs->title_alignment = xfce_rc_read_int_entry(rc, "title_alignment", DEFAULT_TITLE_ALIGNMENT);
             wckp->prefs->title_padding = xfce_rc_read_int_entry(rc, "title_padding", DEFAULT_TITLE_PADDING);
 
@@ -161,6 +170,8 @@ static void windowck_read(WindowckPlugin *wckp) {
     wckp->prefs->show_tooltips = DEFAULT_SHOW_TOOLTIPS;
     wckp->prefs->size_mode = DEFAULT_SIZE_MODE;
     wckp->prefs->title_size = DEFAULT_TITLE_SIZE;
+    wckp->prefs->custom_font = DEFAULT_CUSTOM_FONT;
+    wckp->prefs->title_font = DEFAULT_TITLE_FONT;
     wckp->prefs->title_alignment = DEFAULT_TITLE_ALIGNMENT;
     wckp->prefs->title_padding = DEFAULT_TITLE_PADDING;
 }
