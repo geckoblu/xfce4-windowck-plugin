@@ -101,6 +101,7 @@ AC_SUBST([PLATFORM_LDFLAGS])
 AC_OUTPUT([
 Makefile
 panel-plugin/Makefile
+panel-plugin/title/Makefile
 po/Makefile.in
 ])
 

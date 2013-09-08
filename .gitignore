@@ -20,9 +20,8 @@ libtool
 ltmain.sh
 missing
 mkinstalldirs
-panel-plugin/*.desktop
-panel-plugin/*.desktop.in
-panel-plugin/windowck-dialogs_ui.h
+panel-plugin/*/*.desktop
+panel-plugin/*/windowck-dialogs_ui.h
 po/.intltool-merge-cache
 po/Makefile.in.in
 po/POTFILES
