@@ -1,2 +1,2 @@
 
-SUBDIRS =	title
+SUBDIRS =	title buttons

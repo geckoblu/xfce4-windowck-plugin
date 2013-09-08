@@ -103,6 +103,7 @@ Makefile
 common/Makefile
 panel-plugin/Makefile
 panel-plugin/title/Makefile
+panel-plugin/buttons/Makefile
 po/Makefile.in
 ])
 
