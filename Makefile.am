@@ -1,4 +1,5 @@
 SUBDIRS =	\
+	common \
 	panel-plugin \
 	po
 

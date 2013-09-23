@@ -18,13 +18,13 @@
 
 #include "windowck.h"
 #include "windowck-dialogs.h"
-#include "windowck-utils.h"
+#include "windowck-title.h"
 
 #include <libxfce4util/libxfce4util.h>
 
 /* default settings */
 #define DEFAULT_ONLY_MAXIMIZED TRUE
-#define DEFAULT_HIDE_ON_UNMAXIMIZED TRUE
+#define DEFAULT_SHOW_ON_DESKTOP FALSE
 #define DEFAULT_HIDE_TITLE FALSE
 #define DEFAULT_SHOW_TOOLTIPS TRUE
 #define DEFAULT_SIZE_MODE FIXE
@@ -103,7 +103,7 @@ void windowck_save(XfcePanelPlugin *plugin, WindowckPlugin *wckp) {
         /* save the settings */
         DBG(".");
         xfce_rc_write_bool_entry(rc, "only_maximized", wckp->prefs->only_maximized);
-        xfce_rc_write_bool_entry(rc, "hide_on_unmaximized", wckp->prefs->hide_on_unmaximized);
+        xfce_rc_write_bool_entry(rc, "show_on_desktop", wckp->prefs->show_on_desktop);
         xfce_rc_write_bool_entry(rc, "hide_title", wckp->prefs->hide_title);
         xfce_rc_write_bool_entry(rc, "show_tooltips", wckp->prefs->show_tooltips);
         xfce_rc_write_int_entry(rc, "size_mode", wckp->prefs->size_mode);
@@ -141,7 +141,7 @@ static void windowck_read(WindowckPlugin *wckp) {
         if (G_LIKELY (rc != NULL)) {
             /* read the settings */
             wckp->prefs->only_maximized = xfce_rc_read_bool_entry(rc, "only_maximized", DEFAULT_ONLY_MAXIMIZED);
-            wckp->prefs->hide_on_unmaximized = xfce_rc_read_bool_entry(rc, "hide_on_unmaximized", DEFAULT_HIDE_ON_UNMAXIMIZED);
+            wckp->prefs->show_on_desktop = xfce_rc_read_bool_entry(rc, "show_on_desktop", DEFAULT_SHOW_ON_DESKTOP);
             wckp->prefs->hide_title = xfce_rc_read_bool_entry(rc, "hide_title", DEFAULT_HIDE_TITLE);
             wckp->prefs->show_tooltips = xfce_rc_read_bool_entry(rc, "show_tooltips", DEFAULT_SHOW_TOOLTIPS);
             wckp->prefs->size_mode = xfce_rc_read_int_entry (rc, "size_mode", DEFAULT_SIZE_MODE);
@@ -165,7 +165,7 @@ static void windowck_read(WindowckPlugin *wckp) {
     DBG("Applying default settings");
 
     wckp->prefs->only_maximized = DEFAULT_ONLY_MAXIMIZED;
-    wckp->prefs->hide_on_unmaximized = DEFAULT_HIDE_ON_UNMAXIMIZED;
+    wckp->prefs->show_on_desktop = DEFAULT_SHOW_ON_DESKTOP;
     wckp->prefs->hide_title = DEFAULT_HIDE_TITLE;
     wckp->prefs->show_tooltips = DEFAULT_SHOW_TOOLTIPS;
     wckp->prefs->size_mode = DEFAULT_SIZE_MODE;
@@ -178,6 +178,8 @@ static void windowck_read(WindowckPlugin *wckp) {
 
 static WindowckPlugin * windowck_new(XfcePanelPlugin *plugin) {
     WindowckPlugin *wckp;
+    WckUtils *win;
+
     GtkOrientation orientation;
     GtkWidget *label;
 
@@ -240,6 +242,7 @@ static void windowck_free(XfcePanelPlugin *plugin, WindowckPlugin *wckp) {
     gtk_widget_destroy(wckp->hvbox);
 
     /* free the plugin structure */
+  	g_slice_free(WckUtils, wckp->win);
     g_slice_free(WCKPreferences, wckp->prefs);
     g_slice_free(WindowckPlugin, wckp);
 }
@@ -320,7 +323,9 @@ static void windowck_construct(XfcePanelPlugin *plugin) {
 //    xfce_panel_plugin_menu_insert_item(plugin, GTK_MENU_ITEM(item1));
 //    gtk_widget_show(GTK_WIDGET(item1));
 
-    initWnck(wckp);
+    /* start tracking title text */
+    wckp->win = g_slice_new0 (WckUtils);
+    initWnck(wckp->win, wckp->prefs->only_maximized, wckp);
 }
 
 /* register the plugin */

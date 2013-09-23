@@ -33,28 +33,23 @@
 #endif
 
 #include <gtk/gtk.h>
-#include <libxfce4panel/xfce-panel-plugin.h>
-
-#ifndef WNCK_I_KNOW_THIS_IS_UNSTABLE
-#define WNCK_I_KNOW_THIS_IS_UNSTABLE
-#endif
-#include <libwnck/libwnck.h>
+#include <common/wck-utils.h>
 
 G_BEGIN_DECLS
-
-typedef enum SizeMode
-{
-    SHRINK = 1, FIXE = 2, EXPAND = 3
-} SizeMode;
 
 typedef enum Alignment
 {
     LEFT = 0, CENTER = 5, RIGHT = 10
 } Alignment;
 
+typedef enum SizeMode
+{
+    SHRINK = 1, FIXE = 2, EXPAND = 3
+} SizeMode;
+
 typedef struct {
     gboolean only_maximized;           // [T/F] Only track maximized windows
-    gboolean hide_on_unmaximized;      // [T/F] Hide when no maximized windows present
+    gboolean show_on_desktop;      // [T/F] Show the plugin on desktop
     //gboolean hide_icon;                // [T/F] Hide the icon
     gboolean hide_title;               // [T/F] Hide the title
     //gboolean swap_title_icon;          // [T/F] Swap title/icon (TRUE icon on the right
@@ -74,10 +69,8 @@ typedef struct {
     //gchar *title_inactive_color;     // Custom inactive title color
 
     gint title_alignment;            // Title alignment [0=left, 5=center, 10=right]
-
     gint width;                     // Title size in pixels
     gint  title_size_max;           // Title size max in chars
-
 } WCKPreferences;
 
 /* plugin structure */
@@ -87,26 +80,18 @@ typedef struct {
     /* Widgets */
     GtkWidget *ebox;
     GtkWidget *hvbox;
+    GtkWidget *alignment;
     GtkLabel *title;
 
     /* Variables */
-    WCKPreferences *prefs;              // Main properties
+    WCKPreferences     *prefs;
+    WckUtils *win;
 
-    WnckScreen *activescreen;          // Active screen
-    WnckWorkspace *activeworkspace;    // Active workspace
-    WnckWindow *umaxedwindow;          // Upper-most maximized window
-    WnckWindow *activewindow;          // Active window
-    WnckWindow *rootwindow;            // Root window (desktop)
-
-    gulong active_handler_state;       // activewindow's statechange event handler ID
-    gulong active_handler_name;        // activewindow's namechange event handler ID
-    gulong active_handler_icon;        // activewindow's iconchange event handler ID
-    gulong umaxed_handler_state;       // umaxedwindow's statechange event handler ID
-    gulong umaxed_handler_icon;        // umaxedwindow's iconchange event handler ID
-    gulong umaxed_handler_name;        // umaxedwindow's manechange event handler ID
-
-    gboolean focused;                  // [T/F] Window state (focused or unfocused)
     gint  width;                       // with of the plugin
+
+    gulong cnh;                         // controled window name handler id
+    gulong cih;                         // controled window icon handler id
+
 } WindowckPlugin;
 
 void windowck_save(XfcePanelPlugin *plugin, WindowckPlugin *wckp);

@@ -1,4 +1,4 @@
-INCLUDES = \
+AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-DG_LOG_DOMAIN=\"xfce4-windowck-plugin\" \
 	-DPACKAGE_LOCALE_DIR=\"$(localedir)\" \
@@ -23,11 +23,12 @@ libwindowck_la_SOURCES = \
 	windowck.h \
 	windowck-dialogs.c \
 	windowck-dialogs.h \
-	windowck-utils.h \
-	windowck-utils.c
-	
+	windowck-title.h \
+	windowck-title.c
 
 libwindowck_la_CFLAGS = \
+	$(GTK_CFLAGS) \
+	$(XFCONF_CFLAGS) \
 	$(LIBXFCE4UTIL_CFLAGS) \
 	$(LIBXFCE4UI_CFLAGS) \
 	$(LIBXFCE4PANEL_CFLAGS) \
@@ -42,10 +43,13 @@ libwindowck_la_LDFLAGS = \
        $(PLATFORM_LDFLAGS)
 
 libwindowck_la_LIBADD = \
+	$(top_builddir)/common/libwck-common.la \
+	$(GTK_LIBS) \
 	$(LIBXFCE4UTIL_LIBS) \
 	$(LIBXFCE4UI_LIBS) \
 	$(LIBXFCE4PANEL_LIBS) \
-	$(LIBWNCK_LIBS)
+	$(LIBWNCK_LIBS) \
+	$(XFCONF_LIBS)
 
 #
 # Desktop file
@@ -54,7 +58,7 @@ desktopdir =								\
 	$(datadir)/xfce4/panel/plugins
 
 desktop_DATA =								\
-	xfce4-windowck-plugin.desktop
+	windowck-plugin.desktop
 
 @INTLTOOL_DESKTOP_RULE@
 

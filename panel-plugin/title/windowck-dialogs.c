@@ -20,6 +20,7 @@
 #include <libxfce4panel/xfce-panel-plugin.h>
 
 #include "windowck.h"
+#include "windowck-title.h"
 #include "windowck-dialogs.h"
 #include "windowck-dialogs_ui.h"
 
@@ -88,15 +89,12 @@ static void on_custom_font_toggled(GtkToggleButton *custom_font, WindowckPlugin 
     GtkFontButton *title_font;
 
     title_font= g_object_get_data(G_OBJECT(wckp->plugin), "title_font");
-            
+
     wckp->prefs->custom_font = gtk_toggle_button_get_active(custom_font);
     if (wckp->prefs->custom_font)
         gtk_widget_set_sensitive(GTK_WIDGET(title_font), TRUE );
     else
         gtk_widget_set_sensitive(GTK_WIDGET(title_font), FALSE );
-
-    updateTitle(wckp);
-    resize_title(wckp);
 }
 
 static void on_title_font_font_set(GtkFontButton *title_font, WindowckPlugin *wckp) {

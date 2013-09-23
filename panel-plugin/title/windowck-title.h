@@ -16,15 +16,15 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef WINDOWCK_UTILS_H_
-#define WINDOWCK_UTILS_H_
+#ifndef WINDOWCK_TITLE_H_
+#define WINDOWCK_TITLE_H_
 
 #include "windowck.h"
 
-void initWnck(WindowckPlugin *);
-void updateTitle(WindowckPlugin *wckp);
+void on_wck_state_changed (WnckWindow *controlwindow, WindowckPlugin *wckp);
+void on_windowck_size_allocated(GtkWidget *widget, GtkAllocation *allocation,  WindowckPlugin *wckp);
+void on_control_window_changed(WnckWindow *controlwindow, WnckWindow *previous, WindowckPlugin *wckp);
 void updateFont(WindowckPlugin *wckp);
-
 gboolean title_clicked(GtkWidget *, GdkEventButton *, WindowckPlugin *);
 
-#endif /* WINDOWCK_UTILS_H_ */
+#endif /* WINDOWCK_TITLE_H_ */
