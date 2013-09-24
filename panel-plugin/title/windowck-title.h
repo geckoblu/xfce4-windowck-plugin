@@ -21,6 +21,10 @@
 
 #include "windowck.h"
 
+void initTitle (WindowckPlugin *wckp);
+void resizeTitle(WindowckPlugin *wckp);
+void expandTitle(WindowckPlugin *wckp);
+float alignTitle(WindowckPlugin *wckp);
 void on_wck_state_changed (WnckWindow *controlwindow, WindowckPlugin *wckp);
 void on_windowck_size_allocated(GtkWidget *widget, GtkAllocation *allocation,  WindowckPlugin *wckp);
 void on_control_window_changed(WnckWindow *controlwindow, WnckWindow *previous, WindowckPlugin *wckp);

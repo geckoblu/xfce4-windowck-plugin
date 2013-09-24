@@ -115,6 +115,54 @@ void on_control_window_changed (WnckWindow *controlwindow, WnckWindow *previous,
     }
 }
 
+void expandTitle(WindowckPlugin *wckp) {
+    if (wckp->width > wckp->prefs->width) {
+        /* expand title to max size (in chars) */
+        wckp->prefs->title_size_max = wckp->prefs->title_size_max * wckp->width / wckp->prefs->width - 1; /* add - 1 to fix title overflow */
+    }
+    else {
+        wckp->prefs->title_size_max = wckp->prefs->title_size;
+    }
+
+    /* resize title label (in chars) */
+    gtk_label_set_width_chars(wckp->title, wckp->prefs->title_size_max);
+}
+
+void resizeTitle(WindowckPlugin *wckp) {
+    if (wckp->prefs->size_mode == SHRINK ) {
+        gtk_label_set_max_width_chars(wckp->title, wckp->prefs->title_size);
+    }
+    else if (wckp->prefs->size_mode == EXPAND ) {
+        expandTitle(wckp);
+    }
+    else {
+        gtk_label_set_width_chars(wckp->title, wckp->prefs->title_size);
+    }
+}
+
+float alignTitle(WindowckPlugin *wckp) {
+    /* correction on title alignement for expand option */
+    if (wckp->prefs->title_size_max != 0
+        && wckp->prefs->size_mode == EXPAND
+        && wckp->prefs->title_alignment == CENTER)
+        return MIN (wckp->prefs->title_alignment / 10.0 + 0.5 / wckp->prefs->title_size_max, 1);
+    else
+        return wckp->prefs->title_alignment / 10.0;
+}
+
+void on_windowck_size_allocated(GtkWidget *widget, GtkAllocation *allocation,  WindowckPlugin *wckp) {
+    if (wckp->width != allocation->width) {
+        wckp->width = allocation->width;
+        expandTitle(wckp);
+    }
+}
+
+void on_title_size_allocated(GtkWidget *widget, GtkAllocation *allocation,  WindowckPlugin *wckp) {
+    if (wckp->prefs->width != allocation->width) {
+        wckp->prefs->width = allocation->width;
+    }
+}
+
 gboolean title_clicked(GtkWidget *title, GdkEventButton *event, WindowckPlugin *wckp) {
     // only allow left and right mouse button
     //if (event->button != 1 && event->button != 3) return FALSE;
@@ -141,4 +189,23 @@ gboolean title_clicked(GtkWidget *title, GdkEventButton *event, WindowckPlugin *
         return FALSE;
     }
     return TRUE;
+}
+
+void initTitle (WindowckPlugin *wckp) {
+
+    resizeTitle(wckp);
+
+    if (wckp->prefs->size_mode != SHRINK)
+    	gtk_misc_set_alignment(GTK_MISC(wckp->title), alignTitle(wckp), 0.5);
+
+    gtk_misc_set_padding(GTK_MISC(wckp->title), wckp->prefs->title_padding, 0);
+
+    /* start tracking the applet and title size */
+    if (wckp->prefs->size_mode == EXPAND) {
+    /* update wckp->width */
+    g_signal_connect(G_OBJECT (wckp->plugin), "size-allocate", G_CALLBACK(on_windowck_size_allocated), wckp);
+
+    /* update wckp->pref->width */
+    g_signal_connect(G_OBJECT (wckp->title), "size-allocate", G_CALLBACK(on_title_size_allocated), wckp);
+    }
 }

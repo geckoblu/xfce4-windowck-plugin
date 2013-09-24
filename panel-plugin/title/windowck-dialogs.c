@@ -54,7 +54,7 @@ static void windowck_configure_response(GtkWidget *dialog, gint response, Window
 
 static void on_titlesize_changed(GtkSpinButton *titlesize, WindowckPlugin *wckp) {
     wckp->prefs->title_size = gtk_spin_button_get_value(titlesize);
-    resize_title(wckp);
+    resizeTitle(wckp);
 }
 
 static void on_size_mode_changed (GtkComboBox *size_mode, WindowckPlugin *wckp) {
@@ -82,7 +82,7 @@ static void on_size_mode_changed (GtkComboBox *size_mode, WindowckPlugin *wckp) 
 
     // dynamic resizing
     wckp->prefs->title_size_max = wckp->prefs->title_size;
-    resize_title(wckp); /* d’ont work for title shrinking -> need to restart the applet */
+    resizeTitle(wckp); /* d’ont work for title shrinking -> need to restart the applet */
 }
 
 static void on_custom_font_toggled(GtkToggleButton *custom_font, WindowckPlugin *wckp) {
@@ -100,7 +100,7 @@ static void on_custom_font_toggled(GtkToggleButton *custom_font, WindowckPlugin 
 static void on_title_font_font_set(GtkFontButton *title_font, WindowckPlugin *wckp) {
     wckp->prefs->title_font = g_strdup(gtk_font_button_get_font_name(title_font));
     updateFont(wckp);
-    resize_title(wckp);
+    resizeTitle(wckp);
 }
 
 static void on_title_alignment_changed (GtkComboBox *title_alignment, WindowckPlugin *wckp) {
@@ -129,7 +129,7 @@ static void on_title_alignment_changed (GtkComboBox *title_alignment, WindowckPl
 static void on_title_padding_changed(GtkSpinButton *title_padding, WindowckPlugin *wckp) {
     wckp->prefs->title_padding = gtk_spin_button_get_value(title_padding);
     gtk_misc_set_padding(GTK_MISC(wckp->title), wckp->prefs->title_padding, 0);
-    resize_title(wckp);
+    resizeTitle(wckp);
 }
 
 static GtkWidget * build_properties_area(WindowckPlugin *wckp, const gchar *buffer, gsize length) {

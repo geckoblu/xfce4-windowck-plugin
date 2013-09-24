@@ -21,8 +21,8 @@
  * See http://gnome-look.org/content/show.php?content=103732 for details.
  */
 
-#ifndef __WINDOWCKTITLE_H__
-#define __WINDOWCKTITLE_H__
+#ifndef __WINDOWCK_H__
+#define __WINDOWCK_H__
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -95,10 +95,7 @@ typedef struct {
 } WindowckPlugin;
 
 void windowck_save(XfcePanelPlugin *plugin, WindowckPlugin *wckp);
-void resize_title(WindowckPlugin *wckp);
-void expand_title(WindowckPlugin *wckp);
-float alignTitle(WindowckPlugin *wckp);
 
 G_END_DECLS
 
-#endif /* !__WINDOWCKTITLE_H__ */
+#endif /* !__WINDOWCK_H__ */

@@ -37,52 +37,6 @@
 /* prototypes */
 static void windowck_construct(XfcePanelPlugin *plugin);
 
-void expand_title(WindowckPlugin *wckp) {
-    if (wckp->width > wckp->prefs->width) {
-        /* expand title to max size (in chars) */
-        wckp->prefs->title_size_max = wckp->prefs->title_size_max * wckp->width / wckp->prefs->width - 1; /* add - 1 to fix title overflow */
-    }
-    else {
-        wckp->prefs->title_size_max = wckp->prefs->title_size;
-    }
-
-    /* resize title label (in chars) */
-    gtk_label_set_width_chars(wckp->title, wckp->prefs->title_size_max);
-}
-
-void resize_title(WindowckPlugin *wckp) {
-    if (wckp->prefs->size_mode == SHRINK ) {
-        gtk_label_set_max_width_chars(wckp->title, wckp->prefs->title_size);
-    }
-    else if (wckp->prefs->size_mode == EXPAND ) {
-        expand_title(wckp);
-    }
-    else {
-        gtk_label_set_width_chars(wckp->title, wckp->prefs->title_size);
-    }
-}
-
-float alignTitle(WindowckPlugin *wckp) {
-    /* minor correction on title alignement for expand option */
-    if (wckp->prefs->size_mode == EXPAND && wckp->prefs->title_alignment == CENTER)
-        return MIN(wckp->prefs->title_alignment / 10.0 + 0.5 / wckp->prefs->title_size_max, 1);
-    else
-        return wckp->prefs->title_alignment / 10.0;
-}
-
-void on_windowck_size_allocated(GtkWidget *widget, GtkAllocation *allocation,  WindowckPlugin *wckp) {
-    if (wckp->width != allocation->width) {
-        wckp->width = allocation->width;
-        expand_title(wckp);
-    }
-}
-
-void on_title_size_allocated(GtkWidget *widget, GtkAllocation *allocation,  WindowckPlugin *wckp) {
-    if (wckp->prefs->width != allocation->width) {
-        wckp->prefs->width = allocation->width;
-    }
-}
-
 void windowck_save(XfcePanelPlugin *plugin, WindowckPlugin *wckp) {
     XfceRc *rc;
     gchar *file;
@@ -200,7 +154,7 @@ static WindowckPlugin * windowck_new(XfcePanelPlugin *plugin) {
 
     if (wckp->prefs->size_mode == EXPAND) {
     /* expand the plugin to the maximum space available  */
-    xfce_panel_plugin_set_expand (plugin, TRUE);
+        xfce_panel_plugin_set_expand (plugin, TRUE);
     }
 
     /* create some panel widgets */
@@ -214,12 +168,6 @@ static WindowckPlugin * windowck_new(XfcePanelPlugin *plugin) {
     label = gtk_label_new("");
     gtk_box_pack_start(GTK_BOX(wckp->hvbox), label, FALSE, FALSE, 0);
     wckp->title = GTK_LABEL (label);
-
-    resize_title(wckp);
-
-    if (wckp->prefs->size_mode != SHRINK)
-        gtk_misc_set_alignment(GTK_MISC(wckp->title), alignTitle(wckp), 0.5);
-    gtk_misc_set_padding(GTK_MISC(wckp->title), wckp->prefs->title_padding, 0);
 
     gtk_widget_show(wckp->ebox);
     gtk_widget_show(wckp->hvbox);
@@ -253,7 +201,7 @@ static void windowck_orientation_changed(XfcePanelPlugin *plugin, GtkOrientation
 }
 
 static void windowck_screen_position_changed(XfcePanelPlugin *plugin, XfceScreenPosition *position, WindowckPlugin *wckp) {
-    resize_title(wckp);
+    // resizeTitle(wckp);
 }
 
 static gboolean windowck_size_changed(XfcePanelPlugin *plugin, gint size, WindowckPlugin *wckp) {
@@ -292,14 +240,6 @@ static void windowck_construct(XfcePanelPlugin *plugin) {
 
     /* connect plugin signals */
 
-    if (wckp->prefs->size_mode == EXPAND) {
-    /* update wckp->width */
-    g_signal_connect(G_OBJECT (plugin), "size-allocate", G_CALLBACK(on_windowck_size_allocated), wckp);
-
-    /* update wckp->pref->width */
-    g_signal_connect(G_OBJECT (wckp->title), "size-allocate", G_CALLBACK(on_title_size_allocated), wckp);
-    }
-
     g_signal_connect(G_OBJECT (plugin), "free-data", G_CALLBACK (windowck_free), wckp);
 
     g_signal_connect(G_OBJECT (plugin), "save", G_CALLBACK (windowck_save), wckp);
@@ -322,6 +262,9 @@ static void windowck_construct(XfcePanelPlugin *plugin) {
 //    GtkWidget *item1 = gtk_menu_item_new_with_label("Test");
 //    xfce_panel_plugin_menu_insert_item(plugin, GTK_MENU_ITEM(item1));
 //    gtk_widget_show(GTK_WIDGET(item1));
+
+    /* start tracking title size */
+    initTitle(wckp);
 
     /* start tracking title text */
     wckp->win = g_slice_new0 (WckUtils);
