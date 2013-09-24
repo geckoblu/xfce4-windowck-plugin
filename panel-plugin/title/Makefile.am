@@ -5,7 +5,7 @@ AM_CPPFLAGS = \
 	$(PLATFORM_CPPFLAGS)
 
 #
-# Sample plugin
+# Windowck plugin
 #
 plugin_LTLIBRARIES = \
 	libwindowck.la
@@ -51,6 +51,9 @@ libwindowck_la_LIBADD = \
 	$(LIBWNCK_LIBS) \
 	$(XFCONF_LIBS)
 
+libactions_la_DEPENDENCIES = \
+	$(top_builddir)/common/libwck-common.la
+
 #
 # Desktop file
 #
@@ -64,7 +67,7 @@ desktop_DATA =								\
 
 EXTRA_DIST =								\
 	windowck-dialogs.glade                                          \
-	xfce4-windowck-plugin.desktop.in
+	windowck-plugin.desktop.in
 
 CLEANFILES =								\
 	$(desktop_DATA)
