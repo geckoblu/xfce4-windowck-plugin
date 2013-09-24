@@ -198,7 +198,7 @@ void initTitle (WindowckPlugin *wckp) {
     if (wckp->prefs->size_mode != SHRINK)
     	gtk_misc_set_alignment(GTK_MISC(wckp->title), alignTitle(wckp), 0.5);
 
-    gtk_misc_set_padding(GTK_MISC(wckp->title), wckp->prefs->title_padding, 0);
+    gtk_alignment_set_padding(GTK_ALIGNMENT(wckp->alignment), 0, 0, wckp->prefs->title_padding, wckp->prefs->title_padding);
 
     /* start tracking the applet and title size */
     if (wckp->prefs->size_mode == EXPAND) {

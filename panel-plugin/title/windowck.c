@@ -154,7 +154,7 @@ static WindowckPlugin * windowck_new(XfcePanelPlugin *plugin) {
 
     if (wckp->prefs->size_mode == EXPAND) {
     /* expand the plugin to the maximum space available  */
-        xfce_panel_plugin_set_expand (plugin, TRUE);
+        xfce_panel_plugin_set_shrink (plugin, TRUE);
     }
 
     /* create some panel widgets */
@@ -162,17 +162,25 @@ static WindowckPlugin * windowck_new(XfcePanelPlugin *plugin) {
     gtk_event_box_set_visible_window(GTK_EVENT_BOX(wckp->ebox), FALSE);
     gtk_widget_set_name(wckp->ebox, "XfceWindowckPlugin");
 
+    wckp->alignment = gtk_alignment_new (0.5, 0.5, 0, 0);
+
     wckp->hvbox = xfce_hvbox_new(orientation, FALSE, 2);
 
     /* some wckp widgets */
     label = gtk_label_new("");
-    gtk_box_pack_start(GTK_BOX(wckp->hvbox), label, FALSE, FALSE, 0);
     wckp->title = GTK_LABEL (label);
 
+    gtk_box_pack_start (GTK_BOX(wckp->hvbox), label, TRUE, TRUE, 0);
+
+    gtk_container_add(GTK_CONTAINER(wckp->alignment), GTK_WIDGET(wckp->hvbox));
+    gtk_container_add(GTK_CONTAINER(wckp->ebox), wckp->alignment);
+
+    /* show widgets */
     gtk_widget_show(wckp->ebox);
+    gtk_widget_show(wckp->alignment);
     gtk_widget_show(wckp->hvbox);
-    gtk_container_add(GTK_CONTAINER(wckp->ebox), wckp->hvbox);
     gtk_widget_show(label);
+
     gtk_label_set_ellipsize(wckp->title, PANGO_ELLIPSIZE_END);
 
     return wckp;

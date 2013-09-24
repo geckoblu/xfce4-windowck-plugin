@@ -128,7 +128,7 @@ static void on_title_alignment_changed (GtkComboBox *title_alignment, WindowckPl
 
 static void on_title_padding_changed(GtkSpinButton *title_padding, WindowckPlugin *wckp) {
     wckp->prefs->title_padding = gtk_spin_button_get_value(title_padding);
-    gtk_misc_set_padding(GTK_MISC(wckp->title), wckp->prefs->title_padding, 0);
+    gtk_alignment_set_padding(GTK_ALIGNMENT(wckp->alignment), 0, 0, wckp->prefs->title_padding, wckp->prefs->title_padding);
     resizeTitle(wckp);
 }
 
