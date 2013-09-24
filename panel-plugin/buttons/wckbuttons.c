@@ -138,7 +138,7 @@ wckbuttons_new (XfcePanelPlugin *plugin)
   GtkWidget      *label;
 
   /* allocate memory for the plugin structure */
-  wb = panel_slice_new0 (WBPlugin);
+  wb = g_slice_new0 (WBPlugin);
 
   /* pointer to plugin */
   wb->plugin = plugin;
@@ -189,7 +189,7 @@ wckbuttons_free (XfcePanelPlugin *plugin, WBPlugin    *wb)
     g_free (wb->setting1);
 
   /* free the plugin structure */
-  panel_slice_free (WBPlugin, wb);
+  g_slice_free (WBPlugin, wb);
 }
 
 

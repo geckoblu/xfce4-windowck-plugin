@@ -80,7 +80,7 @@ static void windowck_read(WindowckPlugin *wckp) {
     const gchar *title_font;
 
     /* allocate memory for the preferences structure */
-    wckp->prefs = panel_slice_new0(WCKPreferences);
+    wckp->prefs = g_slice_new0(WCKPreferences);
 
     /* get the plugin config file location */
     file = xfce_panel_plugin_save_location(wckp->plugin, TRUE);
