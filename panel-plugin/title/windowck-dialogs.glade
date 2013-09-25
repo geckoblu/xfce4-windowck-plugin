@@ -42,6 +42,25 @@
                   </packing>
                 </child>
                 <child>
+                  <object class="GtkComboBox" id="size_mode">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="tooltip_text" translatable="yes">You need to restart the applet after changing width mode.</property>
+                    <property name="model">size_mode_list</property>
+                    <child>
+                      <object class="GtkCellRendererText" id="cellrenderertext"/>
+                      <attributes>
+                        <attribute name="text">0</attribute>
+                      </attributes>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
                   <object class="GtkSpinButton" id="titlesize">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
@@ -58,7 +77,7 @@
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
-                    <property name="position">1</property>
+                    <property name="position">2</property>
                   </packing>
                 </child>
                 <child>
@@ -70,25 +89,6 @@
                     <attributes>
                       <attribute name="style" value="italic"/>
                     </attributes>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">2</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkComboBox" id="size_mode">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="tooltip_text" translatable="yes">You need to restart the applet after changing width mode.</property>
-                    <property name="model">size_mode_list</property>
-                    <child>
-                      <object class="GtkCellRendererText" id="cellrenderertext"/>
-                      <attributes>
-                        <attribute name="text">0</attribute>
-                      </attributes>
-                    </child>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -282,13 +282,13 @@
     </columns>
     <data>
       <row>
-        <col id="0" translatable="yes">at most (shrink)</col>
+        <col id="0" translatable="yes">at most</col>
       </row>
       <row>
-        <col id="0" translatable="yes">fixe</col>
+        <col id="0" translatable="yes">fixed to</col>
       </row>
       <row>
-        <col id="0" translatable="yes">at least (expand)</col>
+        <col id="0" translatable="yes">expand</col>
       </row>
     </data>
   </object>

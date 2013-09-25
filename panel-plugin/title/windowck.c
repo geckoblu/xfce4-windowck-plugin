@@ -100,7 +100,6 @@ static void windowck_read(WindowckPlugin *wckp) {
             wckp->prefs->show_tooltips = xfce_rc_read_bool_entry(rc, "show_tooltips", DEFAULT_SHOW_TOOLTIPS);
             wckp->prefs->size_mode = xfce_rc_read_int_entry (rc, "size_mode", DEFAULT_SIZE_MODE);
             wckp->prefs->title_size = xfce_rc_read_int_entry(rc, "title_size", DEFAULT_TITLE_SIZE);
-            wckp->prefs->title_size_max = wckp->prefs->title_size;
             wckp->prefs->custom_font = xfce_rc_read_bool_entry(rc, "custom_font", DEFAULT_CUSTOM_FONT);
             title_font = xfce_rc_read_entry(rc, "title_font", DEFAULT_TITLE_FONT);
             wckp->prefs->title_font = g_strdup(title_font);
@@ -146,16 +145,12 @@ static WindowckPlugin * windowck_new(XfcePanelPlugin *plugin) {
     /* read the user settings */
     windowck_read(wckp);
 
-    /* initialize variables */
-    wckp->width = wckp->prefs->width = DEFAULT_TITLE_SIZE * 7;
-
     /* get the current orientation */
     orientation = xfce_panel_plugin_get_orientation(plugin);
 
-    if (wckp->prefs->size_mode == EXPAND) {
-    /* expand the plugin to the maximum space available  */
+    /* not needed for shrink mode */
+    if (!wckp->prefs->size_mode == SHRINK)
         xfce_panel_plugin_set_shrink (plugin, TRUE);
-    }
 
     /* create some panel widgets */
     wckp->ebox = gtk_event_box_new();
@@ -180,8 +175,6 @@ static WindowckPlugin * windowck_new(XfcePanelPlugin *plugin) {
     gtk_widget_show(wckp->alignment);
     gtk_widget_show(wckp->hvbox);
     gtk_widget_show(label);
-
-    gtk_label_set_ellipsize(wckp->title, PANGO_ELLIPSIZE_END);
 
     return wckp;
 }
@@ -209,7 +202,12 @@ static void windowck_orientation_changed(XfcePanelPlugin *plugin, GtkOrientation
 }
 
 static void windowck_screen_position_changed(XfcePanelPlugin *plugin, XfceScreenPosition *position, WindowckPlugin *wckp) {
-    // resizeTitle(wckp);
+    if (wckp->prefs->size_mode != SHRINK) {
+        xfce_panel_plugin_set_shrink (plugin, FALSE);
+        gtk_label_set_width_chars(wckp->title, 1);
+        xfce_panel_plugin_set_shrink (plugin, TRUE);
+        resizeTitle(wckp);
+    }
 }
 
 static gboolean windowck_size_changed(XfcePanelPlugin *plugin, gint size, WindowckPlugin *wckp) {

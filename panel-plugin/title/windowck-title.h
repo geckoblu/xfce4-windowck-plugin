@@ -21,12 +21,11 @@
 
 #include "windowck.h"
 
+#define TITLE_SIZE_MAX 999 /* title size max for expand option in characters */
+
 void initTitle (WindowckPlugin *wckp);
 void resizeTitle(WindowckPlugin *wckp);
-void expandTitle(WindowckPlugin *wckp);
-float alignTitle(WindowckPlugin *wckp);
 void on_wck_state_changed (WnckWindow *controlwindow, WindowckPlugin *wckp);
-void on_windowck_size_allocated(GtkWidget *widget, GtkAllocation *allocation,  WindowckPlugin *wckp);
 void on_control_window_changed(WnckWindow *controlwindow, WnckWindow *previous, WindowckPlugin *wckp);
 void updateFont(WindowckPlugin *wckp);
 gboolean title_clicked(GtkWidget *, GdkEventButton *, WindowckPlugin *);

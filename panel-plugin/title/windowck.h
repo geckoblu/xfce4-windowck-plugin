@@ -69,8 +69,6 @@ typedef struct {
     //gchar *title_inactive_color;     // Custom inactive title color
 
     gint title_alignment;            // Title alignment [0=left, 5=center, 10=right]
-    gint width;                     // Title size in pixels
-    gint  title_size_max;           // Title size max in chars
 } WCKPreferences;
 
 /* plugin structure */
@@ -86,8 +84,6 @@ typedef struct {
     /* Variables */
     WCKPreferences     *prefs;
     WckUtils *win;
-
-    gint  width;                       // with of the plugin
 
     gulong cnh;                         // controled window name handler id
     gulong cih;                         // controled window icon handler id

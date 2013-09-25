@@ -26,7 +26,7 @@
 
 /* the website url */
 #define PLUGIN_WEBSITE "http://goodies.xfce.org/projects/panel-plugins/xfce4-windowck-plugin"
-#define MIN_TITLE_SIZE 3
+#define TITLE_SIZE_MIN 3
 
 static void windowck_configure_response(GtkWidget *dialog, gint response, WindowckPlugin *wckp) {
     gboolean result;
@@ -58,31 +58,42 @@ static void on_titlesize_changed(GtkSpinButton *titlesize, WindowckPlugin *wckp)
 }
 
 static void on_size_mode_changed (GtkComboBox *size_mode, WindowckPlugin *wckp) {
-  gint id;
+    gint id;
+    GtkSpinButton *titlesize;
+    GtkLabel *width_unit;
 
-  id = gtk_combo_box_get_active(size_mode);
-
-  if (id < 0 || id > 2) {
+    id = gtk_combo_box_get_active(size_mode);
+    
+    if (id < 0 || id > 2) {
       g_critical ("Trying to set a default size but got an invalid item");
       return;
-  }
+    }
 
-  if (id == 0) {
-      wckp->prefs->size_mode = SHRINK;
-      xfce_panel_plugin_set_expand (wckp->plugin, FALSE);
-  }
-  else if (id == 1) {
-      wckp->prefs->size_mode = FIXE;
-      xfce_panel_plugin_set_expand (wckp->plugin, FALSE);
-  }
-  else if (id == 2) {
-      wckp->prefs->size_mode = EXPAND;
-      xfce_panel_plugin_set_expand (wckp->plugin, TRUE);
-  }
+    titlesize = g_object_get_data(G_OBJECT(wckp->plugin), "titlesize");
+    width_unit = g_object_get_data(G_OBJECT(wckp->plugin), "width_unit");
 
-    // dynamic resizing
-    wckp->prefs->title_size_max = wckp->prefs->title_size;
-    resizeTitle(wckp); /* d’ont work for title shrinking -> need to restart the applet */
+    if (id == 0) {
+        wckp->prefs->size_mode = SHRINK;
+        xfce_panel_plugin_set_shrink (wckp->plugin, FALSE);
+        gtk_widget_set_sensitive(GTK_WIDGET(titlesize), TRUE);
+        gtk_widget_set_sensitive(GTK_WIDGET(width_unit), TRUE);
+    }
+    else if (id == 1) {
+        wckp->prefs->size_mode = FIXE;
+        xfce_panel_plugin_set_shrink (wckp->plugin, TRUE);
+        gtk_widget_set_sensitive(GTK_WIDGET(titlesize), TRUE);
+        gtk_widget_set_sensitive(GTK_WIDGET(width_unit), TRUE);
+    }
+    else if (id == 2) {
+        wckp->prefs->size_mode = EXPAND;
+        xfce_panel_plugin_set_shrink (wckp->plugin, TRUE);
+        gtk_widget_set_sensitive(GTK_WIDGET(titlesize), FALSE);
+        gtk_widget_set_sensitive(GTK_WIDGET(width_unit), FALSE);
+    }
+
+    /* dynamic resizing */
+    /* d'ont work for title shrinking -> need to restart the applet */
+    resizeTitle(wckp);
 }
 
 static void on_custom_font_toggled(GtkToggleButton *custom_font, WindowckPlugin *wckp) {
@@ -100,7 +111,6 @@ static void on_custom_font_toggled(GtkToggleButton *custom_font, WindowckPlugin 
 static void on_title_font_font_set(GtkFontButton *title_font, WindowckPlugin *wckp) {
     wckp->prefs->title_font = g_strdup(gtk_font_button_get_font_name(title_font));
     updateFont(wckp);
-    resizeTitle(wckp);
 }
 
 static void on_title_alignment_changed (GtkComboBox *title_alignment, WindowckPlugin *wckp) {
@@ -123,25 +133,23 @@ static void on_title_alignment_changed (GtkComboBox *title_alignment, WindowckPl
         wckp->prefs->title_alignment = RIGHT;
     }
 
-    gtk_misc_set_alignment(GTK_MISC(wckp->title), alignTitle(wckp), 0.5);
+    gtk_misc_set_alignment(GTK_MISC(wckp->title), wckp->prefs->title_alignment / 10.0, 0.5);
 }
 
 static void on_title_padding_changed(GtkSpinButton *title_padding, WindowckPlugin *wckp) {
     wckp->prefs->title_padding = gtk_spin_button_get_value(title_padding);
     gtk_alignment_set_padding(GTK_ALIGNMENT(wckp->alignment), 0, 0, wckp->prefs->title_padding, wckp->prefs->title_padding);
-    resizeTitle(wckp);
 }
 
 static GtkWidget * build_properties_area(WindowckPlugin *wckp, const gchar *buffer, gsize length) {
     GError *error = NULL;
     GtkBuilder *builder;
     GObject *area = NULL;
-    GtkSpinButton *titlesize;
-    GtkComboBox *size_mode;
+    GtkSpinButton *titlesize, *title_padding;
+    GtkComboBox *size_mode, *title_alignment;
     GtkToggleButton *custom_font;
     GtkFontButton *title_font;
-    GtkComboBox *title_alignment;
-    GtkSpinButton *title_padding;
+    GtkLabel *width_unit;
 
     builder = gtk_builder_new();
     if (gtk_builder_add_from_string(builder, buffer, length, &error)) {
@@ -149,8 +157,11 @@ static GtkWidget * build_properties_area(WindowckPlugin *wckp, const gchar *buff
         if (G_LIKELY (area != NULL)) {
 
             titlesize = GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "titlesize"));
+            width_unit = GTK_LABEL(gtk_builder_get_object(builder, "width_unit"));
+            g_object_set_data(G_OBJECT(wckp->plugin), "titlesize", titlesize);
+            g_object_set_data(G_OBJECT(wckp->plugin), "width_unit", width_unit);
             if (G_LIKELY (titlesize != NULL)) {
-                gtk_spin_button_set_range(titlesize, MIN_TITLE_SIZE, 999);
+                gtk_spin_button_set_range(titlesize, TITLE_SIZE_MIN, TITLE_SIZE_MAX);
                 gtk_spin_button_set_increments(titlesize, 1, 1);
                 gtk_spin_button_set_value(titlesize, wckp->prefs->title_size);
                 g_signal_connect(titlesize, "value-changed", G_CALLBACK(on_titlesize_changed), wckp);
@@ -210,13 +221,15 @@ static GtkWidget * build_properties_area(WindowckPlugin *wckp, const gchar *buff
             if (G_LIKELY (size_mode != NULL)) {
                 /* set active item */
                 if ( wckp->prefs->size_mode == SHRINK ) {
-                  gtk_combo_box_set_active(size_mode, 0);
+                    gtk_combo_box_set_active(size_mode, 0);
                 }
                 else if( wckp->prefs->size_mode == FIXE ) {
-                  gtk_combo_box_set_active(size_mode, 1);
+                    gtk_combo_box_set_active(size_mode, 1);
                 }
                 else if( wckp->prefs->size_mode == EXPAND ) {
-                  gtk_combo_box_set_active(size_mode, 2);
+                    gtk_combo_box_set_active(size_mode, 2);
+                    gtk_widget_set_sensitive(GTK_WIDGET(titlesize), FALSE);
+                    gtk_widget_set_sensitive(GTK_WIDGET(width_unit), FALSE);
                 }
 
                 g_signal_connect(size_mode, "changed", G_CALLBACK(on_size_mode_changed), wckp);
@@ -242,10 +255,6 @@ void windowck_configure(XfcePanelPlugin *plugin, WindowckPlugin *wckp) {
     GtkBuilder *builder;
     GtkWidget *content_area;
     GtkWidget *ca;
-    GObject *titlesize;
-    GObject *size_mode;
-    GObject *title_alignment;
-    GObject *title_padding;
 
     /* block the plugin menu */
     xfce_panel_plugin_block_menu(plugin);
