@@ -27,18 +27,17 @@
 #include <libxfce4ui/libxfce4ui.h>
 #include <libxfce4panel/xfce-panel-plugin.h>
 
-#include "sample.h"
-#include "sample-dialogs.h"
+#include "wckbuttons.h"
+#include "wckbuttons-dialogs.h"
 
 /* the website url */
-#define PLUGIN_WEBSITE "http://goodies.xfce.org/projects/panel-plugins/xfce4-sample-plugin"
-
+#define PLUGIN_WEBSITE "http://goodies.xfce.org/projects/panel-plugins/xfce4-wckbuttons-plugin"
 
 
 static void
-sample_configure_response (GtkWidget    *dialog,
+wckbuttons_configure_response (GtkWidget    *dialog,
                            gint          response,
-                           SamplePlugin *sample)
+                           WBPlugin *wb)
 {
   gboolean result;
 
@@ -53,13 +52,13 @@ sample_configure_response (GtkWidget    *dialog,
   else
     {
       /* remove the dialog data from the plugin */
-      g_object_set_data (G_OBJECT (sample->plugin), "dialog", NULL);
+      g_object_set_data (G_OBJECT (wb->plugin), "dialog", NULL);
 
       /* unlock the panel menu */
-      xfce_panel_plugin_unblock_menu (sample->plugin);
+      xfce_panel_plugin_unblock_menu (wb->plugin);
 
       /* save the plugin */
-      sample_save (sample->plugin, sample);
+      wckbuttons_save (wb->plugin, wb);
 
       /* destroy the properties dialog */
       gtk_widget_destroy (dialog);
@@ -69,8 +68,8 @@ sample_configure_response (GtkWidget    *dialog,
 
 
 void
-sample_configure (XfcePanelPlugin *plugin,
-                  SamplePlugin    *sample)
+wckbuttons_configure (XfcePanelPlugin *plugin,
+                  WBPlugin    *wb)
 {
   GtkWidget *dialog;
 
@@ -78,7 +77,7 @@ sample_configure (XfcePanelPlugin *plugin,
   xfce_panel_plugin_block_menu (plugin);
 
   /* create the dialog */
-  dialog = xfce_titled_dialog_new_with_buttons (_("Sample Plugin"),
+  dialog = xfce_titled_dialog_new_with_buttons (_("Windowck Buttons"),
                                                 GTK_WINDOW (gtk_widget_get_toplevel (GTK_WIDGET (plugin))),
                                                 GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_NO_SEPARATOR,
                                                 GTK_STOCK_HELP, GTK_RESPONSE_HELP,
@@ -97,7 +96,7 @@ sample_configure (XfcePanelPlugin *plugin,
 
   /* connect the reponse signal to the dialog */
   g_signal_connect (G_OBJECT (dialog), "response",
-                    G_CALLBACK(sample_configure_response), sample);
+                    G_CALLBACK(wckbuttons_configure_response), wb);
 
   /* show the entire dialog */
   gtk_widget_show (dialog);
@@ -106,7 +105,7 @@ sample_configure (XfcePanelPlugin *plugin,
 
 
 void
-sample_about (XfcePanelPlugin *plugin)
+wckbuttons_about (XfcePanelPlugin *plugin)
 {
   /* about dialog code. you can use the GtkAboutDialog
    * or the XfceAboutInfo widget */

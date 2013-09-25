@@ -17,18 +17,34 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef __SAMPLE_DIALOGS_H__
-#define __SAMPLE_DIALOGS_H__
+#ifndef __WCKBUTTONS_H__
+#define __WCKBUTTONS_H__
 
 G_BEGIN_DECLS
 
-void
-sample_configure    (XfcePanelPlugin *plugin,
-                     SamplePlugin    *sample);
+/* plugin structure */
+typedef struct
+{
+    XfcePanelPlugin *plugin;
+
+    /* panel widgets */
+    GtkWidget       *ebox;
+    GtkWidget       *hvbox;
+    GtkWidget       *label;
+
+    /* wckbuttons settings */
+    gchar           *setting1;
+    gint             setting2;
+    gboolean         setting3;
+}
+WBPlugin;
+
+
 
 void
-sample_about        (XfcePanelPlugin *plugin);
+wckbuttons_save (XfcePanelPlugin *plugin,
+             WBPlugin    *wb);
 
 G_END_DECLS
 
-#endif
+#endif /* !__WCKBUTTONS_H__ */

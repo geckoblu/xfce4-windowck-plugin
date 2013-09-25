@@ -29,8 +29,8 @@
 #include <libxfce4panel/xfce-panel-plugin.h>
 #include <libxfce4panel/xfce-hvbox.h>
 
-#include "sample.h"
-#include "sample-dialogs.h"
+#include "wckbuttons.h"
+#include "wckbuttons-dialogs.h"
 
 /* default settings */
 #define DEFAULT_SETTING1 NULL
@@ -41,17 +41,17 @@
 
 /* prototypes */
 static void
-sample_construct (XfcePanelPlugin *plugin);
+wckbuttons_construct (XfcePanelPlugin *plugin);
 
 
 /* register the plugin */
-XFCE_PANEL_PLUGIN_REGISTER (sample_construct);
+XFCE_PANEL_PLUGIN_REGISTER (wckbuttons_construct);
 
 
 
 void
-sample_save (XfcePanelPlugin *plugin,
-             SamplePlugin    *sample)
+wckbuttons_save (XfcePanelPlugin *plugin,
+             WBPlugin    *wb)
 {
   XfceRc *rc;
   gchar  *file;
@@ -73,11 +73,11 @@ sample_save (XfcePanelPlugin *plugin,
     {
       /* save the settings */
       DBG(".");
-      if (sample->setting1)
-        xfce_rc_write_entry    (rc, "setting1", sample->setting1);
+      if (wb->setting1)
+        xfce_rc_write_entry    (rc, "setting1", wb->setting1);
 
-      xfce_rc_write_int_entry  (rc, "setting2", sample->setting2);
-      xfce_rc_write_bool_entry (rc, "setting3", sample->setting3);
+      xfce_rc_write_int_entry  (rc, "setting2", wb->setting2);
+      xfce_rc_write_bool_entry (rc, "setting3", wb->setting3);
 
       /* close the rc file */
       xfce_rc_close (rc);
@@ -87,14 +87,14 @@ sample_save (XfcePanelPlugin *plugin,
 
 
 static void
-sample_read (SamplePlugin *sample)
+wckbuttons_read (WBPlugin *wb)
 {
   XfceRc      *rc;
   gchar       *file;
   const gchar *value;
 
   /* get the plugin config file location */
-  file = xfce_panel_plugin_save_location (sample->plugin, TRUE);
+  file = xfce_panel_plugin_save_location (wb->plugin, TRUE);
 
   if (G_LIKELY (file != NULL))
     {
@@ -108,10 +108,10 @@ sample_read (SamplePlugin *sample)
         {
           /* read the settings */
           value = xfce_rc_read_entry (rc, "setting1", DEFAULT_SETTING1);
-          sample->setting1 = g_strdup (value);
+          wb->setting1 = g_strdup (value);
 
-          sample->setting2 = xfce_rc_read_int_entry (rc, "setting2", DEFAULT_SETTING2);
-          sample->setting3 = xfce_rc_read_bool_entry (rc, "setting3", DEFAULT_SETTING3);
+          wb->setting2 = xfce_rc_read_int_entry (rc, "setting2", DEFAULT_SETTING2);
+          wb->setting3 = xfce_rc_read_bool_entry (rc, "setting3", DEFAULT_SETTING3);
 
           /* cleanup */
           xfce_rc_close (rc);
@@ -124,57 +124,55 @@ sample_read (SamplePlugin *sample)
   /* something went wrong, apply default values */
   DBG ("Applying default settings");
 
-  sample->setting1 = g_strdup (DEFAULT_SETTING1);
-  sample->setting2 = DEFAULT_SETTING2;
-  sample->setting3 = DEFAULT_SETTING3;
+  wb->setting1 = g_strdup (DEFAULT_SETTING1);
+  wb->setting2 = DEFAULT_SETTING2;
+  wb->setting3 = DEFAULT_SETTING3;
 }
 
 
-
-static SamplePlugin *
-sample_new (XfcePanelPlugin *plugin)
+static WBPlugin *
+wckbuttons_new (XfcePanelPlugin *plugin)
 {
-  SamplePlugin   *sample;
+    WBPlugin   *wb;
   GtkOrientation  orientation;
   GtkWidget      *label;
 
   /* allocate memory for the plugin structure */
-  sample = panel_slice_new0 (SamplePlugin);
+  wb = panel_slice_new0 (WBPlugin);
 
   /* pointer to plugin */
-  sample->plugin = plugin;
+  wb->plugin = plugin;
 
   /* read the user settings */
-  sample_read (sample);
+  wckbuttons_read (wb);
 
   /* get the current orientation */
   orientation = xfce_panel_plugin_get_orientation (plugin);
 
   /* create some panel widgets */
-  sample->ebox = gtk_event_box_new ();
-  gtk_widget_show (sample->ebox);
+  wb->ebox = gtk_event_box_new ();
+  gtk_widget_show (wb->ebox);
 
-  sample->hvbox = xfce_hvbox_new (orientation, FALSE, 2);
-  gtk_widget_show (sample->hvbox);
-  gtk_container_add (GTK_CONTAINER (sample->ebox), sample->hvbox);
+  wb->hvbox = xfce_hvbox_new (orientation, FALSE, 2);
+  gtk_widget_show (wb->hvbox);
+  gtk_container_add (GTK_CONTAINER (wb->ebox), wb->hvbox);
 
-  /* some sample widgets */
-  label = gtk_label_new (_("Sample"));
+  /* some wb widgets */
+  label = gtk_label_new (_("Window Buttons"));
   gtk_widget_show (label);
-  gtk_box_pack_start (GTK_BOX (sample->hvbox), label, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (wb->hvbox), label, FALSE, FALSE, 0);
 
   label = gtk_label_new (_("Plugin"));
   gtk_widget_show (label);
-  gtk_box_pack_start (GTK_BOX (sample->hvbox), label, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (wb->hvbox), label, FALSE, FALSE, 0);
 
-  return sample;
+  return wb;
 }
 
 
 
 static void
-sample_free (XfcePanelPlugin *plugin,
-             SamplePlugin    *sample)
+wckbuttons_free (XfcePanelPlugin *plugin, WBPlugin    *wb)
 {
   GtkWidget *dialog;
 
@@ -184,33 +182,33 @@ sample_free (XfcePanelPlugin *plugin,
     gtk_widget_destroy (dialog);
 
   /* destroy the panel widgets */
-  gtk_widget_destroy (sample->hvbox);
+  gtk_widget_destroy (wb->hvbox);
 
   /* cleanup the settings */
-  if (G_LIKELY (sample->setting1 != NULL))
-    g_free (sample->setting1);
+  if (G_LIKELY (wb->setting1 != NULL))
+    g_free (wb->setting1);
 
   /* free the plugin structure */
-  panel_slice_free (SamplePlugin, sample);
+  panel_slice_free (WBPlugin, wb);
 }
 
 
 
 static void
-sample_orientation_changed (XfcePanelPlugin *plugin,
+wckbuttons_orientation_changed (XfcePanelPlugin *plugin,
                             GtkOrientation   orientation,
-                            SamplePlugin    *sample)
+                            WBPlugin    *wb)
 {
   /* change the orienation of the box */
-  xfce_hvbox_set_orientation (XFCE_HVBOX (sample->hvbox), orientation);
+  xfce_hvbox_set_orientation (XFCE_HVBOX (wb->hvbox), orientation);
 }
 
 
 
 static gboolean
-sample_size_changed (XfcePanelPlugin *plugin,
+wckbuttons_size_changed (XfcePanelPlugin *plugin,
                      gint             size,
-                     SamplePlugin    *sample)
+                     WBPlugin    *wb)
 {
   GtkOrientation orientation;
 
@@ -230,42 +228,42 @@ sample_size_changed (XfcePanelPlugin *plugin,
 
 
 static void
-sample_construct (XfcePanelPlugin *plugin)
+wckbuttons_construct (XfcePanelPlugin *plugin)
 {
-  SamplePlugin *sample;
+    WBPlugin *wb;
 
   /* setup transation domain */
   xfce_textdomain(GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR, "UTF-8");
 
   /* create the plugin */
-  sample = sample_new (plugin);
+  wb = wckbuttons_new (plugin);
 
   /* add the ebox to the panel */
-  gtk_container_add (GTK_CONTAINER (plugin), sample->ebox);
+  gtk_container_add (GTK_CONTAINER (plugin), wb->ebox);
 
   /* show the panel's right-click menu on this ebox */
-  xfce_panel_plugin_add_action_widget (plugin, sample->ebox);
+  xfce_panel_plugin_add_action_widget (plugin, wb->ebox);
 
   /* connect plugin signals */
   g_signal_connect (G_OBJECT (plugin), "free-data",
-                    G_CALLBACK (sample_free), sample);
+                    G_CALLBACK (wckbuttons_free), wb);
 
   g_signal_connect (G_OBJECT (plugin), "save",
-                    G_CALLBACK (sample_save), sample);
+                    G_CALLBACK (wckbuttons_save), wb);
 
   g_signal_connect (G_OBJECT (plugin), "size-changed",
-                    G_CALLBACK (sample_size_changed), sample);
+                    G_CALLBACK (wckbuttons_size_changed), wb);
 
   g_signal_connect (G_OBJECT (plugin), "orientation-changed",
-                    G_CALLBACK (sample_orientation_changed), sample);
+                    G_CALLBACK (wckbuttons_orientation_changed), wb);
 
   /* show the configure menu item and connect signal */
   xfce_panel_plugin_menu_show_configure (plugin);
   g_signal_connect (G_OBJECT (plugin), "configure-plugin",
-                    G_CALLBACK (sample_configure), sample);
+                    G_CALLBACK (wckbuttons_configure), wb);
 
   /* show the about menu item and connect signal */
   xfce_panel_plugin_menu_show_about (plugin);
   g_signal_connect (G_OBJECT (plugin), "about",
-                    G_CALLBACK (sample_about), NULL);
+                    G_CALLBACK (wckbuttons_about), NULL);
 }
