@@ -23,6 +23,7 @@ libwckbuttons_la_CFLAGS = \
 	$(LIBXFCE4UTIL_CFLAGS) \
 	$(LIBXFCE4UI_CFLAGS) \
 	$(LIBXFCE4PANEL_CFLAGS) \
+	$(LIBWNCK_CFLAGS) \
 	$(PLATFORM_CFLAGS)
 
 libwckbuttons_la_LDFLAGS = \
@@ -33,9 +34,14 @@ libwckbuttons_la_LDFLAGS = \
        $(PLATFORM_LDFLAGS)
 
 libwckbuttons_la_LIBADD = \
+	$(top_builddir)/common/libwck-common.la \
 	$(LIBXFCE4UTIL_LIBS) \
 	$(LIBXFCE4UI_LIBS) \
+	$(LIBWNCK_LIBS) \
 	$(LIBXFCE4PANEL_LIBS)
+
+libactions_la_DEPENDENCIES = \
+	$(top_builddir)/common/libwck-common.la
 
 #
 # Desktop file

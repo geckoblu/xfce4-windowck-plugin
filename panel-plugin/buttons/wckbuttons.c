@@ -33,10 +33,10 @@
 #include "wckbuttons-dialogs.h"
 
 /* default settings */
+#define DEFAULT_ONLY_MAXIMIZED TRUE
+#define DEFAULT_SHOW_ON_DESKTOP FALSE
 #define DEFAULT_BUTTON_LAYOUT "HMC"
 #define DEFAULT_SETTING2 1
-#define DEFAULT_SETTING3 FALSE
-
 
 
 /* prototypes */
@@ -68,11 +68,12 @@ wckbuttons_save (XfcePanelPlugin *plugin,
     {
       /* save the settings */
       DBG(".");
+      xfce_rc_write_bool_entry(rc, "only_maximized", wb->prefs->only_maximized);
+      xfce_rc_write_bool_entry(rc, "show_on_desktop", wb->prefs->show_on_desktop);
       if (wb->prefs->button_layout)
         xfce_rc_write_entry    (rc, "button_layout", wb->prefs->button_layout);
 
       xfce_rc_write_int_entry  (rc, "setting2", wb->setting2);
-      xfce_rc_write_bool_entry (rc, "setting3", wb->setting3);
 
       /* close the rc file */
       xfce_rc_close (rc);
@@ -105,11 +106,12 @@ wckbuttons_read (WBPlugin *wb)
       if (G_LIKELY (rc != NULL))
         {
           /* read the settings */
+        wb->prefs->only_maximized = xfce_rc_read_bool_entry(rc, "only_maximized", DEFAULT_ONLY_MAXIMIZED);
+        wb->prefs->show_on_desktop = xfce_rc_read_bool_entry(rc, "show_on_desktop", DEFAULT_SHOW_ON_DESKTOP);
         button_layout = xfce_rc_read_entry (rc, "button_layout", DEFAULT_BUTTON_LAYOUT);
         wb->prefs->button_layout = g_strdup (button_layout);
 
           wb->setting2 = xfce_rc_read_int_entry (rc, "setting2", DEFAULT_SETTING2);
-          wb->setting3 = xfce_rc_read_bool_entry (rc, "setting3", DEFAULT_SETTING3);
 
           /* cleanup */
           xfce_rc_close (rc);
@@ -122,9 +124,10 @@ wckbuttons_read (WBPlugin *wb)
   /* something went wrong, apply default values */
   DBG ("Applying default settings");
 
+    wb->prefs->only_maximized = DEFAULT_ONLY_MAXIMIZED;
+    wb->prefs->show_on_desktop = DEFAULT_SHOW_ON_DESKTOP;
     wb->prefs->button_layout = g_strdup (DEFAULT_BUTTON_LAYOUT);
   wb->setting2 = DEFAULT_SETTING2;
-  wb->setting3 = DEFAULT_SETTING3;
 }
 
 WindowButton **createButtons (WBPlugin *wb) {
@@ -239,6 +242,7 @@ wckbuttons_free (XfcePanelPlugin *plugin, WBPlugin    *wb)
     g_free (wb->prefs->button_layout);
 
   /* free the plugin structure */
+  g_slice_free(WckUtils, wb->win);
   g_slice_free(WCKPreferences, wb->prefs);
   g_slice_free (WBPlugin, wb);
 }
@@ -276,7 +280,38 @@ wckbuttons_size_changed (XfcePanelPlugin *plugin,
   return TRUE;
 }
 
+void on_wck_state_changed (WnckWindow *controlwindow, WBPlugin *wb) {
+    gushort image_state;
 
+    if (controlwindow) {
+        if (wnck_window_is_active(controlwindow))
+            image_state = 1;
+        else image_state = 0;
+
+    printf("on_wck_state_changed image_state%d\n", image_state);
+    }
+}
+
+void on_control_window_changed (WnckWindow *controlwindow, WnckWindow *previous, WBPlugin *wb) {
+
+    if (controlwindow
+        && (wnck_window_get_window_type (controlwindow) != WNCK_WINDOW_DESKTOP)) {
+        gtk_widget_set_sensitive(GTK_WIDGET(wb->hvbox), TRUE);
+        on_wck_state_changed (controlwindow, wb);
+        if (!gtk_widget_get_visible(GTK_WIDGET(wb->hvbox)))
+            gtk_widget_show_all(GTK_WIDGET(wb->hvbox));
+    }
+    else if (wb->prefs->show_on_desktop) {
+        gtk_widget_set_sensitive(GTK_WIDGET(wb->hvbox), FALSE);
+        on_wck_state_changed (controlwindow, wb);
+        if (!gtk_widget_get_visible(GTK_WIDGET(wb->hvbox)))
+            gtk_widget_show_all(GTK_WIDGET(wb->hvbox));
+    }
+    else {
+        if (gtk_widget_get_visible(GTK_WIDGET(wb->hvbox)))
+            gtk_widget_hide_all(GTK_WIDGET(wb->hvbox));
+    }
+}
 
 static void
 wckbuttons_construct (XfcePanelPlugin *plugin)
@@ -317,6 +352,10 @@ wckbuttons_construct (XfcePanelPlugin *plugin)
   xfce_panel_plugin_menu_show_about (plugin);
   g_signal_connect (G_OBJECT (plugin), "about",
                     G_CALLBACK (wckbuttons_about), NULL);
+
+    /* start tracking windows */
+    wb->win = g_slice_new0 (WckUtils);
+    initWnck(wb->win, wb->prefs->only_maximized, wb);
 }
 
 /* register the plugin */
