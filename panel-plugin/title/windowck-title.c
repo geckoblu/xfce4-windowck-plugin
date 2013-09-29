@@ -41,6 +41,41 @@ void updateFont(WindowckPlugin *wckp) {
     }
 }
 
+static void on_icon_changed(WnckWindow *controlwindow, WindowckPlugin *wckp) {
+    GdkPixbuf *pixbuf = NULL;
+    GdkPixbuf *grayscale = NULL;
+
+    if (controlwindow) {
+        /* This only returns a pointer - it SHOULDN'T be unrefed! */
+        if (wckp->icon->size == GTK_ICON_SIZE_MENU)
+            pixbuf = wnck_window_get_mini_icon(controlwindow);
+        else
+            pixbuf = wnck_window_get_icon(controlwindow);
+    }
+
+    if (controlwindow && !wnck_window_is_active(controlwindow)) {
+        /* icon color is set to grayscale */
+        grayscale = gdk_pixbuf_copy(pixbuf);
+        gdk_pixbuf_saturate_and_pixelate(grayscale, grayscale, 0, FALSE);
+        if (G_UNLIKELY (grayscale != NULL))
+            pixbuf = grayscale;
+    }
+
+    if (controlwindow
+        && (wnck_window_get_window_type (controlwindow) != WNCK_WINDOW_DESKTOP)) {
+        gtk_image_set_from_pixbuf(wckp->icon->image, pixbuf);
+    }
+    else if (controlwindow && wckp->prefs->show_on_desktop) {
+        gtk_image_set_from_stock(wckp->icon->image,GTK_STOCK_HOME, wckp->icon->size);
+    }
+    else {
+        gtk_image_clear(wckp->icon->image);
+    }
+
+    if (grayscale != NULL && grayscale != pixbuf)
+        g_object_unref (G_OBJECT (grayscale));
+}
+
 /* Triggers when controlwindow's name OR ICON changes */
 /* Warning! This function is called very often, so it should only do the most necessary things! */
 static void on_name_changed(WnckWindow *controlwindow, WindowckPlugin *wckp) {
@@ -86,6 +121,8 @@ static void on_name_changed(WnckWindow *controlwindow, WindowckPlugin *wckp) {
 
 void on_wck_state_changed (WnckWindow *controlwindow, WindowckPlugin *wckp) {
     on_name_changed (controlwindow, wckp);
+    if (wckp->prefs->show_icon)
+        on_icon_changed (wckp->win->controlwindow, wckp);
 }
 
 void on_control_window_changed (WnckWindow *controlwindow, WnckWindow *previous, WindowckPlugin *wckp) {
@@ -101,6 +138,20 @@ void on_control_window_changed (WnckWindow *controlwindow, WnckWindow *previous,
     if (controlwindow) {
         wckp->cnh = g_signal_connect(G_OBJECT(controlwindow), "name-changed", G_CALLBACK(on_name_changed), wckp);
     }
+
+    if (wckp->prefs->show_icon) {
+        if (previous && wckp->cih) {
+            if (g_signal_handler_is_connected(G_OBJECT(previous), wckp->cih))
+                g_signal_handler_disconnect(G_OBJECT(previous), wckp->cih);
+        }
+
+        on_icon_changed (controlwindow, wckp);
+
+        if (controlwindow) {
+            wckp->cih = g_signal_connect(G_OBJECT(controlwindow), "icon-changed", G_CALLBACK(on_icon_changed), wckp);
+        }
+    }
+
 }
 
 void resizeTitle(WindowckPlugin *wckp) {
@@ -162,12 +213,14 @@ static void setTitleColors(WindowckPlugin *wckp) {
 void initTitle (WindowckPlugin *wckp) {
 
     setTitleColors(wckp);
+    wckp->icon->size = GTK_ICON_SIZE_MENU;
     resizeTitle(wckp);
 
     gtk_label_set_ellipsize(wckp->title, PANGO_ELLIPSIZE_END);
 
     if (wckp->prefs->size_mode != SHRINK)
-    	gtk_misc_set_alignment(GTK_MISC(wckp->title), wckp->prefs->title_alignment / 10.0, 0.5);
+        gtk_misc_set_alignment(GTK_MISC(wckp->title), wckp->prefs->title_alignment / 10.0, 0.5);
 
     gtk_alignment_set_padding(GTK_ALIGNMENT(wckp->alignment), 0, 0, wckp->prefs->title_padding, wckp->prefs->title_padding);
+    gtk_box_set_spacing (GTK_BOX(wckp->hvbox), wckp->prefs->title_padding);
 }

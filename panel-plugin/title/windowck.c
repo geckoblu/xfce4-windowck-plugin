@@ -27,6 +27,8 @@
 #define DEFAULT_SHOW_ON_DESKTOP FALSE
 #define DEFAULT_HIDE_TITLE FALSE
 #define DEFAULT_SHOW_TOOLTIPS TRUE
+#define DEFAULT_SHOW_ICON TRUE
+#define DEFAULT_ICON_ON_RIGHT FALSE
 #define DEFAULT_SIZE_MODE FIXE
 #define DEFAULT_TITLE_SIZE 80
 #define DEFAULT_TITLE_ALIGNMENT CENTER
@@ -58,6 +60,8 @@ void windowck_save(XfcePanelPlugin *plugin, WindowckPlugin *wckp) {
         DBG(".");
         xfce_rc_write_bool_entry(rc, "only_maximized", wckp->prefs->only_maximized);
         xfce_rc_write_bool_entry(rc, "show_on_desktop", wckp->prefs->show_on_desktop);
+        xfce_rc_write_bool_entry(rc, "show_icon", wckp->prefs->show_icon);
+        xfce_rc_write_bool_entry(rc, "icon_on_right", wckp->prefs->icon_on_right);
         xfce_rc_write_bool_entry(rc, "hide_title", wckp->prefs->hide_title);
         xfce_rc_write_bool_entry(rc, "show_tooltips", wckp->prefs->show_tooltips);
         xfce_rc_write_int_entry(rc, "size_mode", wckp->prefs->size_mode);
@@ -96,6 +100,8 @@ static void windowck_read(WindowckPlugin *wckp) {
             /* read the settings */
             wckp->prefs->only_maximized = xfce_rc_read_bool_entry(rc, "only_maximized", DEFAULT_ONLY_MAXIMIZED);
             wckp->prefs->show_on_desktop = xfce_rc_read_bool_entry(rc, "show_on_desktop", DEFAULT_SHOW_ON_DESKTOP);
+            wckp->prefs->show_icon = xfce_rc_read_bool_entry(rc, "show_icon", DEFAULT_SHOW_ICON);
+            wckp->prefs->icon_on_right = xfce_rc_read_bool_entry(rc, "icon_on_right", DEFAULT_ICON_ON_RIGHT);
             wckp->prefs->hide_title = xfce_rc_read_bool_entry(rc, "hide_title", DEFAULT_HIDE_TITLE);
             wckp->prefs->show_tooltips = xfce_rc_read_bool_entry(rc, "show_tooltips", DEFAULT_SHOW_TOOLTIPS);
             wckp->prefs->size_mode = xfce_rc_read_int_entry (rc, "size_mode", DEFAULT_SIZE_MODE);
@@ -119,6 +125,8 @@ static void windowck_read(WindowckPlugin *wckp) {
 
     wckp->prefs->only_maximized = DEFAULT_ONLY_MAXIMIZED;
     wckp->prefs->show_on_desktop = DEFAULT_SHOW_ON_DESKTOP;
+    wckp->prefs->show_icon = DEFAULT_SHOW_ICON;
+    wckp->prefs->icon_on_right = DEFAULT_ICON_ON_RIGHT;
     wckp->prefs->hide_title = DEFAULT_HIDE_TITLE;
     wckp->prefs->show_tooltips = DEFAULT_SHOW_TOOLTIPS;
     wckp->prefs->size_mode = DEFAULT_SIZE_MODE;
@@ -127,6 +135,21 @@ static void windowck_read(WindowckPlugin *wckp) {
     wckp->prefs->title_font = DEFAULT_TITLE_FONT;
     wckp->prefs->title_alignment = DEFAULT_TITLE_ALIGNMENT;
     wckp->prefs->title_padding = DEFAULT_TITLE_PADDING;
+}
+
+static void createIcon (WindowckPlugin *wckp) {
+    wckp->icon = g_slice_new0 (WindowIcon);
+    wckp->icon->eventbox = GTK_EVENT_BOX (gtk_event_box_new());
+    wckp->icon->image = GTK_IMAGE (gtk_image_new());
+    
+    gtk_widget_set_can_focus (GTK_WIDGET(wckp->icon->eventbox), TRUE);
+    
+    gtk_container_add (GTK_CONTAINER (wckp->icon->eventbox), GTK_WIDGET(wckp->icon->image));
+    gtk_event_box_set_visible_window (wckp->icon->eventbox, FALSE);
+
+    gtk_box_pack_start (GTK_BOX (wckp->hvbox), GTK_WIDGET(wckp->icon->eventbox), FALSE, FALSE, 0);
+
+    gtk_widget_show_all(GTK_WIDGET(wckp->icon->eventbox));
 }
 
 static WindowckPlugin * windowck_new(XfcePanelPlugin *plugin) {
@@ -165,7 +188,13 @@ static WindowckPlugin * windowck_new(XfcePanelPlugin *plugin) {
     label = gtk_label_new("");
     wckp->title = GTK_LABEL (label);
 
+    createIcon (wckp);
+
     gtk_box_pack_start (GTK_BOX(wckp->hvbox), label, TRUE, TRUE, 0);
+
+    if (wckp->prefs->icon_on_right) {
+        gtk_box_reorder_child (GTK_BOX (wckp->hvbox), GTK_WIDGET(wckp->icon->eventbox), 1);
+    }
 
     gtk_container_add(GTK_CONTAINER(wckp->alignment), GTK_WIDGET(wckp->hvbox));
     gtk_container_add(GTK_CONTAINER(wckp->ebox), wckp->alignment);
@@ -191,7 +220,8 @@ static void windowck_free(XfcePanelPlugin *plugin, WindowckPlugin *wckp) {
     gtk_widget_destroy(wckp->hvbox);
 
     /* free the plugin structure */
-  	g_slice_free(WckUtils, wckp->win);
+    g_slice_free(WindowIcon, wckp->icon);
+    g_slice_free(WckUtils, wckp->win);
     g_slice_free(WCKPreferences, wckp->prefs);
     g_slice_free(WindowckPlugin, wckp);
 }
@@ -221,6 +251,12 @@ static gboolean windowck_size_changed(XfcePanelPlugin *plugin, gint size, Window
         gtk_widget_set_size_request(GTK_WIDGET (plugin), -1, size);
     else
         gtk_widget_set_size_request(GTK_WIDGET (plugin), size, -1);
+
+    /* set icon size */
+    if (size >= 32)
+        wckp->icon->size = GTK_ICON_SIZE_SMALL_TOOLBAR;
+    else
+        wckp->icon->size = GTK_ICON_SIZE_MENU;
 
     /* we handled the orientation */
     return TRUE;

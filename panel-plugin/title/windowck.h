@@ -48,13 +48,18 @@ typedef enum SizeMode
 } SizeMode;
 
 typedef struct {
+	GtkEventBox 	*eventbox;
+	GtkImage 		*image;
+    gushort            size;
+} WindowIcon;
+
+typedef struct {
     gboolean only_maximized;           // [T/F] Only track maximized windows
     gboolean show_on_desktop;      // [T/F] Show the plugin on desktop
     //gboolean hide_icon;                // [T/F] Hide the icon
     gboolean hide_title;               // [T/F] Hide the title
-    //gboolean swap_title_icon;          // [T/F] Swap title/icon (TRUE icon on the right
-    //gboolean expand_applet;          // [T/F] Expand the applet TODO: rename to expand_title ?
-    //gboolean custom_style;           // [T/F] Use custom style
+    gboolean show_icon;                 // [T/F] Show the window icon
+    gboolean icon_on_right;          // [T/F] Place icon on the right
     //gboolean show_window_menu;       // [T/F] Show window action menu on right click
     gboolean show_tooltips;            // [T/F] Show tooltips
 
@@ -80,8 +85,8 @@ typedef struct {
     GtkWidget *hvbox;
     GtkWidget *alignment;
     GtkLabel *title;
+    WindowIcon  *icon;			    // Icon widget
 
-    /* Variables */
     WCKPreferences     *prefs;
     WckUtils *win;
 
