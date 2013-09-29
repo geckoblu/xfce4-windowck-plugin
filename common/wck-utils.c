@@ -77,10 +77,11 @@ static WnckWindow *getUpperMaximized (WckUtils *win) {
     GList *windows = wnck_screen_get_windows_stacked(win->activescreen);
 
     while (windows && windows->data) {
-        if (wnck_window_is_in_viewport(windows->data, win->activeworkspace)
-        && wnck_window_is_maximized(windows->data)
-        && !wnck_window_is_minimized(windows->data)) {
-            umaxedwindow = windows->data;
+        if (!win->activeworkspace
+            || wnck_window_is_in_viewport(windows->data, win->activeworkspace))
+            if (wnck_window_is_maximized(windows->data)
+                && !wnck_window_is_minimized(windows->data)) {
+                umaxedwindow = windows->data;
         }
         windows = windows->next;
     }

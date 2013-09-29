@@ -10,8 +10,13 @@ noinst_LTLIBRARIES = \
 	libwck-common.la
 
 libwck_common_la_SOURCES = \
+	mypixmap.c \
+	mypixmap.h \
+	ui_style.c \
+	ui_style.h \
 	wck-utils.c \
-	wck-utils.h
+	wck-utils.h \
+	xpm-color-table.h 
 
 libwck_common_la_CFLAGS = \
 	$(XFCONF_CFLAGS) \
@@ -32,6 +37,7 @@ libwck_common_la_LIBADD = \
 	$(LIBXFCE4PANEL_LIBS) \
 	$(LIBWNCK_LIBS)
 
-EXTRA_DIST =
+EXTRA_DIST =				\
+	gen-color-table.pl
 
 # vi:set ts=8 sw=8 noet ai nocindent syntax=automake:
