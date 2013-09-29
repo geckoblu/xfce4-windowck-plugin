@@ -1,0 +1,12 @@
+/* XPM */
+static char * bottom_left_active = {
+"3 4 4 1", 
+"+	c #000000 s active_shadow_1", 
+"%	c #000000 s active_color_1", 
+"#	c #000000 s active_mid_2", 
+".	c None", 
+"+%#", 
+"+%%", 
+"+%%", 
+".++", 
+};

@@ -100,10 +100,15 @@ AC_SUBST([PLATFORM_LDFLAGS])
 
 AC_OUTPUT([
 Makefile
+icons/Makefile
+icons/48x48/Makefile
 common/Makefile
 panel-plugin/Makefile
 panel-plugin/title/Makefile
 panel-plugin/buttons/Makefile
+themes/Makefile
+themes/windowck/Makefile
+themes/elementary/Makefile
 po/Makefile.in
 ])
 

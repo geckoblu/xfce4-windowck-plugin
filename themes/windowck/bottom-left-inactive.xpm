@@ -1,0 +1,12 @@
+/* XPM */
+static char * bottom_left_inactive = {
+"3 4 4 1", 
+"+	c #000000 s inactive_shadow_2", 
+"%	c #000000 s inactive_mid_2", 
+"#	c #000000 s inactive_color_2", 
+".	c None", 
+"+%#", 
+"+%%", 
+"+%%", 
+".++", 
+};

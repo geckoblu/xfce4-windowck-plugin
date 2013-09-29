@@ -22,9 +22,6 @@
 
 #include <common/wck-utils.h>
 
-/* default settings */
-#define DEFAULT_THEME "Default"
-
 G_BEGIN_DECLS
 
 /* indexing of buttons */

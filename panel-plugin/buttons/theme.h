@@ -18,6 +18,9 @@
 #include <gtk/gtk.h>
 #include "wckbuttons.h"
 
+/* default settings */
+#define DEFAULT_THEME "Windowck"
+
 G_BEGIN_DECLS
 
 typedef struct {

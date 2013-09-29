@@ -1,6 +1,8 @@
 SUBDIRS =	\
 	common \
 	panel-plugin \
+	icons	\
+	themes \
 	po
 
 distclean-local:
