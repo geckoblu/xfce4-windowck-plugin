@@ -151,6 +151,10 @@ WindowButton **createButtons (WBPlugin *wb) {
 
       gtk_container_add (GTK_CONTAINER (button[i]->eventbox), GTK_WIDGET(button[i]->image));
       gtk_event_box_set_visible_window (button[i]->eventbox, FALSE);
+
+      /* Add hover events to eventboxes */
+      gtk_widget_add_events (GTK_WIDGET (button[i]->eventbox), GDK_ENTER_NOTIFY_MASK); //add the "enter" signal
+      gtk_widget_add_events (GTK_WIDGET (button[i]->eventbox), GDK_LEAVE_NOTIFY_MASK); //add the "leave" signal
   }
   return button;
 }
@@ -183,8 +187,12 @@ void placeButtons(WBPlugin *wb) {
         button= getButtonFromLetter (wb->prefs->button_layout[i]);
         if (button >= 0)
         {
+            wb->button[button]->visible = TRUE;
             gtk_box_pack_start (GTK_BOX (wb->hvbox), GTK_WIDGET(wb->button[button]->eventbox), TRUE, TRUE, 0);
             gtk_widget_show_all(GTK_WIDGET(wb->button[button]->eventbox));
+        }
+        else {
+            wb->button[button]->visible = FALSE;
         }
     }
 }
@@ -332,6 +340,164 @@ void on_control_window_changed (WnckWindow *controlwindow, WnckWindow *previous,
     }
 }
 
+/* Called when we release the click on a button */
+static gboolean on_minimize_button_release (GtkWidget *event_box,
+                               GdkEventButton *event,
+                               WBPlugin *wb) {
+
+    if (event->button != 1) return FALSE;
+
+    wnck_window_minimize(wb->win->controlwindow);
+
+	return TRUE;
+}
+
+/* Called when we click on a button */
+static gboolean on_minimize_button_pressed (GtkWidget *event_box,
+                             GdkEventButton *event,
+                             WBPlugin *wb) {
+
+	if (event->button != 1) return FALSE;
+
+	gtk_image_set_from_pixbuf (wb->button[MINIMIZE_BUTTON]->image, wb->pixbufs[IMAGE_MINIMIZE][IMAGE_PRESSED]);
+
+	return TRUE;
+}
+
+/* Makes the button stop 'glowing' when the mouse leaves it */
+static gboolean on_minimize_button_hover_leave (GtkWidget *widget,
+                         GdkEventCrossing *event,
+                         WBPlugin *wb) {
+    gboolean image_state;
+    image_state = wnck_window_is_active(wb->win->controlwindow);
+
+	gtk_image_set_from_pixbuf (wb->button[MINIMIZE_BUTTON]->image, wb->pixbufs[IMAGE_MINIMIZE][image_state]);
+	return TRUE;
+}
+
+/* Makes the button 'glow' when the mouse enters it */
+static gboolean on_minimize_button_hover_enter (GtkWidget *widget,
+                         GdkEventCrossing *event,
+                         WBPlugin *wb) {
+
+	gtk_image_set_from_pixbuf (wb->button[MINIMIZE_BUTTON]->image, wb->pixbufs[IMAGE_MINIMIZE][IMAGE_PRELIGHT]);
+
+	return TRUE;
+}
+
+/* Called when we release the click on a button */
+static gboolean on_maximize_button_release (GtkWidget *event_box,
+                               GdkEventButton *event,
+                               WBPlugin *wb) {
+
+    if (event->button != 1) return FALSE;
+
+    toggleMaximize(wb->win);
+
+	return TRUE;
+}
+
+/* Called when we click on a button */
+static gboolean on_maximize_button_pressed (GtkWidget *event_box,
+                             GdkEventButton *event,
+                             WBPlugin *wb) {
+
+	if (event->button != 1) return FALSE;
+
+    setMaximizeButtonImage (wb, IMAGE_PRESSED);
+
+	return TRUE;
+}
+
+/* Makes the button stop 'glowing' when the mouse leaves it */
+static gboolean on_maximize_button_hover_leave (GtkWidget *widget,
+                         GdkEventCrossing *event,
+                         WBPlugin *wb) {
+
+    if (wb->win->controlwindow) {
+        setMaximizeButtonImage (wb, wnck_window_is_active(wb->win->controlwindow));
+    }
+
+	return TRUE;
+}
+
+/* Makes the button 'glow' when the mouse enters it */
+static gboolean on_maximize_button_hover_enter (GtkWidget *widget,
+                         GdkEventCrossing *event,
+                         WBPlugin *wb) {
+
+    setMaximizeButtonImage (wb, IMAGE_PRELIGHT);
+
+	return TRUE;
+}
+
+/* Called when we release the click on a button */
+static gboolean on_close_button_release (GtkWidget *event_box,
+                               GdkEventButton *event,
+                               WBPlugin *wb) {
+
+    if (event->button != 1) return FALSE;
+
+    wnck_window_close(wb->win->controlwindow, GDK_CURRENT_TIME);
+
+	return TRUE;
+}
+
+/* Called when we click on a button */
+static gboolean on_close_button_pressed (GtkWidget *event_box,
+                             GdkEventButton *event,
+                             WBPlugin *wb) {
+
+	if (event->button != 1) return FALSE;
+
+	gtk_image_set_from_pixbuf (wb->button[CLOSE_BUTTON]->image, wb->pixbufs[IMAGE_CLOSE][IMAGE_PRESSED]);
+
+	return TRUE;
+}
+
+/* Makes the button stop 'glowing' when the mouse leaves it */
+static gboolean on_close_button_hover_leave (GtkWidget *widget,
+                         GdkEventCrossing *event,
+                         WBPlugin *wb) {
+    gboolean image_state;
+    image_state = wnck_window_is_active(wb->win->controlwindow);
+
+	gtk_image_set_from_pixbuf (wb->button[CLOSE_BUTTON]->image, wb->pixbufs[IMAGE_CLOSE][image_state]);
+	return TRUE;
+}
+
+/* Makes the button 'glow' when the mouse enters it */
+static gboolean on_close_button_hover_enter (GtkWidget *widget,
+                         GdkEventCrossing *event,
+                         WBPlugin *wb) {
+
+	gtk_image_set_from_pixbuf (wb->button[CLOSE_BUTTON]->image, wb->pixbufs[IMAGE_CLOSE][IMAGE_PRELIGHT]);
+
+	return TRUE;
+}
+
+void initButtonsEvents (WBPlugin *wb) {
+    /* Connect buttons to their respective callback functions */
+    if (wb->button[MINIMIZE_BUTTON]->visible) {
+        g_signal_connect (G_OBJECT (wb->button[MINIMIZE_BUTTON]->eventbox), "button-press-event", G_CALLBACK (on_minimize_button_pressed), wb);
+        g_signal_connect (G_OBJECT (wb->button[MINIMIZE_BUTTON]->eventbox), "button-release-event", G_CALLBACK (on_minimize_button_release), wb);
+        g_signal_connect (G_OBJECT (wb->button[MINIMIZE_BUTTON]->eventbox), "enter-notify-event", G_CALLBACK (on_minimize_button_hover_enter), wb);
+        g_signal_connect (G_OBJECT (wb->button[MINIMIZE_BUTTON]->eventbox), "leave-notify-event", G_CALLBACK (on_minimize_button_hover_leave), wb);
+    }
+    if (wb->button[MAXIMIZE_BUTTON]->visible) {
+        g_signal_connect (G_OBJECT (wb->button[MAXIMIZE_BUTTON]->eventbox), "button-press-event", G_CALLBACK (on_maximize_button_pressed), wb);
+        g_signal_connect (G_OBJECT (wb->button[MAXIMIZE_BUTTON]->eventbox), "button-release-event", G_CALLBACK (on_maximize_button_release), wb);
+        g_signal_connect (G_OBJECT (wb->button[MAXIMIZE_BUTTON]->eventbox), "enter-notify-event", G_CALLBACK (on_maximize_button_hover_enter), wb);
+        g_signal_connect (G_OBJECT (wb->button[MAXIMIZE_BUTTON]->eventbox), "leave-notify-event", G_CALLBACK (on_maximize_button_hover_leave), wb);
+    }
+    if (wb->button[MAXIMIZE_BUTTON]->visible) {
+        g_signal_connect (G_OBJECT (wb->button[CLOSE_BUTTON]->eventbox), "button-press-event", G_CALLBACK (on_close_button_pressed), wb);
+        g_signal_connect (G_OBJECT (wb->button[CLOSE_BUTTON]->eventbox), "button-release-event", G_CALLBACK (on_close_button_release), wb);
+        g_signal_connect (G_OBJECT (wb->button[CLOSE_BUTTON]->eventbox), "enter-notify-event", G_CALLBACK (on_close_button_hover_enter), wb);
+        g_signal_connect (G_OBJECT (wb->button[CLOSE_BUTTON]->eventbox), "leave-notify-event", G_CALLBACK (on_close_button_hover_leave), wb);
+    }
+}
+
 static void
 wckbuttons_construct (XfcePanelPlugin *plugin)
 {
@@ -375,6 +541,9 @@ wckbuttons_construct (XfcePanelPlugin *plugin)
     /* start tracking windows */
     wb->win = g_slice_new0 (WckUtils);
     initWnck(wb->win, wb->prefs->only_maximized, wb);
+
+    /* start tracking buttons events*/
+    initButtonsEvents(wb);
 }
 
 /* register the plugin */
