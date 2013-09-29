@@ -24,17 +24,10 @@
 #include "windowck.h"
 #include "windowck-title.h"
 #include <common/wck-utils.h>
-
-#define UNFOCUSED_TEXT_ALPHA 0.5
+#include <common/ui_style.h>
 
 /* Prototypes */
 static void on_name_changed(WnckWindow *window, WindowckPlugin *);
-
-static void mix(GdkColor  *color2, GdkColor  *color1, float a, GdkColor  *color) {
-  color->red = color1->red * a + color2->red * (1 - a);
-  color->green = color1->green * a + color2->green * (1 - a);
-  color->blue = color1->blue * a + color2->blue * (1 - a);
-}
 
 void updateFont(WindowckPlugin *wckp) {
     PangoFontDescription *font;
@@ -51,12 +44,8 @@ void updateFont(WindowckPlugin *wckp) {
 /* Triggers when controlwindow's name OR ICON changes */
 /* Warning! This function is called very often, so it should only do the most necessary things! */
 static void on_name_changed(WnckWindow *controlwindow, WindowckPlugin *wckp) {
-    gchar *title_text, *title_color, *title_font;
-    GdkColor  color, fgColor, bgColor;
-
-    /* get plugin widget style */
-    fgColor =  GTK_WIDGET(wckp->plugin)->style->fg[GTK_STATE_NORMAL];
-    bgColor =  GTK_WIDGET(wckp->plugin)->style->bg[GTK_STATE_NORMAL];
+    const gchar *title_text;
+    gchar *title_color, *title_font;
 
     if (controlwindow
         && ((wnck_window_get_window_type (controlwindow) != WNCK_WINDOW_DESKTOP)
@@ -66,13 +55,12 @@ static void on_name_changed(WnckWindow *controlwindow, WindowckPlugin *wckp) {
         if (wnck_window_is_active(controlwindow)) {
             // window focused
             //~ gtk_widget_set_sensitive(GTK_WIDGET(wckp->title), TRUE);
-        title_color = gdk_color_to_string(&fgColor);
+            title_color = wckp->prefs->active_text_color;
         }
         else {
             // window unfocused
             //~ gtk_widget_set_sensitive(GTK_WIDGET(wckp->title), FALSE);
-            mix(&bgColor, &fgColor, UNFOCUSED_TEXT_ALPHA, &color);
-            title_color = gdk_color_to_string(&color);
+            title_color = wckp->prefs->inactive_text_color;
         }
 
         if (wckp->prefs->custom_font)
@@ -156,8 +144,24 @@ gboolean title_clicked(GtkWidget *title, GdkEventButton *event, WindowckPlugin *
     return TRUE;
 }
 
+static void setTitleColors(WindowckPlugin *wckp) {
+    gchar *title_color;
+    GdkPixbuf *icon_pixbuf;
+    GdkColor  color, textColor, bgColor;
+
+    /* get plugin widget style */
+    textColor =  GTK_WIDGET(wckp->plugin)->style->text[GTK_STATE_ACTIVE];
+    wckp->prefs->active_text_color = gdk_color_to_string(&textColor);
+
+    bgColor =  GTK_WIDGET(wckp->plugin)->style->bg[GTK_STATE_NORMAL];
+    textColor =  GTK_WIDGET(wckp->plugin)->style->text[GTK_STATE_NORMAL];
+    color = mix(bgColor, textColor, UNFOCUSED_TEXT_ALPHA);
+    wckp->prefs->inactive_text_color = gdk_color_to_string(&color);
+}
+
 void initTitle (WindowckPlugin *wckp) {
 
+    setTitleColors(wckp);
     resizeTitle(wckp);
 
     gtk_label_set_ellipsize(wckp->title, PANGO_ELLIPSIZE_END);
