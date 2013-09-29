@@ -33,7 +33,7 @@
 #include "wckbuttons-dialogs.h"
 
 /* default settings */
-#define DEFAULT_SETTING1 NULL
+#define DEFAULT_BUTTON_LAYOUT "HMC"
 #define DEFAULT_SETTING2 1
 #define DEFAULT_SETTING3 FALSE
 
@@ -42,11 +42,6 @@
 /* prototypes */
 static void
 wckbuttons_construct (XfcePanelPlugin *plugin);
-
-
-/* register the plugin */
-XFCE_PANEL_PLUGIN_REGISTER (wckbuttons_construct);
-
 
 
 void
@@ -73,8 +68,8 @@ wckbuttons_save (XfcePanelPlugin *plugin,
     {
       /* save the settings */
       DBG(".");
-      if (wb->setting1)
-        xfce_rc_write_entry    (rc, "setting1", wb->setting1);
+      if (wb->prefs->button_layout)
+        xfce_rc_write_entry    (rc, "button_layout", wb->prefs->button_layout);
 
       xfce_rc_write_int_entry  (rc, "setting2", wb->setting2);
       xfce_rc_write_bool_entry (rc, "setting3", wb->setting3);
@@ -91,7 +86,10 @@ wckbuttons_read (WBPlugin *wb)
 {
   XfceRc      *rc;
   gchar       *file;
-  const gchar *value;
+  const gchar *button_layout;
+
+  /* allocate memory for the preferences structure */
+  wb->prefs = g_slice_new0(WCKPreferences);
 
   /* get the plugin config file location */
   file = xfce_panel_plugin_save_location (wb->plugin, TRUE);
@@ -107,8 +105,8 @@ wckbuttons_read (WBPlugin *wb)
       if (G_LIKELY (rc != NULL))
         {
           /* read the settings */
-          value = xfce_rc_read_entry (rc, "setting1", DEFAULT_SETTING1);
-          wb->setting1 = g_strdup (value);
+        button_layout = xfce_rc_read_entry (rc, "button_layout", DEFAULT_BUTTON_LAYOUT);
+        wb->prefs->button_layout = g_strdup (button_layout);
 
           wb->setting2 = xfce_rc_read_int_entry (rc, "setting2", DEFAULT_SETTING2);
           wb->setting3 = xfce_rc_read_bool_entry (rc, "setting3", DEFAULT_SETTING3);
@@ -124,11 +122,66 @@ wckbuttons_read (WBPlugin *wb)
   /* something went wrong, apply default values */
   DBG ("Applying default settings");
 
-  wb->setting1 = g_strdup (DEFAULT_SETTING1);
+    wb->prefs->button_layout = g_strdup (DEFAULT_BUTTON_LAYOUT);
   wb->setting2 = DEFAULT_SETTING2;
   wb->setting3 = DEFAULT_SETTING3;
 }
 
+WindowButton **createButtons (WBPlugin *wb) {
+  WindowButton **button = g_new(WindowButton*, BUTTONS);
+  gint i;
+
+  for (i=0; i<BUTTONS; i++) {
+      button[i] = g_new0 (WindowButton, 1);
+      button[i]->eventbox = GTK_EVENT_BOX (gtk_event_box_new());
+      button[i]->image = GTK_IMAGE (gtk_image_new());
+
+      // Woohooo! This line eliminates MatePanelPlugin borders - no more workarounds!
+      gtk_widget_set_can_focus (GTK_WIDGET(button[i]->eventbox), TRUE);
+
+      gtk_container_add (GTK_CONTAINER (button[i]->eventbox), GTK_WIDGET(button[i]->image));
+      gtk_event_box_set_visible_window (button[i]->eventbox, FALSE);
+  }
+      gtk_image_set_from_stock(button[0]->image,GTK_STOCK_GO_DOWN, GTK_ICON_SIZE_SMALL_TOOLBAR);
+      gtk_image_set_from_stock(button[1]->image,GTK_STOCK_LEAVE_FULLSCREEN, GTK_ICON_SIZE_SMALL_TOOLBAR);
+      gtk_image_set_from_stock(button[2]->image,GTK_STOCK_CLOSE, GTK_ICON_SIZE_SMALL_TOOLBAR);
+  return button;
+}
+
+static int
+getButtonFromLetter (char chr)
+{
+
+    TRACE ("entering getButtonFromLetter");
+
+    switch (chr)
+    {
+        case 'H':
+                return MINIMIZE_BUTTON;
+        case 'M':
+                return MAXIMIZE_BUTTON;
+        case 'C':
+                return CLOSE_BUTTON;
+        default:
+            return -1;
+    }
+}
+
+// Places our buttons in correct order
+void placeButtons(WBPlugin *wb) {
+  gint i, button;
+
+    for (i = 0; i < strlen (wb->prefs->button_layout); i++)
+    {
+        button= getButtonFromLetter (wb->prefs->button_layout[i]);
+        printf("button %d\n", button);
+        if (button >= 0)
+        {
+            gtk_box_pack_start (GTK_BOX (wb->hvbox), GTK_WIDGET(wb->button[button]->eventbox), TRUE, TRUE, 0);
+            gtk_widget_show_all(GTK_WIDGET(wb->button[button]->eventbox));
+        }
+    }
+}
 
 static WBPlugin *
 wckbuttons_new (XfcePanelPlugin *plugin)
@@ -151,20 +204,17 @@ wckbuttons_new (XfcePanelPlugin *plugin)
 
   /* create some panel widgets */
   wb->ebox = gtk_event_box_new ();
-  gtk_widget_show (wb->ebox);
-
   wb->hvbox = xfce_hvbox_new (orientation, FALSE, 2);
+
+  /* create buttons */
+  wb->button = createButtons (wb);
+
+  /* place buttons accordingly to button_layout pref */
+  placeButtons(wb);
+
+  gtk_widget_show (wb->ebox);
   gtk_widget_show (wb->hvbox);
   gtk_container_add (GTK_CONTAINER (wb->ebox), wb->hvbox);
-
-  /* some wb widgets */
-  label = gtk_label_new (_("Window Buttons"));
-  gtk_widget_show (label);
-  gtk_box_pack_start (GTK_BOX (wb->hvbox), label, FALSE, FALSE, 0);
-
-  label = gtk_label_new (_("Plugin"));
-  gtk_widget_show (label);
-  gtk_box_pack_start (GTK_BOX (wb->hvbox), label, FALSE, FALSE, 0);
 
   return wb;
 }
@@ -185,10 +235,11 @@ wckbuttons_free (XfcePanelPlugin *plugin, WBPlugin    *wb)
   gtk_widget_destroy (wb->hvbox);
 
   /* cleanup the settings */
-  if (G_LIKELY (wb->setting1 != NULL))
-    g_free (wb->setting1);
+  if (G_LIKELY (wb->prefs->button_layout != NULL))
+    g_free (wb->prefs->button_layout);
 
   /* free the plugin structure */
+  g_slice_free(WCKPreferences, wb->prefs);
   g_slice_free (WBPlugin, wb);
 }
 
@@ -267,3 +318,6 @@ wckbuttons_construct (XfcePanelPlugin *plugin)
   g_signal_connect (G_OBJECT (plugin), "about",
                     G_CALLBACK (wckbuttons_about), NULL);
 }
+
+/* register the plugin */
+XFCE_PANEL_PLUGIN_REGISTER (wckbuttons_construct);

@@ -22,24 +22,52 @@
 
 G_BEGIN_DECLS
 
-/* plugin structure */
-typedef struct
-{
+/* indexing of buttons */
+typedef enum {
+	MINIMIZE_BUTTON = 0,	// minimize button
+	MAXIMIZE_BUTTON,	// maximize/unmaximize button
+	CLOSE_BUTTON,		// close button
+
+	BUTTONS				// number of buttons
+} WindowButtonIndices;
+
+typedef enum {
+	BUTTON_STATE_NORMAL	=  0,
+	BUTTON_STATE_PRELIGHT,
+	BUTTON_STATE_PRESSED,
+
+  BUTTON_STATES
+} WBButtonSt;
+
+typedef struct {
+    gchar      *button_layout;    // Button layout ["XXX"] (example "HMC" : H=Hide, M=Maximize/unMaximize, C=Close)
+} WCKPreferences;
+
+/* Definition for our button */
+typedef struct {
+	GtkEventBox 	*eventbox;
+	GtkImage 		*image;
+} WindowButton;
+
+/* plugin structure for title and buttons*/
+typedef struct {
     XfcePanelPlugin *plugin;
 
-    /* panel widgets */
-    GtkWidget       *ebox;
-    GtkWidget       *hvbox;
-    GtkWidget       *label;
+    /* Widgets */
+    GtkWidget *ebox;
+    GtkWidget *hvbox;
 
-    /* wckbuttons settings */
-    gchar           *setting1;
-    gint             setting2;
-    gboolean         setting3;
-}
-WBPlugin;
+    WindowButton  *icon;			    // Icon widget
+    WindowButton  **button;			    // Array of buttons
+    gboolean  *button_hidden;			// Indicates whether a button is hidden
+    gushort        font_width;
 
+    WCKPreferences *prefs;              // Main properties
+    gint        setting2;
+    gboolean    setting3;
 
+    GdkPixbuf *pixbufs[IMAGES_STATES][IMAGES_BUTTONS];
+} WBPlugin;
 
 void
 wckbuttons_save (XfcePanelPlugin *plugin,
