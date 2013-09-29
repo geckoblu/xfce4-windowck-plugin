@@ -45,16 +45,31 @@ char *states[] = {
 };
 
 char *names[] = {
-    "fg", "bg", "text", "base", "light", "dark", "mid", NULL
+    "fg", "bg", "text", "base", "light", "dark", "mid", "mix_bg_text", NULL
 };
 
-#define GTKSTYLE_FG    0
-#define GTKSTYLE_BG    1
-#define GTKSTYLE_TEXT  2
-#define GTKSTYLE_BASE  3
-#define GTKSTYLE_LIGHT 4
-#define GTKSTYLE_DARK  5
-#define GTKSTYLE_MID   6
+typedef enum {
+    GTKSTYLE_FG = 0,
+    GTKSTYLE_BG,
+    GTKSTYLE_TEXT,
+    GTKSTYLE_BASE,
+    GTKSTYLE_LIGHT,
+    GTKSTYLE_DARK,
+    GTKSTYLE_MID,
+    MIX_BG_TEXT,
+
+    COLOR_NAMES
+} ColorNames;
+
+GdkColor mix(GdkColor  color2, GdkColor  color1, float a) {
+    GdkColor color;
+
+    color.red = color1.red * a + color2.red * (1 - a);
+    color.green = color1.green * a + color2.green * (1 - a);
+    color.blue = color1.blue * a + color2.blue * (1 - a);
+
+    return color;
+}
 
 static gint
 state_value (const gchar * s)
@@ -88,38 +103,48 @@ name_value (const gchar * s)
     return (0);
 }
 
-static gchar *
-print_color (GtkWidget * win, GdkColor * c)
+GdkColor
+queryColor (GtkWidget * win, GdkColor c)
 {
-    gchar *s;
     GdkColor real_color;
     GdkColormap *cmap;
 
-    s = g_new (gchar, 14);
     cmap = gtk_widget_get_colormap (GTK_WIDGET (win));
     if (cmap && GDK_IS_COLORMAP (cmap))
     {
-        gdk_colormap_query_color (cmap, c->pixel, &real_color);
-        g_snprintf (s, 14, "#%04x%04x%04x", real_color.red, real_color.green,
-                    real_color.blue);
+        gdk_colormap_query_color (cmap, c.pixel, &real_color);
+        return real_color;
     }
     else
     {
-        g_snprintf (s, 14, "#%04x%04x%04x", c->red, c->green, c->blue);
+        return c;
     }
-    return (s);
+}
+
+static gchar *
+print_color (GtkWidget * win, GdkColor color)
+{
+    gchar *s;
+    s = g_new (gchar, 14);
+    g_snprintf (s, 14, "#%04x%04x%04x", color.red, color.green,
+                    color.blue);
+    return s;
 }
 
 static gchar *
 print_colors (GtkWidget * win, GdkColor * x, int n)
 {
-    return (print_color (win, x + n));
+    GdkColor color;
+    color = queryColor (win, x[n]);
+    return print_color(win, x[n]);
 }
 
 static gchar *
 print_rc_style (GtkWidget * win, const gchar * name, const gchar * state,
                 GtkStyle * style)
 {
+    GdkColor color, bgColor, textColor;
+
     gchar *s;
     gint n, m;
 
@@ -152,6 +177,12 @@ print_rc_style (GtkWidget * win, const gchar * name, const gchar * state,
         default:
         case GTKSTYLE_MID:
             s = print_colors (win, style->mid, n);
+            break;
+        case MIX_BG_TEXT:
+            bgColor = queryColor (win, style->bg[n]);
+            textColor = queryColor (win, style->text[n]);
+            color = mix(bgColor, textColor, UNFOCUSED_TEXT_ALPHA);
+            s = print_color (win, color);
             break;
     }
     return (s);

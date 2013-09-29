@@ -31,6 +31,7 @@
 
 #include "wckbuttons.h"
 #include "wckbuttons-dialogs.h"
+#include "theme.h"
 
 /* default settings */
 #define DEFAULT_ONLY_MAXIMIZED TRUE
@@ -73,6 +74,9 @@ wckbuttons_save (XfcePanelPlugin *plugin,
       if (wb->prefs->button_layout)
         xfce_rc_write_entry    (rc, "button_layout", wb->prefs->button_layout);
 
+      if (wb->prefs->theme)
+        xfce_rc_write_entry    (rc, "theme", wb->prefs->theme);
+
       xfce_rc_write_int_entry  (rc, "setting2", wb->setting2);
 
       /* close the rc file */
@@ -87,7 +91,7 @@ wckbuttons_read (WBPlugin *wb)
 {
   XfceRc      *rc;
   gchar       *file;
-  const gchar *button_layout;
+  const gchar *button_layout, *theme;
 
   /* allocate memory for the preferences structure */
   wb->prefs = g_slice_new0(WCKPreferences);
@@ -110,6 +114,8 @@ wckbuttons_read (WBPlugin *wb)
         wb->prefs->show_on_desktop = xfce_rc_read_bool_entry(rc, "show_on_desktop", DEFAULT_SHOW_ON_DESKTOP);
         button_layout = xfce_rc_read_entry (rc, "button_layout", DEFAULT_BUTTON_LAYOUT);
         wb->prefs->button_layout = g_strdup (button_layout);
+        theme = xfce_rc_read_entry (rc, "theme", DEFAULT_THEME);
+        wb->prefs->theme = g_strdup (theme);
 
           wb->setting2 = xfce_rc_read_int_entry (rc, "setting2", DEFAULT_SETTING2);
 
@@ -127,6 +133,7 @@ wckbuttons_read (WBPlugin *wb)
     wb->prefs->only_maximized = DEFAULT_ONLY_MAXIMIZED;
     wb->prefs->show_on_desktop = DEFAULT_SHOW_ON_DESKTOP;
     wb->prefs->button_layout = g_strdup (DEFAULT_BUTTON_LAYOUT);
+    wb->prefs->theme = g_strdup (DEFAULT_THEME);
   wb->setting2 = DEFAULT_SETTING2;
 }
 
@@ -145,9 +152,6 @@ WindowButton **createButtons (WBPlugin *wb) {
       gtk_container_add (GTK_CONTAINER (button[i]->eventbox), GTK_WIDGET(button[i]->image));
       gtk_event_box_set_visible_window (button[i]->eventbox, FALSE);
   }
-      gtk_image_set_from_stock(button[0]->image,GTK_STOCK_GO_DOWN, GTK_ICON_SIZE_SMALL_TOOLBAR);
-      gtk_image_set_from_stock(button[1]->image,GTK_STOCK_LEAVE_FULLSCREEN, GTK_ICON_SIZE_SMALL_TOOLBAR);
-      gtk_image_set_from_stock(button[2]->image,GTK_STOCK_CLOSE, GTK_ICON_SIZE_SMALL_TOOLBAR);
   return button;
 }
 
@@ -177,7 +181,6 @@ void placeButtons(WBPlugin *wb) {
     for (i = 0; i < strlen (wb->prefs->button_layout); i++)
     {
         button= getButtonFromLetter (wb->prefs->button_layout[i]);
-        printf("button %d\n", button);
         if (button >= 0)
         {
             gtk_box_pack_start (GTK_BOX (wb->hvbox), GTK_WIDGET(wb->button[button]->eventbox), TRUE, TRUE, 0);
@@ -201,6 +204,9 @@ wckbuttons_new (XfcePanelPlugin *plugin)
 
   /* read the user settings */
   wckbuttons_read (wb);
+
+  /* load images */
+    loadTheme(wb);
 
   /* get the current orientation */
   orientation = xfce_panel_plugin_get_orientation (plugin);
@@ -280,16 +286,29 @@ wckbuttons_size_changed (XfcePanelPlugin *plugin,
   return TRUE;
 }
 
+setMaximizeButtonImage (WBPlugin *wb, gushort image_state) {
+    if (wb->win->controlwindow && wnck_window_is_maximized(wb->win->controlwindow)) {
+        gtk_image_set_from_pixbuf (wb->button[MAXIMIZE_BUTTON]->image, wb->pixbufs[IMAGE_UNMAXIMIZE][image_state]);
+    } else {
+        gtk_image_set_from_pixbuf (wb->button[MAXIMIZE_BUTTON]->image, wb->pixbufs[IMAGE_MAXIMIZE][image_state]);
+    }
+}
+
 void on_wck_state_changed (WnckWindow *controlwindow, WBPlugin *wb) {
     gushort image_state;
 
-    if (controlwindow) {
-        if (wnck_window_is_active(controlwindow))
-            image_state = 1;
-        else image_state = 0;
+    if (controlwindow && (wnck_window_is_active(controlwindow)))
+        image_state = 1;
+    else
+        image_state = 0;
 
-    printf("on_wck_state_changed image_state%d\n", image_state);
-    }
+    /* update buttons images */
+
+    gtk_image_set_from_pixbuf (wb->button[MINIMIZE_BUTTON]->image, wb->pixbufs[IMAGE_MINIMIZE][image_state]);
+
+    setMaximizeButtonImage (wb, image_state);
+
+    gtk_image_set_from_pixbuf (wb->button[CLOSE_BUTTON]->image, wb->pixbufs[IMAGE_CLOSE][image_state]);
 }
 
 void on_control_window_changed (WnckWindow *controlwindow, WnckWindow *previous, WBPlugin *wb) {

@@ -29,7 +29,7 @@
 
         oroborus - (c) 2001 Ken Lynch
         xfwm4    - (c) 2002-2011 Olivier Fourdan
-
+        windowckbuttons - (c) 2013 Cedric leporcq
  */
 
 #ifdef HAVE_CONFIG_H
@@ -661,7 +661,6 @@ pixbuf_create_from_xpm (gpointer handle, xfwmColorSymbol *color_sym)
 
     return pixbuf;
 }
-
 
 static GdkPixbuf *
 xpm_image_load (const char *filename, xfwmColorSymbol *color_sym)

@@ -16,6 +16,8 @@ plugindir = \
 libwckbuttons_la_SOURCES = \
 	wckbuttons.c \
 	wckbuttons.h \
+	theme.c \
+	theme.h \
 	wckbuttons-dialogs.c \
 	wckbuttons-dialogs.h
 
@@ -24,7 +26,8 @@ libwckbuttons_la_CFLAGS = \
 	$(LIBXFCE4UI_CFLAGS) \
 	$(LIBXFCE4PANEL_CFLAGS) \
 	$(LIBWNCK_CFLAGS) \
-	$(PLATFORM_CFLAGS)
+	$(PLATFORM_CFLAGS) \
+	-DDATADIR=\"$(datadir)\"
 
 libwckbuttons_la_LDFLAGS = \
        -avoid-version \
