@@ -96,6 +96,34 @@ static void on_size_mode_changed (GtkComboBox *size_mode, WindowckPlugin *wckp) 
     resizeTitle(wckp);
 }
 
+static void on_only_maximized_toggled(GtkRadioButton *only_maximized, WindowckPlugin *wckp) {
+    wckp->prefs->only_maximized = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(only_maximized));
+    initWnck(wckp->win, wckp->prefs->only_maximized, wckp);
+}
+
+static void on_show_on_desktop_toggled(GtkToggleButton *show_on_desktop, WindowckPlugin *wckp) {
+    wckp->prefs->show_on_desktop = gtk_toggle_button_get_active(show_on_desktop);
+    initWnck(wckp->win, wckp->prefs->only_maximized, wckp);
+}
+
+static void on_show_icon_toggled(GtkToggleButton *show_icon, WindowckPlugin *wckp) {
+    wckp->prefs->show_icon = gtk_toggle_button_get_active(show_icon);
+
+    if (wckp->prefs->show_icon)
+        gtk_widget_show(GTK_WIDGET(wckp->icon->eventbox));
+    else
+        gtk_widget_hide(GTK_WIDGET(wckp->icon->eventbox));
+}
+
+static void on_icon_on_right_toggled(GtkToggleButton *icon_on_right, WindowckPlugin *wckp) {
+    wckp->prefs->icon_on_right = gtk_toggle_button_get_active(icon_on_right);
+
+    if (wckp->prefs->icon_on_right)
+        gtk_box_reorder_child (GTK_BOX (wckp->hvbox), GTK_WIDGET(wckp->icon->eventbox), 1);
+    else
+        gtk_box_reorder_child (GTK_BOX (wckp->hvbox), GTK_WIDGET(wckp->icon->eventbox), 0);
+}
+
 static void on_custom_font_toggled(GtkToggleButton *custom_font, WindowckPlugin *wckp) {
     GtkFontButton *title_font;
 
@@ -139,6 +167,7 @@ static void on_title_alignment_changed (GtkComboBox *title_alignment, WindowckPl
 static void on_title_padding_changed(GtkSpinButton *title_padding, WindowckPlugin *wckp) {
     wckp->prefs->title_padding = gtk_spin_button_get_value(title_padding);
     gtk_alignment_set_padding(GTK_ALIGNMENT(wckp->alignment), 0, 0, wckp->prefs->title_padding, wckp->prefs->title_padding);
+    gtk_box_set_spacing (GTK_BOX(wckp->hvbox), wckp->prefs->title_padding);
 }
 
 static GtkWidget * build_properties_area(WindowckPlugin *wckp, const gchar *buffer, gsize length) {
@@ -148,13 +177,51 @@ static GtkWidget * build_properties_area(WindowckPlugin *wckp, const gchar *buff
     GtkSpinButton *titlesize, *title_padding;
     GtkComboBox *size_mode, *title_alignment;
     GtkToggleButton *custom_font;
+    GtkRadioButton *only_maximized, *active_window;
+    GtkToggleButton *show_on_desktop;
+    GtkToggleButton *show_icon, *icon_on_right;
     GtkFontButton *title_font;
     GtkLabel *width_unit;
 
     builder = gtk_builder_new();
     if (gtk_builder_add_from_string(builder, buffer, length, &error)) {
-        area = gtk_builder_get_object(builder, "contentarea");
+        area = gtk_builder_get_object(builder, "alignment0");
         if (G_LIKELY (area != NULL)) {
+
+            only_maximized = GTK_RADIO_BUTTON(gtk_builder_get_object(builder, "only_maximized"));
+            active_window = GTK_RADIO_BUTTON(gtk_builder_get_object(builder, "active_window"));
+            if (G_LIKELY (only_maximized != NULL)) {
+                gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(only_maximized), wckp->prefs->only_maximized);
+                gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(active_window), !wckp->prefs->only_maximized);
+                g_signal_connect(only_maximized, "toggled", G_CALLBACK(on_only_maximized_toggled), wckp);
+            } else {
+                DBG("No widget with the name \"only_maximized\" found");
+            }
+
+            show_on_desktop = GTK_TOGGLE_BUTTON(gtk_builder_get_object(builder, "show_on_desktop"));
+            if (G_LIKELY (show_on_desktop != NULL)) {
+                gtk_toggle_button_set_active(show_on_desktop, wckp->prefs->show_on_desktop);
+                g_signal_connect(show_on_desktop, "toggled", G_CALLBACK(on_show_on_desktop_toggled), wckp);
+            } else {
+                DBG("No widget with the name \"show_on_desktop\" found");
+            }
+
+            show_icon = GTK_TOGGLE_BUTTON(gtk_builder_get_object(builder, "show_icon"));
+            if (G_LIKELY (show_icon != NULL)) {
+                gtk_toggle_button_set_active(show_icon, wckp->prefs->show_icon);
+                g_signal_connect(show_icon, "toggled", G_CALLBACK(on_show_icon_toggled), wckp);
+            } else {
+                DBG("No widget with the name \"show_icon\" found");
+            }
+
+            icon_on_right = GTK_TOGGLE_BUTTON(gtk_builder_get_object(builder, "icon_on_right"));
+
+            if (G_LIKELY (icon_on_right != NULL)) {
+                gtk_toggle_button_set_active(icon_on_right, wckp->prefs->icon_on_right);
+                g_signal_connect(icon_on_right, "toggled", G_CALLBACK(on_icon_on_right_toggled), wckp);
+            } else {
+                DBG("No widget with the name \"icon_on_right\" found");
+            }
 
             titlesize = GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "titlesize"));
             width_unit = GTK_LABEL(gtk_builder_get_object(builder, "width_unit"));
@@ -174,7 +241,7 @@ static GtkWidget * build_properties_area(WindowckPlugin *wckp, const gchar *buff
             g_object_set_data(G_OBJECT(wckp->plugin), "title_font", title_font);
 
             if (!wckp->prefs->custom_font)
-            gtk_widget_set_sensitive(GTK_WIDGET(title_font), FALSE );
+                gtk_widget_set_sensitive(GTK_WIDGET(title_font), FALSE );
 
             if (G_LIKELY (custom_font != NULL)) {
                 gtk_toggle_button_set_active(custom_font, wckp->prefs->custom_font);
