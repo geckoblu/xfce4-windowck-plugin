@@ -16,6 +16,13 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+#include <string.h>
+#include <gtk/gtk.h>
+
 #include <libxfce4ui/libxfce4ui.h>
 #include <libxfce4panel/xfce-panel-plugin.h>
 
@@ -358,9 +365,9 @@ void windowck_about(XfcePanelPlugin *plugin) {
     /* about dialog code. you can use the GtkAboutDialog
      * or the XfceAboutInfo widget */
     GdkPixbuf *icon;
-    const gchar *auth[] = { "Alessio Piccoli <alepic@geckoblu.net>", "\nThis code is heavily based on original 'Window Applets' code of Andrej Belcijan.\nSee http://gnome-look.org/content/show.php?content=103732 for details." };
+    const gchar *auth[] = { "Alessio Piccoli <alepic@geckoblu.net>", "Cedric Leporcq <cedl38@gmail.com>", "\nThis code is based on original 'Window Applets' code of Andrej Belcijan.\nSee http://gnome-look.org/content/show.php?content=103732 for details." };
 
-    icon = xfce_panel_pixbuf_from_source("preferences-system-windows", NULL, 32);
+    icon = xfce_panel_pixbuf_from_source("windowck-plugin", NULL, 32);
 
     gtk_show_about_dialog(NULL, "logo", icon, "license", xfce_get_license_text(XFCE_LICENSE_TEXT_GPL), "version", PACKAGE_VERSION, "program-name", PACKAGE_NAME, "comments", _("Put the maximized window title on the panel."), "website", PLUGIN_WEBSITE, "copyright", _("Copyright (c) 2013\n"), "authors", auth, NULL );
     // TODO: add translators.
