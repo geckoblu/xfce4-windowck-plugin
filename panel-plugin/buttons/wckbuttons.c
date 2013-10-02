@@ -49,38 +49,38 @@ void
 wckbuttons_save (XfcePanelPlugin *plugin,
              WBPlugin    *wb)
 {
-  XfceRc *rc;
-  gchar  *file;
+    XfceRc *rc;
+    gchar  *file;
 
-  /* get the config file location */
-  file = xfce_panel_plugin_save_location (plugin, TRUE);
+    /* get the config file location */
+    file = xfce_panel_plugin_save_location (plugin, TRUE);
 
-  if (G_UNLIKELY (file == NULL))
+    if (G_UNLIKELY (file == NULL))
     {
        DBG ("Failed to open config file");
        return;
     }
 
-  /* open the config file, read/write */
-  rc = xfce_rc_simple_open (file, FALSE);
-  g_free (file);
+    /* open the config file, read/write */
+    rc = xfce_rc_simple_open (file, FALSE);
+    g_free (file);
 
-  if (G_LIKELY (rc != NULL))
+    if (G_LIKELY (rc != NULL))
     {
-      /* save the settings */
-      DBG(".");
-      xfce_rc_write_bool_entry(rc, "only_maximized", wb->prefs->only_maximized);
-      xfce_rc_write_bool_entry(rc, "show_on_desktop", wb->prefs->show_on_desktop);
-      if (wb->prefs->button_layout)
+        /* save the settings */
+        DBG(".");
+        xfce_rc_write_bool_entry(rc, "only_maximized", wb->prefs->only_maximized);
+        xfce_rc_write_bool_entry(rc, "show_on_desktop", wb->prefs->show_on_desktop);
+        if (wb->prefs->button_layout)
         xfce_rc_write_entry    (rc, "button_layout", wb->prefs->button_layout);
 
-      if (wb->prefs->theme)
+        if (wb->prefs->theme)
         xfce_rc_write_entry    (rc, "theme", wb->prefs->theme);
 
-      xfce_rc_write_int_entry  (rc, "setting2", wb->setting2);
+        xfce_rc_write_int_entry  (rc, "setting2", wb->setting2);
 
-      /* close the rc file */
-      xfce_rc_close (rc);
+        /* close the rc file */
+        xfce_rc_close (rc);
     }
 }
 
@@ -89,25 +89,25 @@ wckbuttons_save (XfcePanelPlugin *plugin,
 static void
 wckbuttons_read (WBPlugin *wb)
 {
-  XfceRc      *rc;
-  gchar       *file;
-  const gchar *button_layout, *theme;
+    XfceRc      *rc;
+    gchar       *file;
+    const gchar *button_layout, *theme;
 
-  /* allocate memory for the preferences structure */
-  wb->prefs = g_slice_new0(WCKPreferences);
+    /* allocate memory for the preferences structure */
+    wb->prefs = g_slice_new0(WCKPreferences);
 
-  /* get the plugin config file location */
-  file = xfce_panel_plugin_save_location (wb->plugin, TRUE);
+    /* get the plugin config file location */
+    file = xfce_panel_plugin_save_location (wb->plugin, TRUE);
 
-  if (G_LIKELY (file != NULL))
+    if (G_LIKELY (file != NULL))
     {
-      /* open the config file, readonly */
-      rc = xfce_rc_simple_open (file, TRUE);
+    /* open the config file, readonly */
+    rc = xfce_rc_simple_open (file, TRUE);
 
-      /* cleanup */
-      g_free (file);
+    /* cleanup */
+    g_free (file);
 
-      if (G_LIKELY (rc != NULL))
+        if (G_LIKELY (rc != NULL))
         {
           /* read the settings */
         wb->prefs->only_maximized = xfce_rc_read_bool_entry(rc, "only_maximized", DEFAULT_ONLY_MAXIMIZED);
@@ -117,18 +117,18 @@ wckbuttons_read (WBPlugin *wb)
         theme = xfce_rc_read_entry (rc, "theme", DEFAULT_THEME);
         wb->prefs->theme = g_strdup (theme);
 
-          wb->setting2 = xfce_rc_read_int_entry (rc, "setting2", DEFAULT_SETTING2);
+        wb->setting2 = xfce_rc_read_int_entry (rc, "setting2", DEFAULT_SETTING2);
 
-          /* cleanup */
-          xfce_rc_close (rc);
+        /* cleanup */
+        xfce_rc_close (rc);
 
-          /* leave the function, everything went well */
-          return;
+        /* leave the function, everything went well */
+        return;
         }
     }
 
-  /* something went wrong, apply default values */
-  DBG ("Applying default settings");
+    /* something went wrong, apply default values */
+    DBG ("Applying default settings");
 
     wb->prefs->only_maximized = DEFAULT_ONLY_MAXIMIZED;
     wb->prefs->show_on_desktop = DEFAULT_SHOW_ON_DESKTOP;
@@ -138,25 +138,25 @@ wckbuttons_read (WBPlugin *wb)
 }
 
 WindowButton **createButtons (WBPlugin *wb) {
-  WindowButton **button = g_new(WindowButton*, BUTTONS);
-  gint i;
+    WindowButton **button = g_new(WindowButton*, BUTTONS);
+    gint i;
 
-  for (i=0; i<BUTTONS; i++) {
-      button[i] = g_new0 (WindowButton, 1);
-      button[i]->eventbox = GTK_EVENT_BOX (gtk_event_box_new());
-      button[i]->image = GTK_IMAGE (gtk_image_new());
+    for (i=0; i<BUTTONS; i++) {
+        button[i] = g_new0 (WindowButton, 1);
+        button[i]->eventbox = GTK_EVENT_BOX (gtk_event_box_new());
+        button[i]->image = GTK_IMAGE (gtk_image_new());
 
-      // Woohooo! This line eliminates MatePanelPlugin borders - no more workarounds!
-      gtk_widget_set_can_focus (GTK_WIDGET(button[i]->eventbox), TRUE);
+        // Woohooo! This line eliminates MatePanelPlugin borders - no more workarounds!
+        gtk_widget_set_can_focus (GTK_WIDGET(button[i]->eventbox), TRUE);
 
-      gtk_container_add (GTK_CONTAINER (button[i]->eventbox), GTK_WIDGET(button[i]->image));
-      gtk_event_box_set_visible_window (button[i]->eventbox, FALSE);
+        gtk_container_add (GTK_CONTAINER (button[i]->eventbox), GTK_WIDGET(button[i]->image));
+        gtk_event_box_set_visible_window (button[i]->eventbox, FALSE);
 
-      /* Add hover events to eventboxes */
-      gtk_widget_add_events (GTK_WIDGET (button[i]->eventbox), GDK_ENTER_NOTIFY_MASK); //add the "enter" signal
-      gtk_widget_add_events (GTK_WIDGET (button[i]->eventbox), GDK_LEAVE_NOTIFY_MASK); //add the "leave" signal
-  }
-  return button;
+        /* Add hover events to eventboxes */
+        gtk_widget_add_events (GTK_WIDGET (button[i]->eventbox), GDK_ENTER_NOTIFY_MASK); //add the "enter" signal
+        gtk_widget_add_events (GTK_WIDGET (button[i]->eventbox), GDK_LEAVE_NOTIFY_MASK); //add the "leave" signal
+    }
+    return button;
 }
 
 static int
@@ -180,7 +180,7 @@ getButtonFromLetter (char chr)
 
 // Places our buttons in correct order
 void placeButtons(WBPlugin *wb) {
-  gint i, button;
+    gint i, button;
 
     for (i = 0; i < strlen (wb->prefs->button_layout); i++)
     {
@@ -201,39 +201,39 @@ static WBPlugin *
 wckbuttons_new (XfcePanelPlugin *plugin)
 {
     WBPlugin   *wb;
-  GtkOrientation  orientation;
-  GtkWidget      *label;
+    GtkOrientation  orientation;
+    GtkWidget      *label;
 
-  /* allocate memory for the plugin structure */
-  wb = g_slice_new0 (WBPlugin);
+    /* allocate memory for the plugin structure */
+    wb = g_slice_new0 (WBPlugin);
 
-  /* pointer to plugin */
-  wb->plugin = plugin;
+    /* pointer to plugin */
+    wb->plugin = plugin;
 
-  /* read the user settings */
-  wckbuttons_read (wb);
+    /* read the user settings */
+    wckbuttons_read (wb);
 
-  /* load images */
+    /* load images */
     loadTheme(wb);
 
-  /* get the current orientation */
-  orientation = xfce_panel_plugin_get_orientation (plugin);
+    /* get the current orientation */
+    orientation = xfce_panel_plugin_get_orientation (plugin);
 
-  /* create some panel widgets */
-  wb->ebox = gtk_event_box_new ();
-  wb->hvbox = xfce_hvbox_new (orientation, FALSE, 2);
+    /* create some panel widgets */
+    wb->ebox = gtk_event_box_new ();
+    wb->hvbox = xfce_hvbox_new (orientation, FALSE, 2);
 
-  /* create buttons */
-  wb->button = createButtons (wb);
+    /* create buttons */
+    wb->button = createButtons (wb);
 
-  /* place buttons accordingly to button_layout pref */
-  placeButtons(wb);
+    /* place buttons accordingly to button_layout pref */
+    placeButtons(wb);
 
-  gtk_widget_show (wb->ebox);
-  gtk_widget_show (wb->hvbox);
-  gtk_container_add (GTK_CONTAINER (wb->ebox), wb->hvbox);
+    gtk_widget_show (wb->ebox);
+    gtk_widget_show (wb->hvbox);
+    gtk_container_add (GTK_CONTAINER (wb->ebox), wb->hvbox);
 
-  return wb;
+    return wb;
 }
 
 
@@ -241,24 +241,24 @@ wckbuttons_new (XfcePanelPlugin *plugin)
 static void
 wckbuttons_free (XfcePanelPlugin *plugin, WBPlugin    *wb)
 {
-  GtkWidget *dialog;
+    GtkWidget *dialog;
 
-  /* check if the dialog is still open. if so, destroy it */
-  dialog = g_object_get_data (G_OBJECT (plugin), "dialog");
-  if (G_UNLIKELY (dialog != NULL))
+    /* check if the dialog is still open. if so, destroy it */
+    dialog = g_object_get_data (G_OBJECT (plugin), "dialog");
+    if (G_UNLIKELY (dialog != NULL))
     gtk_widget_destroy (dialog);
 
-  /* destroy the panel widgets */
-  gtk_widget_destroy (wb->hvbox);
+    /* destroy the panel widgets */
+    gtk_widget_destroy (wb->hvbox);
 
-  /* cleanup the settings */
-  if (G_LIKELY (wb->prefs->button_layout != NULL))
+    /* cleanup the settings */
+    if (G_LIKELY (wb->prefs->button_layout != NULL))
     g_free (wb->prefs->button_layout);
 
-  /* free the plugin structure */
-  g_slice_free(WckUtils, wb->win);
-  g_slice_free(WCKPreferences, wb->prefs);
-  g_slice_free (WBPlugin, wb);
+    /* free the plugin structure */
+    g_slice_free(WckUtils, wb->win);
+    g_slice_free(WCKPreferences, wb->prefs);
+    g_slice_free (WBPlugin, wb);
 }
 
 
@@ -279,19 +279,19 @@ wckbuttons_size_changed (XfcePanelPlugin *plugin,
                      gint             size,
                      WBPlugin    *wb)
 {
-  GtkOrientation orientation;
+    GtkOrientation orientation;
 
-  /* get the orientation of the plugin */
-  orientation = xfce_panel_plugin_get_orientation (plugin);
+    /* get the orientation of the plugin */
+    orientation = xfce_panel_plugin_get_orientation (plugin);
 
-  /* set the widget size */
-  if (orientation == GTK_ORIENTATION_HORIZONTAL)
+    /* set the widget size */
+    if (orientation == GTK_ORIENTATION_HORIZONTAL)
     gtk_widget_set_size_request (GTK_WIDGET (plugin), -1, size);
-  else
+    else
     gtk_widget_set_size_request (GTK_WIDGET (plugin), size, -1);
 
-  /* we handled the orientation */
-  return TRUE;
+    /* we handled the orientation */
+    return TRUE;
 }
 
 setMaximizeButtonImage (WBPlugin *wb, gushort image_state) {
@@ -349,7 +349,7 @@ static gboolean on_minimize_button_release (GtkWidget *event_box,
 
     wnck_window_minimize(wb->win->controlwindow);
 
-	return TRUE;
+    return TRUE;
 }
 
 /* Called when we click on a button */
@@ -357,11 +357,11 @@ static gboolean on_minimize_button_pressed (GtkWidget *event_box,
                              GdkEventButton *event,
                              WBPlugin *wb) {
 
-	if (event->button != 1) return FALSE;
+    if (event->button != 1) return FALSE;
 
-	gtk_image_set_from_pixbuf (wb->button[MINIMIZE_BUTTON]->image, wb->pixbufs[IMAGE_MINIMIZE][IMAGE_PRESSED]);
+    gtk_image_set_from_pixbuf (wb->button[MINIMIZE_BUTTON]->image, wb->pixbufs[IMAGE_MINIMIZE][IMAGE_PRESSED]);
 
-	return TRUE;
+    return TRUE;
 }
 
 /* Makes the button stop 'glowing' when the mouse leaves it */
@@ -371,8 +371,8 @@ static gboolean on_minimize_button_hover_leave (GtkWidget *widget,
     gboolean image_state;
     image_state = wnck_window_is_active(wb->win->controlwindow);
 
-	gtk_image_set_from_pixbuf (wb->button[MINIMIZE_BUTTON]->image, wb->pixbufs[IMAGE_MINIMIZE][image_state]);
-	return TRUE;
+    gtk_image_set_from_pixbuf (wb->button[MINIMIZE_BUTTON]->image, wb->pixbufs[IMAGE_MINIMIZE][image_state]);
+    return TRUE;
 }
 
 /* Makes the button 'glow' when the mouse enters it */
@@ -380,9 +380,9 @@ static gboolean on_minimize_button_hover_enter (GtkWidget *widget,
                          GdkEventCrossing *event,
                          WBPlugin *wb) {
 
-	gtk_image_set_from_pixbuf (wb->button[MINIMIZE_BUTTON]->image, wb->pixbufs[IMAGE_MINIMIZE][IMAGE_PRELIGHT]);
+    gtk_image_set_from_pixbuf (wb->button[MINIMIZE_BUTTON]->image, wb->pixbufs[IMAGE_MINIMIZE][IMAGE_PRELIGHT]);
 
-	return TRUE;
+    return TRUE;
 }
 
 /* Called when we release the click on a button */
@@ -394,7 +394,7 @@ static gboolean on_maximize_button_release (GtkWidget *event_box,
 
     toggleMaximize(wb->win);
 
-	return TRUE;
+    return TRUE;
 }
 
 /* Called when we click on a button */
@@ -402,11 +402,11 @@ static gboolean on_maximize_button_pressed (GtkWidget *event_box,
                              GdkEventButton *event,
                              WBPlugin *wb) {
 
-	if (event->button != 1) return FALSE;
+    if (event->button != 1) return FALSE;
 
     setMaximizeButtonImage (wb, IMAGE_PRESSED);
 
-	return TRUE;
+    return TRUE;
 }
 
 /* Makes the button stop 'glowing' when the mouse leaves it */
@@ -418,7 +418,7 @@ static gboolean on_maximize_button_hover_leave (GtkWidget *widget,
         setMaximizeButtonImage (wb, wnck_window_is_active(wb->win->controlwindow));
     }
 
-	return TRUE;
+    return TRUE;
 }
 
 /* Makes the button 'glow' when the mouse enters it */
@@ -428,7 +428,7 @@ static gboolean on_maximize_button_hover_enter (GtkWidget *widget,
 
     setMaximizeButtonImage (wb, IMAGE_PRELIGHT);
 
-	return TRUE;
+    return TRUE;
 }
 
 /* Called when we release the click on a button */
@@ -440,7 +440,7 @@ static gboolean on_close_button_release (GtkWidget *event_box,
 
     wnck_window_close(wb->win->controlwindow, GDK_CURRENT_TIME);
 
-	return TRUE;
+    return TRUE;
 }
 
 /* Called when we click on a button */
@@ -448,11 +448,11 @@ static gboolean on_close_button_pressed (GtkWidget *event_box,
                              GdkEventButton *event,
                              WBPlugin *wb) {
 
-	if (event->button != 1) return FALSE;
+    if (event->button != 1) return FALSE;
 
-	gtk_image_set_from_pixbuf (wb->button[CLOSE_BUTTON]->image, wb->pixbufs[IMAGE_CLOSE][IMAGE_PRESSED]);
+    gtk_image_set_from_pixbuf (wb->button[CLOSE_BUTTON]->image, wb->pixbufs[IMAGE_CLOSE][IMAGE_PRESSED]);
 
-	return TRUE;
+    return TRUE;
 }
 
 /* Makes the button stop 'glowing' when the mouse leaves it */
@@ -462,8 +462,8 @@ static gboolean on_close_button_hover_leave (GtkWidget *widget,
     gboolean image_state;
     image_state = wnck_window_is_active(wb->win->controlwindow);
 
-	gtk_image_set_from_pixbuf (wb->button[CLOSE_BUTTON]->image, wb->pixbufs[IMAGE_CLOSE][image_state]);
-	return TRUE;
+    gtk_image_set_from_pixbuf (wb->button[CLOSE_BUTTON]->image, wb->pixbufs[IMAGE_CLOSE][image_state]);
+    return TRUE;
 }
 
 /* Makes the button 'glow' when the mouse enters it */
@@ -471,9 +471,9 @@ static gboolean on_close_button_hover_enter (GtkWidget *widget,
                          GdkEventCrossing *event,
                          WBPlugin *wb) {
 
-	gtk_image_set_from_pixbuf (wb->button[CLOSE_BUTTON]->image, wb->pixbufs[IMAGE_CLOSE][IMAGE_PRELIGHT]);
+    gtk_image_set_from_pixbuf (wb->button[CLOSE_BUTTON]->image, wb->pixbufs[IMAGE_CLOSE][IMAGE_PRELIGHT]);
 
-	return TRUE;
+    return TRUE;
 }
 
 void initButtonsEvents (WBPlugin *wb) {
@@ -503,39 +503,39 @@ wckbuttons_construct (XfcePanelPlugin *plugin)
 {
     WBPlugin *wb;
 
-  /* setup transation domain */
-  xfce_textdomain(GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR, "UTF-8");
+    /* setup transation domain */
+    xfce_textdomain(GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR, "UTF-8");
 
-  /* create the plugin */
-  wb = wckbuttons_new (plugin);
+    /* create the plugin */
+    wb = wckbuttons_new (plugin);
 
-  /* add the ebox to the panel */
-  gtk_container_add (GTK_CONTAINER (plugin), wb->ebox);
+    /* add the ebox to the panel */
+    gtk_container_add (GTK_CONTAINER (plugin), wb->ebox);
 
-  /* show the panel's right-click menu on this ebox */
-  xfce_panel_plugin_add_action_widget (plugin, wb->ebox);
+    /* show the panel's right-click menu on this ebox */
+    xfce_panel_plugin_add_action_widget (plugin, wb->ebox);
 
-  /* connect plugin signals */
-  g_signal_connect (G_OBJECT (plugin), "free-data",
+    /* connect plugin signals */
+    g_signal_connect (G_OBJECT (plugin), "free-data",
                     G_CALLBACK (wckbuttons_free), wb);
 
-  g_signal_connect (G_OBJECT (plugin), "save",
+    g_signal_connect (G_OBJECT (plugin), "save",
                     G_CALLBACK (wckbuttons_save), wb);
 
-  g_signal_connect (G_OBJECT (plugin), "size-changed",
+    g_signal_connect (G_OBJECT (plugin), "size-changed",
                     G_CALLBACK (wckbuttons_size_changed), wb);
 
-  g_signal_connect (G_OBJECT (plugin), "orientation-changed",
+    g_signal_connect (G_OBJECT (plugin), "orientation-changed",
                     G_CALLBACK (wckbuttons_orientation_changed), wb);
 
-  /* show the configure menu item and connect signal */
-  xfce_panel_plugin_menu_show_configure (plugin);
-  g_signal_connect (G_OBJECT (plugin), "configure-plugin",
+    /* show the configure menu item and connect signal */
+    xfce_panel_plugin_menu_show_configure (plugin);
+    g_signal_connect (G_OBJECT (plugin), "configure-plugin",
                     G_CALLBACK (wckbuttons_configure), wb);
 
-  /* show the about menu item and connect signal */
-  xfce_panel_plugin_menu_show_about (plugin);
-  g_signal_connect (G_OBJECT (plugin), "about",
+    /* show the about menu item and connect signal */
+    xfce_panel_plugin_menu_show_about (plugin);
+    g_signal_connect (G_OBJECT (plugin), "about",
                     G_CALLBACK (wckbuttons_about), NULL);
 
     /* start tracking windows */

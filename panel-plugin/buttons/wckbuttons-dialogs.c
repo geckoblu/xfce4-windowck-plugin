@@ -92,29 +92,29 @@ wckbuttons_configure_response (GtkWidget    *dialog,
                            gint          response,
                            WBPlugin *wb)
 {
-  gboolean result;
+    gboolean result;
 
-  if (response == GTK_RESPONSE_HELP)
+    if (response == GTK_RESPONSE_HELP)
     {
-      /* show help */
-      result = g_spawn_command_line_async ("exo-open --launch WebBrowser " PLUGIN_WEBSITE, NULL);
+        /* show help */
+        result = g_spawn_command_line_async ("exo-open --launch WebBrowser " PLUGIN_WEBSITE, NULL);
 
-      if (G_UNLIKELY (result == FALSE))
-        g_warning (_("Unable to open the following url: %s"), PLUGIN_WEBSITE);
+        if (G_UNLIKELY (result == FALSE))
+            g_warning (_("Unable to open the following url: %s"), PLUGIN_WEBSITE);
     }
-  else
+    else
     {
-      /* remove the dialog data from the plugin */
-      g_object_set_data (G_OBJECT (wb->plugin), "dialog", NULL);
+        /* remove the dialog data from the plugin */
+        g_object_set_data (G_OBJECT (wb->plugin), "dialog", NULL);
 
-      /* unlock the panel menu */
-      xfce_panel_plugin_unblock_menu (wb->plugin);
+        /* unlock the panel menu */
+        xfce_panel_plugin_unblock_menu (wb->plugin);
 
-      /* save the plugin */
-      wckbuttons_save (wb->plugin, wb);
+        /* save the plugin */
+        wckbuttons_save (wb->plugin, wb);
 
-      /* destroy the properties dialog */
-      gtk_widget_destroy (dialog);
+        /* destroy the properties dialog */
+        gtk_widget_destroy (dialog);
     }
 }
 
@@ -171,8 +171,8 @@ wckbuttons_configure (XfcePanelPlugin *plugin,
 void
 wckbuttons_about (XfcePanelPlugin *plugin)
 {
-  /* about dialog code. you can use the GtkAboutDialog
-   * or the XfceAboutInfo widget */
+    /* about dialog code. you can use the GtkAboutDialog
+    * or the XfceAboutInfo widget */
     GdkPixbuf *icon;
     const gchar *auth[] = { "Alessio Piccoli <alepic@geckoblu.net>", "Cedric Leporcq <cedl38@gmail.com>", "\nThis code is based on original 'Window Applets' code of Andrej Belcijan.\nSee http://gnome-look.org/content/show.php?content=103732 for details." };
 

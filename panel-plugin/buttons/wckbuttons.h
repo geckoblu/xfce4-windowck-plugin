@@ -94,9 +94,10 @@ typedef struct {
 } WBPlugin;
 
 void
-wckbuttons_save (XfcePanelPlugin *plugin, WBPlugin *wb);
-void on_wck_state_changed (WnckWindow *controlwindow, WBPlugin *wb);
-void on_control_window_changed(WnckWindow *controlwindow, WnckWindow *previous, WBPlugin *wb);
+wckbuttons_save (XfcePanelPlugin *plugin,
+             WBPlugin    *wb);
+void on_wck_state_changed (WnckWindow *controlwindow, WBPlugin *wckp);
+void on_control_window_changed(WnckWindow *controlwindow, WnckWindow *previous, WBPlugin *wckp);
 G_END_DECLS
 
 #endif /* !__WCKBUTTONS_H__ */
