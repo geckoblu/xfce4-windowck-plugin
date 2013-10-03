@@ -13,7 +13,11 @@ plugin_LTLIBRARIES = \
 plugindir = \
 	$(libdir)/xfce4/panel/plugins
 
+libwindowck_built_sources = \
+	wckbuttons-dialogs_ui.h
+
 libwckbuttons_la_SOURCES = \
+	$(libwckbuttons_built_sources) \
 	wckbuttons.c \
 	wckbuttons.h \
 	theme.c \
@@ -58,9 +62,19 @@ desktop_DATA =								\
 @INTLTOOL_DESKTOP_RULE@
 
 EXTRA_DIST =								\
+	wckbuttons-dialogs.glade                                          \
 	wckbuttons.desktop.in
 
 CLEANFILES =								\
 	$(desktop_DATA)
+
+BUILT_SOURCES = \
+	$(libwindowck_built_sources)
+
+CLEANFILES += \
+	$(libwindowck_built_sources)
+
+wckbuttons-dialogs_ui.h: wckbuttons-dialogs.glade
+	$(AM_V_GEN) exo-csource --static --strip-comments --strip-content --name=wckbuttons_dialogs_ui $< >$@
 
 # vi:set ts=8 sw=8 noet ai nocindent syntax=automake:

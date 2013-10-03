@@ -29,10 +29,63 @@
 
 #include "wckbuttons.h"
 #include "wckbuttons-dialogs.h"
+#include "wckbuttons-dialogs_ui.h"
 
 /* the website url */
 #define PLUGIN_WEBSITE "http://goodies.xfce.org/projects/panel-plugins/xfce4-wckbuttons-plugin"
 
+static void on_only_maximized_toggled(GtkRadioButton *only_maximized, WBPlugin *wb) {
+    wb->prefs->only_maximized = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(only_maximized));
+    initWnck(wb->win, wb->prefs->only_maximized, wb);
+}
+
+static void on_show_on_desktop_toggled(GtkToggleButton *show_on_desktop, WBPlugin *wb) {
+    wb->prefs->show_on_desktop = gtk_toggle_button_get_active(show_on_desktop);
+    initWnck(wb->win, wb->prefs->only_maximized, wb);
+}
+
+static GtkWidget * build_properties_area(WBPlugin *wb, const gchar *buffer, gsize length) {
+    GError *error = NULL;
+    GtkBuilder *builder;
+    GObject *area = NULL;
+    GtkRadioButton *only_maximized, *active_window;
+    GtkToggleButton *show_on_desktop;
+
+    builder = gtk_builder_new();
+    if (gtk_builder_add_from_string(builder, buffer, length, &error)) {
+        area = gtk_builder_get_object(builder, "alignment0");
+        if (G_LIKELY (area != NULL)) {
+
+            only_maximized = GTK_RADIO_BUTTON(gtk_builder_get_object(builder, "only_maximized"));
+            active_window = GTK_RADIO_BUTTON(gtk_builder_get_object(builder, "active_window"));
+            if (G_LIKELY (only_maximized != NULL)) {
+                gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(only_maximized), wb->prefs->only_maximized);
+                gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(active_window), !wb->prefs->only_maximized);
+                g_signal_connect(only_maximized, "toggled", G_CALLBACK(on_only_maximized_toggled), wb);
+            } else {
+                DBG("No widget with the name \"only_maximized\" found");
+            }
+
+            show_on_desktop = GTK_TOGGLE_BUTTON(gtk_builder_get_object(builder, "show_on_desktop"));
+            if (G_LIKELY (show_on_desktop != NULL)) {
+                gtk_toggle_button_set_active(show_on_desktop, wb->prefs->show_on_desktop);
+                g_signal_connect(show_on_desktop, "toggled", G_CALLBACK(on_show_on_desktop_toggled), wb);
+            } else {
+                DBG("No widget with the name \"show_on_desktop\" found");
+            }
+
+            return GTK_WIDGET(area) ;
+        } else {
+            g_set_error_literal(&error, 0, 0, "No widget with the name \"contentarea\" found");
+        }
+    }
+
+    g_critical("Faild to construct the builder for plugin %s-%d: %s.", xfce_panel_plugin_get_name (wb->plugin), xfce_panel_plugin_get_unique_id (wb->plugin), error->message);
+    g_error_free(error);
+    g_object_unref(G_OBJECT (builder) );
+
+    return NULL ;
+}
 
 static void
 wckbuttons_configure_response (GtkWidget    *dialog,
@@ -71,35 +124,46 @@ void
 wckbuttons_configure (XfcePanelPlugin *plugin,
                   WBPlugin    *wb)
 {
-  GtkWidget *dialog;
+    GtkWidget *dialog;
+    GtkBuilder *builder;
+    GtkWidget *content_area;
+    GtkWidget *ca;
 
-  /* block the plugin menu */
-  xfce_panel_plugin_block_menu (plugin);
+    /* block the plugin menu */
+    xfce_panel_plugin_block_menu (plugin);
 
-  /* create the dialog */
-  dialog = xfce_titled_dialog_new_with_buttons (_("Windowck Buttons"),
+    /* create the dialog */
+    dialog = xfce_titled_dialog_new_with_buttons (_("Windowck Buttons"),
                                                 GTK_WINDOW (gtk_widget_get_toplevel (GTK_WIDGET (plugin))),
                                                 GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_NO_SEPARATOR,
                                                 GTK_STOCK_HELP, GTK_RESPONSE_HELP,
                                                 GTK_STOCK_CLOSE, GTK_RESPONSE_OK,
                                                 NULL);
 
-  /* center dialog on the screen */
-  gtk_window_set_position (GTK_WINDOW (dialog), GTK_WIN_POS_CENTER);
+    /* center dialog on the screen */
+    gtk_window_set_position (GTK_WINDOW (dialog), GTK_WIN_POS_CENTER);
 
-  /* set dialog icon */
-  gtk_window_set_icon_name (GTK_WINDOW (dialog), "xfce4-settings");
+    /* set dialog icon */
+    gtk_window_set_icon_name (GTK_WINDOW (dialog), "xfce4-settings");
 
-  /* link the dialog to the plugin, so we can destroy it when the plugin
-   * is closed, but the dialog is still open */
-  g_object_set_data (G_OBJECT (plugin), "dialog", dialog);
+    /* link the dialog to the plugin, so we can destroy it when the plugin
+    * is closed, but the dialog is still open */
+    g_object_set_data (G_OBJECT (plugin), "dialog", dialog);
 
-  /* connect the reponse signal to the dialog */
-  g_signal_connect (G_OBJECT (dialog), "response",
+    /* connect the reponse signal to the dialog */
+    g_signal_connect (G_OBJECT (dialog), "response",
                     G_CALLBACK(wckbuttons_configure_response), wb);
 
-  /* show the entire dialog */
-  gtk_widget_show (dialog);
+    content_area = gtk_dialog_get_content_area(GTK_DIALOG(dialog) );
+
+    ca = build_properties_area(wb, wckbuttons_dialogs_ui, wckbuttons_dialogs_ui_length);
+    if (G_LIKELY (ca != NULL))
+        gtk_container_add(GTK_CONTAINER (content_area), ca);
+    else
+        DBG("Failed to create content area");
+
+    /* show the entire dialog */
+    gtk_widget_show (dialog);
 }
 
 
