@@ -1,3 +1,16 @@
+0.1.0
+    Improve controlled window state tracking.
+    Add wckbuttons plugin.
+    Add window actions on buttons and title clicks (activate, (un)maximize, close).
+    Add window action menu on left button click.
+    Set inactive title color to fit better to themes.
+    Add optional custom title font.
+    Add xfwm4 theme support for buttons.
+    Add plugins icons and a few themes.
+    Add window icon to windowck plugin.
+
+    Fix title overflow for expand option (use xfce_panel_plugin_set_shrink).
+
 0.0.2
     Add shrink, fixed and expand title options.
     Add title padding and alignment options.
