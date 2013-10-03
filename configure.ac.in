@@ -17,7 +17,7 @@ dnl ***************************
 dnl *** Initialize autoconf ***
 dnl ***************************
 AC_COPYRIGHT([Copyright (C) 2013
-        Alessio Piccoli. All rights reserved.])
+        Alessio Piccoli, Cedric Leporcq. All rights reserved.])
 AC_INIT([xfce4-windowck-plugin], [windowck_version], [http://bugzilla.xfce.org/], [xfce4-windowck-plugin])
 AC_PREREQ([2.50])
 AC_REVISION([xfce4_panel_version_build])

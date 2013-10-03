@@ -1,5 +1,4 @@
-/*
- *  Copyright (C) 2013 Alessio Piccoli <alepic@geckoblu.net>
+/*  $Id$
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -14,6 +13,10 @@
  *  You should have received a copy of the GNU General Public License along
  *  with this program; if not, write to the Free Software Foundation, Inc.,
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ *  Copyright (C) 2013 Alessio Piccoli <alepic@geckoblu.net>
+ *                     Cedric Leporcq  <cedl38@gmail.com>
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -71,7 +74,7 @@ static void on_size_mode_changed (GtkComboBox *size_mode, WindowckPlugin *wckp) 
     GtkLabel *width_unit;
 
     id = gtk_combo_box_get_active(size_mode);
-    
+
     if (id < 0 || id > 2) {
       g_critical ("Trying to set a default size but got an invalid item");
       return;

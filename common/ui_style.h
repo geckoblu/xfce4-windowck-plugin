@@ -17,7 +17,7 @@
 
 
         xfwm4    - (c) 2002-2011 Olivier Fourdan
-
+        xfwm4-windowck-plugin - (c) 2013 Cedric leporcq
  */
 
 #ifndef INC_UI_STYLE_H

@@ -16,9 +16,20 @@
         MA 02110-1301, USA.
 
 
+        Original XPM load routines from gdk-pixbuf:
+
+        Copyright (C) 1999 Mark Crichton
+        Copyright (C) 1999 The Free Software Foundation
+
+        Authors: Mark Crichton <crichton@gimp.org>
+                 Federico Mena-Quintero <federico@gimp.org>
+
+        A specific version of the gdk-pixbuf routines are required to support
+        XPM color substitution used by the themes to apply gtk+ colors.
+
         oroborus - (c) 2001 Ken Lynch
         xfwm4    - (c) 2002-2011 Olivier Fourdan
-
+        xfwm4-windowck-plugin - (c) 2013 Cedric leporcq
  */
 
 #ifdef HAVE_CONFIG_H

@@ -1,5 +1,4 @@
-/*
- *  Copyright (C) 2013 Alessio Piccoli <alepic@geckoblu.net>
+/*  $Id$
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -14,6 +13,10 @@
  *  You should have received a copy of the GNU General Public License along
  *  with this program; if not, write to the Free Software Foundation, Inc.,
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ *  Copyright (C) 2013 Alessio Piccoli <alepic@geckoblu.net>
+ *                     Cedric Leporcq  <cedl38@gmail.com>
+ *
  */
 
 #include <libxfce4util/libxfce4util.h>
@@ -142,9 +145,9 @@ static void createIcon (WindowckPlugin *wckp) {
     wckp->icon = g_slice_new0 (WindowIcon);
     wckp->icon->eventbox = GTK_EVENT_BOX (gtk_event_box_new());
     wckp->icon->image = GTK_IMAGE (gtk_image_new());
-    
+
     gtk_widget_set_can_focus (GTK_WIDGET(wckp->icon->eventbox), TRUE);
-    
+
     gtk_container_add (GTK_CONTAINER (wckp->icon->eventbox), GTK_WIDGET(wckp->icon->image));
     gtk_event_box_set_visible_window (wckp->icon->eventbox, FALSE);
 
