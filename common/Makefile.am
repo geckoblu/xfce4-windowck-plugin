@@ -14,6 +14,8 @@ libwck_common_la_SOURCES = \
 	mypixmap.h \
 	ui_style.c \
 	ui_style.h \
+	wck-plugin.c \
+	wck-plugin.h \
 	wck-utils.c \
 	wck-utils.h \
 	xpm-color-table.h 

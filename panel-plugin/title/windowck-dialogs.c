@@ -25,6 +25,7 @@
 
 #include <libxfce4ui/libxfce4ui.h>
 #include <libxfce4panel/xfce-panel-plugin.h>
+#include <common/wck-plugin.h>
 
 #include "windowck.h"
 #include "windowck-title.h"
@@ -359,19 +360,4 @@ void windowck_configure(XfcePanelPlugin *plugin, WindowckPlugin *wckp) {
 
     /* show the entire dialog */
     gtk_widget_show(dialog);
-}
-
-void windowck_about(XfcePanelPlugin *plugin) {
-    /* about dialog code. you can use the GtkAboutDialog
-     * or the XfceAboutInfo widget */
-    GdkPixbuf *icon;
-    const gchar *auth[] = { "Alessio Piccoli <alepic@geckoblu.net>", "Cedric Leporcq <cedl38@gmail.com>", "\nThis code is based on original 'Window Applets' code of Andrej Belcijan.\nSee http://gnome-look.org/content/show.php?content=103732 for details." };
-
-    icon = xfce_panel_pixbuf_from_source("windowck-plugin", NULL, 32);
-
-    gtk_show_about_dialog(NULL, "logo", icon, "license", xfce_get_license_text(XFCE_LICENSE_TEXT_GPL), "version", PACKAGE_VERSION, "program-name", PACKAGE_NAME, "comments", _("Put the maximized window title on the panel."), "website", PLUGIN_WEBSITE, "copyright", _("Copyright (c) 2013\n"), "authors", auth, NULL );
-    // TODO: add translators.
-
-    if (icon)
-        g_object_unref(G_OBJECT(icon) );
 }

@@ -1,10 +1,9 @@
-/*  $Id$
- *
- *  Copyright (C) 2012 John Doo <john@foo.org>
+/*
+ *  Copyright (C) 2013 Alessio Piccoli <alepic@geckoblu.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
+ *  the Free Software Foundation; either version 3 of the License, or
  *  (at your option) any later version.
  *
  *  This program is distributed in the hope that it will be useful,
@@ -26,13 +25,11 @@
 
 #include <libxfce4ui/libxfce4ui.h>
 #include <libxfce4panel/xfce-panel-plugin.h>
+#include <common/wck-plugin.h>
 
 #include "wckbuttons.h"
 #include "wckbuttons-dialogs.h"
 #include "wckbuttons-dialogs_ui.h"
-
-/* the website url */
-#define PLUGIN_WEBSITE "http://goodies.xfce.org/projects/panel-plugins/xfce4-wckbuttons-plugin"
 
 static void on_only_maximized_toggled(GtkRadioButton *only_maximized, WBPlugin *wb) {
     wb->prefs->only_maximized = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(only_maximized));
@@ -166,21 +163,3 @@ wckbuttons_configure (XfcePanelPlugin *plugin,
     gtk_widget_show (dialog);
 }
 
-
-
-void
-wckbuttons_about (XfcePanelPlugin *plugin)
-{
-    /* about dialog code. you can use the GtkAboutDialog
-    * or the XfceAboutInfo widget */
-    GdkPixbuf *icon;
-    const gchar *auth[] = { "Alessio Piccoli <alepic@geckoblu.net>", "Cedric Leporcq <cedl38@gmail.com>", "\nThis code is based on original 'Window Applets' code of Andrej Belcijan.\nSee http://gnome-look.org/content/show.php?content=103732 for details." };
-
-    icon = xfce_panel_pixbuf_from_source("wckbuttons-plugin", NULL, 32);
-
-    gtk_show_about_dialog(NULL, "logo", icon, "license", xfce_get_license_text(XFCE_LICENSE_TEXT_GPL), "version", PACKAGE_VERSION, "program-name", PACKAGE_NAME, "comments", _("Put the maximized window buttons on the panel."), "website", PLUGIN_WEBSITE, "copyright", _("Copyright (c) 2013\n"), "authors", auth, NULL );
-    // TODO: add translators.
-
-    if (icon)
-        g_object_unref(G_OBJECT(icon) );
-}

@@ -28,6 +28,7 @@
 #include <libxfce4util/libxfce4util.h>
 #include <libxfce4panel/xfce-panel-plugin.h>
 #include <libxfce4panel/xfce-hvbox.h>
+#include <common/wck-plugin.h>
 
 #include "wckbuttons.h"
 #include "wckbuttons-dialogs.h"
@@ -536,7 +537,7 @@ wckbuttons_construct (XfcePanelPlugin *plugin)
     /* show the about menu item and connect signal */
     xfce_panel_plugin_menu_show_about (plugin);
     g_signal_connect (G_OBJECT (plugin), "about",
-                    G_CALLBACK (wckbuttons_about), NULL);
+                    G_CALLBACK (wck_about), "wckbuttons-plugin");
 
     /* start tracking windows */
     wb->win = g_slice_new0 (WckUtils);

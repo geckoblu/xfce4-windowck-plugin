@@ -29,8 +29,6 @@ G_BEGIN_DECLS
 
 void windowck_configure(XfcePanelPlugin *plugin, WindowckPlugin *wckp);
 
-void windowck_about(XfcePanelPlugin *plugin);
-
 G_END_DECLS
 
 #endif

@@ -16,11 +16,12 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#include <libxfce4util/libxfce4util.h>
+#include <common/wck-plugin.h>
+
 #include "windowck.h"
 #include "windowck-dialogs.h"
 #include "windowck-title.h"
-
-#include <libxfce4util/libxfce4util.h>
 
 /* default settings */
 #define DEFAULT_ONLY_MAXIMIZED TRUE
@@ -298,7 +299,8 @@ static void windowck_construct(XfcePanelPlugin *plugin) {
 
     /* show the about menu item and connect signal */
     xfce_panel_plugin_menu_show_about(plugin);
-    g_signal_connect(G_OBJECT (plugin), "about", G_CALLBACK (windowck_about), NULL);
+    g_signal_connect (G_OBJECT (plugin), "about",
+                    G_CALLBACK (wck_about), "windowck-plugin");
 
 //    //plugin->priv->menu_items;
 //    GtkWidget *item1 = gtk_menu_item_new_with_label("Test");
