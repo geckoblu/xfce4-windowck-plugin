@@ -20,6 +20,7 @@
  */
 
 #include <libxfce4util/libxfce4util.h>
+#include <libxfce4panel/libxfce4panel.h>
 #include <common/wck-plugin.h>
 
 #include "windowck.h"
@@ -278,11 +279,15 @@ static void windowck_construct(XfcePanelPlugin *plugin) {
     /* add the ebox to the panel */
     gtk_container_add(GTK_CONTAINER (plugin), wckp->ebox);
 
-    // Set event handling (icon & title clicks)
-    g_signal_connect(G_OBJECT (wckp->ebox), "button-press-event", G_CALLBACK (title_clicked), wckp);
-
     /* show the panel's right-click menu on this ebox */
     xfce_panel_plugin_add_action_widget(plugin, wckp->ebox);
+
+    // Set event handling (icon & title clicks)
+    g_signal_connect(G_OBJECT (wckp->ebox), "button-press-event", G_CALLBACK (on_title_pressed), wckp);
+
+    g_signal_connect(G_OBJECT (wckp->ebox), "button-release-event", G_CALLBACK (on_title_released), wckp);
+
+    g_signal_connect(G_OBJECT (wckp->icon->eventbox), "button-release-event", G_CALLBACK (on_icon_released), wckp);
 
     /* connect plugin signals */
 

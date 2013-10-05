@@ -18,10 +18,11 @@
  *
  */
 
-#include "windowck.h"
-#include "windowck-title.h"
 #include <common/wck-utils.h>
 #include <common/ui_style.h>
+
+#include "windowck.h"
+#include "windowck-title.h"
 
 /* Prototypes */
 static void on_name_changed(WnckWindow *window, WindowckPlugin *);
@@ -164,31 +165,63 @@ void resizeTitle(WindowckPlugin *wckp) {
     }
 }
 
-gboolean title_clicked(GtkWidget *title, GdkEventButton *event, WindowckPlugin *wckp) {
-    // only allow left and right mouse button
-    //if (event->button != 1 && event->button != 3) return FALSE;
+gboolean on_title_pressed(GtkWidget *title, GdkEventButton *event, WindowckPlugin *wckp) {
 
     if (!wckp->win->controlwindow)
         return FALSE;
 
-    // single click (left/right)
     if (event->button == 1) {
-        // left-click
-        wnck_window_activate(wckp->win->controlwindow, gtk_get_current_event_time());
+        /* double/tripple click */
         if (event->type == GDK_2BUTTON_PRESS || event->type == GDK_3BUTTON_PRESS) {
-            // double/tripple click
-            //if (event->type==GDK_2BUTTON_PRESS) {
             toggleMaximize(wckp->win);
         }
-    } else if (event->button == 3) {
-        // right-click
+        else {
+        /* left-click */
+        wnck_window_activate(wckp->win->controlwindow, gtk_get_current_event_time());
+        }
+        return TRUE;
+    }
+
+    if (event->button == 3) {
+        /* right-click */
         wnck_window_activate(wckp->win->controlwindow, gtk_get_current_event_time());
 
-        // let the panel show the menu
-        return FALSE;
-    } else {
-        return FALSE;
+        /* let the panel show the menu */
+        return TRUE;
     }
+
+    return FALSE;
+}
+
+gboolean on_title_released(GtkWidget *title, GdkEventButton *event, WindowckPlugin *wckp) {
+
+    if (!wckp->win->controlwindow)
+        return FALSE;
+
+    if (event->button == 2) {
+        /* middle-click */
+        wnck_window_close(wckp->win->controlwindow, GDK_CURRENT_TIME);
+        return TRUE;
+    }
+
+    return FALSE;
+}
+
+
+gboolean on_icon_released(GtkWidget *title, GdkEventButton *event, WindowckPlugin *wckp) {
+
+    if (event->button != 1)
+        return FALSE;
+
+	GtkWidget *menu;
+	menu = wnck_action_menu_new (wckp->win->controlwindow);
+
+    gtk_menu_attach_to_widget(GTK_MENU(menu), GTK_WIDGET(wckp->icon->eventbox), NULL);
+    gtk_menu_popup (GTK_MENU (menu), NULL, NULL,
+                      xfce_panel_plugin_position_menu,
+                      wckp->plugin,
+                      1, gtk_get_current_event_time ());
+
     return TRUE;
 }
 
