@@ -173,7 +173,7 @@ gboolean on_title_pressed(GtkWidget *title, GdkEventButton *event, WindowckPlugi
     if (event->button == 1) {
         /* double/tripple click */
         if (event->type == GDK_2BUTTON_PRESS || event->type == GDK_3BUTTON_PRESS) {
-            toggleMaximize(wckp->win);
+            toggleMaximize(wckp->win->controlwindow);
         }
         else {
         /* left-click */

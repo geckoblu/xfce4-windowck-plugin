@@ -394,7 +394,7 @@ static gboolean on_maximize_button_release (GtkWidget *event_box,
 
     if (event->button != 1) return FALSE;
 
-    toggleMaximize(wb->win);
+    toggleMaximize(wb->win->controlwindow);
 
     return TRUE;
 }

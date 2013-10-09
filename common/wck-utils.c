@@ -107,6 +107,9 @@ static void trackControledWindow (WckUtils *win) {
     }
 
     if (win->activewindow
+        && (!win->activeworkspace
+            || wnck_window_is_in_viewport(win->activewindow, win->activeworkspace))
+        && !wnck_window_is_minimized(win->activewindow)
         && (wnck_window_is_maximized(win->activewindow)
             || !win->only_maximized)) {
         win->controlwindow = win->activewindow;
@@ -209,13 +212,11 @@ static void active_workspace_changed (WnckScreen *screen,
     trackControledWindow(win);
 }
 
-void toggleMaximize (WckUtils *win) {
-    if (win->controlwindow) {
-		if (wnck_window_is_maximized(win->controlwindow))
-			wnck_window_maximize(win->controlwindow);
-		else
-			wnck_window_unmaximize(win->controlwindow);
-    }
+void toggleMaximize (WnckWindow *window) {
+    if (window && wnck_window_is_maximized(window))
+        wnck_window_unmaximize(window);
+    else
+        wnck_window_maximize(window);
 }
 
 void initWnck (WckUtils *win, gboolean only_maximized, gpointer data) {
