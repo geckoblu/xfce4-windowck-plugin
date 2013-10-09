@@ -104,6 +104,7 @@ static void on_size_mode_changed (GtkComboBox *size_mode, WindowckPlugin *wckp) 
 
     /* dynamic resizing */
     /* d'ont work for title shrinking -> need to restart the applet */
+    // TODO : make it working...
     resizeTitle(wckp);
 }
 

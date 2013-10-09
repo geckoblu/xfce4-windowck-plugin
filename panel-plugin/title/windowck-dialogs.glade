@@ -138,6 +138,7 @@
                           <object class="GtkComboBox" id="size_mode">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
+                            <property name="tooltip_text" translatable="yes">Restart the applet to apply changes on size mode.</property>
                             <property name="model">size_mode_list</property>
                             <child>
                               <object class="GtkCellRendererText" id="cellrenderertext"/>
@@ -391,7 +392,7 @@
               <object class="GtkLabel" id="label2">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">&lt;b&gt;Apearance&lt;/b&gt;</property>
+                <property name="label" translatable="yes">&lt;b&gt;Appearance&lt;/b&gt;</property>
                 <property name="use_markup">True</property>
               </object>
             </child>
