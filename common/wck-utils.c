@@ -186,6 +186,10 @@ static void active_window_changed (WnckScreen *screen,
         // if we got NULL it would start flickering (but we shouldn't get NULL anymore)
         win->ash = g_signal_connect(G_OBJECT (win->activewindow), "state-changed", G_CALLBACK (active_window_state_changed), win);
     }
+    else {
+        /* in case there is no active window left (ex : show desktop)*/
+        trackControledWindow (win);
+    }
 }
 
 /* Triggers when user changes viewports on Compiz */
