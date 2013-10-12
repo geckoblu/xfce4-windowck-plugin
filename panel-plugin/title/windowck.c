@@ -39,6 +39,7 @@
 #define DEFAULT_ONLY_MAXIMIZED TRUE
 #define DEFAULT_SHOW_ON_DESKTOP FALSE
 #define DEFAULT_HIDE_TITLE FALSE
+#define DEFAULT_FULL_NAME TRUE
 #define DEFAULT_SHOW_TOOLTIPS TRUE
 #define DEFAULT_SHOW_ICON TRUE
 #define DEFAULT_ICON_ON_RIGHT FALSE
@@ -76,6 +77,7 @@ void windowck_save(XfcePanelPlugin *plugin, WindowckPlugin *wckp) {
         xfce_rc_write_bool_entry(rc, "show_icon", wckp->prefs->show_icon);
         xfce_rc_write_bool_entry(rc, "icon_on_right", wckp->prefs->icon_on_right);
         xfce_rc_write_bool_entry(rc, "hide_title", wckp->prefs->hide_title);
+        xfce_rc_write_bool_entry(rc, "full_name", wckp->prefs->full_name);
         xfce_rc_write_bool_entry(rc, "show_tooltips", wckp->prefs->show_tooltips);
         xfce_rc_write_int_entry(rc, "size_mode", wckp->prefs->size_mode);
         xfce_rc_write_int_entry(rc, "title_size", wckp->prefs->title_size);
@@ -116,6 +118,7 @@ static void windowck_read(WindowckPlugin *wckp) {
             wckp->prefs->show_icon = xfce_rc_read_bool_entry(rc, "show_icon", DEFAULT_SHOW_ICON);
             wckp->prefs->icon_on_right = xfce_rc_read_bool_entry(rc, "icon_on_right", DEFAULT_ICON_ON_RIGHT);
             wckp->prefs->hide_title = xfce_rc_read_bool_entry(rc, "hide_title", DEFAULT_HIDE_TITLE);
+            wckp->prefs->full_name = xfce_rc_read_bool_entry(rc, "full_name", DEFAULT_FULL_NAME);
             wckp->prefs->show_tooltips = xfce_rc_read_bool_entry(rc, "show_tooltips", DEFAULT_SHOW_TOOLTIPS);
             wckp->prefs->size_mode = xfce_rc_read_int_entry (rc, "size_mode", DEFAULT_SIZE_MODE);
             wckp->prefs->title_size = xfce_rc_read_int_entry(rc, "title_size", DEFAULT_TITLE_SIZE);
@@ -141,6 +144,7 @@ static void windowck_read(WindowckPlugin *wckp) {
     wckp->prefs->show_icon = DEFAULT_SHOW_ICON;
     wckp->prefs->icon_on_right = DEFAULT_ICON_ON_RIGHT;
     wckp->prefs->hide_title = DEFAULT_HIDE_TITLE;
+    wckp->prefs->full_name = DEFAULT_FULL_NAME;
     wckp->prefs->show_tooltips = DEFAULT_SHOW_TOOLTIPS;
     wckp->prefs->size_mode = DEFAULT_SIZE_MODE;
     wckp->prefs->title_size = DEFAULT_TITLE_SIZE;

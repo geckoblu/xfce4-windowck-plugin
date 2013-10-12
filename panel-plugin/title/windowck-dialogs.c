@@ -118,6 +118,11 @@ static void on_show_on_desktop_toggled(GtkToggleButton *show_on_desktop, Windowc
     initWnck(wckp->win, wckp->prefs->only_maximized, wckp);
 }
 
+static void on_full_name_toggled(GtkToggleButton *full_name, WindowckPlugin *wckp) {
+    wckp->prefs->full_name = gtk_toggle_button_get_active(full_name);
+    initWnck(wckp->win, wckp->prefs->only_maximized, wckp);
+}
+
 static void on_show_icon_toggled(GtkToggleButton *show_icon, WindowckPlugin *wckp) {
     wckp->prefs->show_icon = gtk_toggle_button_get_active(show_icon);
 
@@ -191,7 +196,7 @@ static GtkWidget * build_properties_area(WindowckPlugin *wckp, const gchar *buff
     GtkToggleButton *custom_font;
     GtkRadioButton *only_maximized, *active_window;
     GtkToggleButton *show_on_desktop;
-    GtkToggleButton *show_icon, *icon_on_right;
+    GtkToggleButton *full_name, *show_icon, *icon_on_right;
     GtkFontButton *title_font;
     GtkLabel *width_unit;
 
@@ -216,6 +221,14 @@ static GtkWidget * build_properties_area(WindowckPlugin *wckp, const gchar *buff
                 g_signal_connect(show_on_desktop, "toggled", G_CALLBACK(on_show_on_desktop_toggled), wckp);
             } else {
                 DBG("No widget with the name \"show_on_desktop\" found");
+            }
+
+            full_name = GTK_TOGGLE_BUTTON(gtk_builder_get_object(builder, "full_name"));
+            if (G_LIKELY (full_name != NULL)) {
+                gtk_toggle_button_set_active(full_name, wckp->prefs->full_name);
+                g_signal_connect(full_name, "toggled", G_CALLBACK(on_full_name_toggled), wckp);
+            } else {
+                DBG("No widget with the name \"full_name\" found");
             }
 
             show_icon = GTK_TOGGLE_BUTTON(gtk_builder_get_object(builder, "show_icon"));

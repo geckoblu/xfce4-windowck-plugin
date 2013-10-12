@@ -59,6 +59,7 @@ typedef struct {
     gboolean show_icon;                 // [T/F] Show the window icon
     gboolean icon_on_right;          // [T/F] Place icon on the right
     //gboolean show_window_menu;       // [T/F] Show window action menu on right click
+    gboolean full_name;                // [T/F] Show full name
     gboolean show_tooltips;            // [T/F] Show tooltips
 
     SizeMode size_mode;               // Size mode : Length=[MINIMAL,FIXE,EXPAND]

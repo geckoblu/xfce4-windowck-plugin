@@ -77,21 +77,25 @@ static void on_icon_changed(WnckWindow *controlwindow, WindowckPlugin *wckp) {
 /* Triggers when controlwindow's name OR ICON changes */
 /* Warning! This function is called very often, so it should only do the most necessary things! */
 static void on_name_changed(WnckWindow *controlwindow, WindowckPlugin *wckp) {
-    const gchar *title_text;
-    gchar *title_color, *title_font;
+    gint i, n;
+    const gchar *title_text, *title_markup;
+    const gchar *title_color, *title_font;
+    gchar *app_name, *instance_name;
+    gchar **part;
 
     if (controlwindow
         && ((wnck_window_get_window_type (controlwindow) != WNCK_WINDOW_DESKTOP)
             || wckp->prefs->show_on_desktop)) {
 
-        title_text = (gchar*) wnck_window_get_name(controlwindow);
+        title_text = wnck_window_get_name(controlwindow);
+
         if (wnck_window_is_active(controlwindow)) {
-            // window focused
+            /* window focused */
             //~ gtk_widget_set_sensitive(GTK_WIDGET(wckp->title), TRUE);
             title_color = wckp->prefs->active_text_color;
         }
         else {
-            // window unfocused
+            /* window unfocused */
             //~ gtk_widget_set_sensitive(GTK_WIDGET(wckp->title), FALSE);
             title_color = wckp->prefs->inactive_text_color;
         }
@@ -100,6 +104,7 @@ static void on_name_changed(WnckWindow *controlwindow, WindowckPlugin *wckp) {
             title_font = wckp->prefs->title_font;
         else
             title_font = "";
+
         updateFont(wckp);
 
         /* Set tooltips */
@@ -107,8 +112,29 @@ static void on_name_changed(WnckWindow *controlwindow, WindowckPlugin *wckp) {
             gtk_widget_set_tooltip_text(GTK_WIDGET(wckp->title), title_text);
         }
 
-       title_text = g_markup_printf_escaped("<span font=\"%s\" color=\"%s\">%s</span>", title_font, title_color, title_text);
-        gtk_label_set_markup(wckp->title, title_text);
+        /* get application and instance names */
+        if (wckp->prefs->full_name) {
+            title_markup = g_markup_printf_escaped("<span font=\"%s\" color=\"%s\">%s</span>", title_font, title_color, title_text);
+        }
+        else {
+
+        	/* split title text */
+        	part = g_strsplit (title_text, " - ", 0);
+        	n=0;
+        	for (i=0; part[i]; i++) {
+            	n++;
+        	}
+
+            if (n > 1) {
+                title_markup = g_markup_printf_escaped("<span font=\"%s\" color=\"%s\">%s</span>", title_font, title_color, part[n-1]);
+            }
+            else {
+                title_markup = g_markup_printf_escaped("<span font=\"%s\" color=\"%s\">%s</span>", title_font, title_color, part[0]);
+            }
+            g_strfreev(part);
+        }
+
+        gtk_label_set_markup(wckp->title, title_markup);
     }
     else {
         /* hide text */
