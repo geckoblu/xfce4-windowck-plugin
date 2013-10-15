@@ -370,9 +370,7 @@ static GtkWidget * build_properties_area(WBPlugin *wb, const gchar *buffer, gsiz
 
 
 static void
-wckbuttons_configure_response (GtkWidget    *dialog,
-                           gint          response,
-                           WBPlugin *wb)
+wckbuttons_configure_response (GtkWidget *dialog, gint response, WBPlugin *wb)
 {
     gboolean result;
 
@@ -401,19 +399,19 @@ wckbuttons_configure_response (GtkWidget    *dialog,
 }
 
 
-
-void
-wckbuttons_configure (XfcePanelPlugin *plugin, WBPlugin    *wb)
+void wckbuttons_configure (XfcePanelPlugin *plugin, WBPlugin *wb)
 {
     GtkWidget *dialog;
     GtkWidget *content_area;
     GtkWidget *ca;
+    const gchar *name;
 
     /* block the plugin menu */
     xfce_panel_plugin_block_menu (plugin);
 
     /* create the dialog */
-    dialog = xfce_titled_dialog_new_with_buttons (_("Windowck Buttons"),
+    name = xfce_panel_plugin_get_display_name (plugin);
+    dialog = xfce_titled_dialog_new_with_buttons (_(name),
                                                 GTK_WINDOW (gtk_widget_get_toplevel (GTK_WIDGET (plugin))),
                                                 GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_NO_SEPARATOR,
                                                 GTK_STOCK_HELP, GTK_RESPONSE_HELP,

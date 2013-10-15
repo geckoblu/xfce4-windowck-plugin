@@ -404,12 +404,14 @@ void windowck_configure(XfcePanelPlugin *plugin, WindowckPlugin *wckp)
     GtkWidget *dialog;
     GtkWidget *content_area;
     GtkWidget *ca;
+    const gchar *name;
 
     /* block the plugin menu */
     xfce_panel_plugin_block_menu (plugin);
 
     /* create the dialog */
-    dialog = xfce_titled_dialog_new_with_buttons (_("Window Title"),
+    name = xfce_panel_plugin_get_display_name (plugin);
+    dialog = xfce_titled_dialog_new_with_buttons (_(name),
                                                 GTK_WINDOW (gtk_widget_get_toplevel (GTK_WIDGET (plugin))),
                                                 GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_NO_SEPARATOR,
                                                 GTK_STOCK_HELP, GTK_RESPONSE_HELP,

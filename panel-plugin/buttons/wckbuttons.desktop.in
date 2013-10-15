@@ -1,7 +1,7 @@
 [Xfce Panel]
 Type=X-XFCE-PanelPlugin
 Encoding=UTF-8
-_Name=Window Buttons
+_Name=Window Header - Buttons
 _Comment=Put the maximized window buttons on the panel.
 Icon=wckbuttons-plugin
 X-XFCE-Module=wckbuttons

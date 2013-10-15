@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-04-05 09:40+0200\n"
+"POT-Creation-Date: 2013-10-28 12:37+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,28 +17,139 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../panel-plugin/windowck-dialogs.c:44
+#: ../panel-plugin/title/windowck-dialogs.c:50
+#: ../panel-plugin/buttons/wckbuttons-dialogs.c:364
 #, c-format
 msgid "Unable to open the following url: %s"
 msgstr ""
 
-#. create the dialog
-#: ../panel-plugin/windowck-dialogs.c:111
-msgid "Window Controls"
+#: ../panel-plugin/title/windowck-dialogs.glade.h:1
+#: ../panel-plugin/buttons/wckbuttons-dialogs.glade.h:1
+msgid "Control maximized windows."
 msgstr ""
 
-#: ../panel-plugin/windowck-dialogs.c:146
+#: ../panel-plugin/title/windowck-dialogs.glade.h:2
+#: ../panel-plugin/buttons/wckbuttons-dialogs.glade.h:2
+msgid "Control active windows."
+msgstr ""
+
+#: ../panel-plugin/title/windowck-dialogs.glade.h:3
+msgid "Show the plugin on desktop."
+msgstr ""
+
+#: ../panel-plugin/title/windowck-dialogs.glade.h:4
+#: ../panel-plugin/buttons/wckbuttons-dialogs.glade.h:4
+msgid "<b>Behaviour</b>"
+msgstr ""
+
+#: ../panel-plugin/title/windowck-dialogs.glade.h:5
+msgid "Width:"
+msgstr ""
+
+#: ../panel-plugin/title/windowck-dialogs.glade.h:6
+msgid "Restart the plugin to apply changes on size mode."
+msgstr ""
+
+#: ../panel-plugin/title/windowck-dialogs.glade.h:7
+msgid "chars"
+msgstr ""
+
+#: ../panel-plugin/title/windowck-dialogs.glade.h:8
+msgid "Alignment:"
+msgstr ""
+
+#: ../panel-plugin/title/windowck-dialogs.glade.h:9
+msgid "Padding:"
+msgstr ""
+
+#: ../panel-plugin/title/windowck-dialogs.glade.h:10
+msgid "pixels"
+msgstr ""
+
+#: ../panel-plugin/title/windowck-dialogs.glade.h:11
+msgid "Font style:"
+msgstr ""
+
+#: ../panel-plugin/title/windowck-dialogs.glade.h:12
+msgid "custom"
+msgstr ""
+
+#: ../panel-plugin/title/windowck-dialogs.glade.h:13
+msgid "Show the full title name"
+msgstr ""
+
+#: ../panel-plugin/title/windowck-dialogs.glade.h:14
+msgid "Show the window Icon."
+msgstr ""
+
+#: ../panel-plugin/title/windowck-dialogs.glade.h:15
+msgid "Place the icon on right."
+msgstr ""
+
+#: ../panel-plugin/title/windowck-dialogs.glade.h:16
+#: ../panel-plugin/buttons/wckbuttons-dialogs.glade.h:10
+msgid "<b>Appearance</b>"
+msgstr ""
+
+#: ../panel-plugin/title/windowck-dialogs.glade.h:17
+msgid "at most"
+msgstr ""
+
+#: ../panel-plugin/title/windowck-dialogs.glade.h:18
+msgid "fixed to"
+msgstr ""
+
+#: ../panel-plugin/title/windowck-dialogs.glade.h:19
+msgid "expand"
+msgstr ""
+
+#: ../panel-plugin/title/windowck-dialogs.glade.h:20
+msgid "left"
+msgstr ""
+
+#: ../panel-plugin/title/windowck-dialogs.glade.h:21
+msgid "center"
+msgstr ""
+
+#: ../panel-plugin/title/windowck-dialogs.glade.h:22
+msgid "right"
+msgstr ""
+
+#: ../panel-plugin/title/windowck-plugin.desktop.in.h:1
+msgid "Window Header - Title"
+msgstr ""
+
+#: ../panel-plugin/title/windowck-plugin.desktop.in.h:2
 msgid "Put the maximized window title on the panel."
 msgstr ""
 
-#: ../panel-plugin/windowck-dialogs.c:146
-msgid "Copyright (c) 2013\n"
+#: ../panel-plugin/buttons/wckbuttons-dialogs.c:312
+msgid "Themes usable"
 msgstr ""
 
-#: ../panel-plugin/windowck-dialogs.glade.h:1
-msgid "Width (in chars)"
+#: ../panel-plugin/buttons/wckbuttons-dialogs.glade.h:3
+msgid "Show the buttons on desktop."
 msgstr ""
 
-#: ../panel-plugin/windowck-dialogs.glade.h:2
-msgid "<b>Appearance</b>"
+#: ../panel-plugin/buttons/wckbuttons-dialogs.glade.h:5
+msgid "Sync it with the window manager theme."
+msgstr ""
+
+#: ../panel-plugin/buttons/wckbuttons-dialogs.glade.h:6
+msgid "Button layout:"
+msgstr ""
+
+#: ../panel-plugin/buttons/wckbuttons-dialogs.glade.h:7
+msgid ""
+"Put the buttons id in the desired order.\n"
+"Example: [HMC]\n"
+"H=Hide, M=Maximize/unMaximize, C=Close"
+msgstr ""
+
+#: ../panel-plugin/buttons/wckbuttons.desktop.in.h:1
+msgid "Window Header - Buttons"
+msgstr ""
+
+#: ../panel-plugin/buttons/wckbuttons.desktop.in.h:2
+msgid "Put the maximized window buttons on the panel."
 msgstr ""
