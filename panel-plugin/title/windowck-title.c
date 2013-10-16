@@ -126,26 +126,23 @@ void on_wck_state_changed (WnckWindow *controlwindow, WindowckPlugin *wckp) {
 void on_control_window_changed (WnckWindow *controlwindow, WnckWindow *previous, WindowckPlugin *wckp) {
 
     /* disconect previous window title signal */
-    if (previous && wckp->cnh) {
-        if (g_signal_handler_is_connected(G_OBJECT(previous), wckp->cnh))
-            g_signal_handler_disconnect(G_OBJECT(previous), wckp->cnh);
-    }
+    wck_signal_handler_disconnect (G_OBJECT(previous), wckp->cnh);
 
     on_name_changed (controlwindow, wckp);
 
-    if (controlwindow) {
+    if (controlwindow)
+    {
         wckp->cnh = g_signal_connect(G_OBJECT(controlwindow), "name-changed", G_CALLBACK(on_name_changed), wckp);
     }
 
-    if (wckp->prefs->show_icon) {
-        if (previous && wckp->cih) {
-            if (g_signal_handler_is_connected(G_OBJECT(previous), wckp->cih))
-                g_signal_handler_disconnect(G_OBJECT(previous), wckp->cih);
-        }
+    if (wckp->prefs->show_icon)
+    {
+        wck_signal_handler_disconnect (G_OBJECT(previous), wckp->cih);
 
         on_icon_changed (controlwindow, wckp);
 
-        if (controlwindow) {
+        if (controlwindow)
+        {
             wckp->cih = g_signal_connect(G_OBJECT(controlwindow), "icon-changed", G_CALLBACK(on_icon_changed), wckp);
         }
     }
@@ -213,8 +210,8 @@ gboolean on_icon_released(GtkWidget *title, GdkEventButton *event, WindowckPlugi
     if (event->button != 1)
         return FALSE;
 
-	GtkWidget *menu;
-	menu = wnck_action_menu_new (wckp->win->controlwindow);
+    GtkWidget *menu;
+    menu = wnck_action_menu_new (wckp->win->controlwindow);
 
     gtk_menu_attach_to_widget(GTK_MENU(menu), GTK_WIDGET(wckp->icon->eventbox), NULL);
     gtk_menu_popup (GTK_MENU (menu), NULL, NULL,
