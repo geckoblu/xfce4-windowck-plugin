@@ -123,7 +123,7 @@ setGValue (const gchar * lvalue, const GValue *rvalue, Settings *rc)
     return FALSE;
 }
 
-gboolean
+static gboolean
 setStringValue (const gchar * lvalue, const gchar *value, Settings *rc)
 {
     GValue tmp_val = {0, };
@@ -268,17 +268,26 @@ void loadTheme (WBPlugin *wb)
     }
 
     /* try to replace missing images */
-    if (wb->pixbufs[IMAGE_UNMAXIMIZE][IMAGE_FOCUSED] == NULL)
-        wb->pixbufs[IMAGE_UNMAXIMIZE][IMAGE_FOCUSED] = wb->pixbufs[IMAGE_MAXIMIZE][IMAGE_FOCUSED];
+
+    for (i = 0; i < BUTTONS; i++)
+    {
+        if (G_LIKELY(wb->pixbufs[i][IMAGE_FOCUSED]))
+            wb->button[i]->visible = TRUE;
+        else
+            wb->button[i]->visible = FALSE;
+    }
+
+    for (i = 0; i < IMAGES_STATES; i++)
+    {
+        if (!wb->pixbufs[IMAGE_UNMAXIMIZE][i])
+            wb->pixbufs[IMAGE_UNMAXIMIZE][i] = wb->pixbufs[IMAGE_MAXIMIZE][i];
+    }
     for (i = 0; i < IMAGES_BUTTONS; i++)
     {
-        if (wb->pixbufs[i][IMAGE_UNFOCUSED] == NULL)
-            wb->pixbufs[i][IMAGE_UNFOCUSED] = wb->pixbufs[IMAGE_FOCUSED][IMAGE_PRELIGHT];
+        if (!wb->pixbufs[i][IMAGE_UNFOCUSED] || !wb->pixbufs[i][IMAGE_PRESSED])
+            wb->pixbufs[i][IMAGE_UNFOCUSED] = wb->pixbufs[i][IMAGE_FOCUSED];
 
-        if (wb->pixbufs[i][IMAGE_PRESSED] == NULL)
-            wb->pixbufs[i][IMAGE_PRESSED] = wb->pixbufs[i][IMAGE_FOCUSED];
-
-        if (wb->pixbufs[i][IMAGE_PRELIGHT] == NULL)
+        if (!wb->pixbufs[i][IMAGE_PRELIGHT])
             wb->pixbufs[i][IMAGE_PRELIGHT] = wb->pixbufs[i][IMAGE_PRESSED];
     }
 }

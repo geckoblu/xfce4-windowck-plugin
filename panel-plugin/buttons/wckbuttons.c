@@ -134,9 +134,9 @@ wckbuttons_read (WBPlugin *wb)
 
     wb->prefs->only_maximized = DEFAULT_ONLY_MAXIMIZED;
     wb->prefs->show_on_desktop = DEFAULT_SHOW_ON_DESKTOP;
-    wb->prefs->button_layout = g_strdup (DEFAULT_BUTTON_LAYOUT);
-    wb->prefs->theme = g_strdup (DEFAULT_THEME);
-  wb->setting2 = DEFAULT_SETTING2;
+    wb->prefs->button_layout = DEFAULT_BUTTON_LAYOUT;
+    wb->prefs->theme = DEFAULT_THEME;
+    wb->setting2 = DEFAULT_SETTING2;
 }
 
 WindowButton **createButtons (WBPlugin *wb) {
@@ -187,14 +187,10 @@ void placeButtons(WBPlugin *wb) {
     for (i = 0; i < strlen (wb->prefs->button_layout); i++)
     {
         button= getButtonFromLetter (wb->prefs->button_layout[i]);
-        if (button >= 0)
+        if (button >= 0 && wb->button[i]->visible)
         {
-            wb->button[button]->visible = TRUE;
             gtk_box_pack_start (GTK_BOX (wb->hvbox), GTK_WIDGET(wb->button[button]->eventbox), TRUE, TRUE, 0);
             gtk_widget_show_all(GTK_WIDGET(wb->button[button]->eventbox));
-        }
-        else {
-            wb->button[button]->visible = FALSE;
         }
     }
 }
@@ -215,9 +211,6 @@ wckbuttons_new (XfcePanelPlugin *plugin)
     /* read the user settings */
     wckbuttons_read (wb);
 
-    /* load images */
-    loadTheme(wb);
-
     /* get the current orientation */
     orientation = xfce_panel_plugin_get_orientation (plugin);
 
@@ -227,6 +220,9 @@ wckbuttons_new (XfcePanelPlugin *plugin)
 
     /* create buttons */
     wb->button = createButtons (wb);
+
+    /* load images */
+    loadTheme(wb);
 
     /* place buttons accordingly to button_layout pref */
     placeButtons(wb);
@@ -313,7 +309,6 @@ void on_wck_state_changed (WnckWindow *controlwindow, WBPlugin *wb) {
         image_state = 0;
 
     /* update buttons images */
-
     gtk_image_set_from_pixbuf (wb->button[MINIMIZE_BUTTON]->image, wb->pixbufs[IMAGE_MINIMIZE][image_state]);
 
     setMaximizeButtonImage (wb, image_state);
