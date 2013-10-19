@@ -279,8 +279,14 @@ static gboolean windowck_size_changed(XfcePanelPlugin *plugin, gint size, Window
     return TRUE;
 }
 
+static void on_refresh_item_activated (GtkMenuItem *refresh, WindowckPlugin *wckp) {
+    initTitle(wckp);
+    initWnck(wckp->win, wckp->prefs->only_maximized, wckp);
+}
+
 static void windowck_construct(XfcePanelPlugin *plugin) {
     WindowckPlugin *wckp;
+    GtkWidget *refresh;
 
     /* setup transation domain */
     xfce_textdomain(GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR, "UTF-8");
@@ -322,10 +328,9 @@ static void windowck_construct(XfcePanelPlugin *plugin) {
     g_signal_connect (G_OBJECT (plugin), "about",
                     G_CALLBACK (wck_about), "windowck-plugin");
 
-//    //plugin->priv->menu_items;
-//    GtkWidget *item1 = gtk_menu_item_new_with_label("Test");
-//    xfce_panel_plugin_menu_insert_item(plugin, GTK_MENU_ITEM(item1));
-//    gtk_widget_show(GTK_WIDGET(item1));
+    /* add custom menu items */
+    refresh = show_refresh_item (plugin);
+    g_signal_connect (G_OBJECT (refresh), "activate", G_CALLBACK (on_refresh_item_activated), wckp);
 
     /* start tracking title size */
     initTitle(wckp);

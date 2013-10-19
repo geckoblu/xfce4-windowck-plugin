@@ -459,10 +459,17 @@ void initButtonsEvents (WBPlugin *wb) {
     }
 }
 
+static void on_refresh_item_activated (GtkMenuItem *refresh, WBPlugin *wb) {
+    wckbuttons_read (wb);
+    init_theme(wb);
+    initWnck(wb->win, wb->prefs->only_maximized, wb);
+}
+
 static void
 wckbuttons_construct (XfcePanelPlugin *plugin)
 {
     WBPlugin *wb;
+    GtkWidget *refresh;
 
     /* setup transation domain */
     xfce_textdomain(GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR, "UTF-8");
@@ -498,6 +505,11 @@ wckbuttons_construct (XfcePanelPlugin *plugin)
     xfce_panel_plugin_menu_show_about (plugin);
     g_signal_connect (G_OBJECT (plugin), "about",
                     G_CALLBACK (wck_about), "wckbuttons-plugin");
+
+
+    /* add custom menu items */
+    refresh = show_refresh_item (plugin);
+    g_signal_connect (G_OBJECT (refresh), "activate", G_CALLBACK (on_refresh_item_activated), wb);
 
     /* start tracking windows */
     wb->win = g_slice_new0 (WckUtils);

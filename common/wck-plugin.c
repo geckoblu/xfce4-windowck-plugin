@@ -59,3 +59,12 @@ wck_about (XfcePanelPlugin *plugin, const gchar *icon_name)
     if (icon)
         g_object_unref(G_OBJECT(icon) );
 }
+
+GtkWidget *show_refresh_item (XfcePanelPlugin *plugin) {
+    GtkWidget *refresh;
+    refresh = gtk_image_menu_item_new_from_stock  (GTK_STOCK_REFRESH, NULL);
+    xfce_panel_plugin_menu_insert_item(plugin, GTK_MENU_ITEM(refresh));
+    gtk_widget_show(GTK_WIDGET(refresh));
+
+    return refresh;
+}

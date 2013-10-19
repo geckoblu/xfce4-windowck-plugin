@@ -29,6 +29,7 @@
 G_BEGIN_DECLS
 
 void wck_about (XfcePanelPlugin *plugin, const gchar *icon_name);
+GtkWidget *show_refresh_item (XfcePanelPlugin *plugin);
 
 G_END_DECLS
 
