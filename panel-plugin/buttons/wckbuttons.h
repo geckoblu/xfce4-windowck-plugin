@@ -22,6 +22,7 @@
 #define __WCKBUTTONS_H__
 
 #include <common/wck-utils.h>
+#include <xfconf/xfconf.h>
 
 G_BEGIN_DECLS
 
@@ -63,10 +64,11 @@ typedef enum {
 } WBImageIndices;
 
 typedef struct {
-    gboolean only_maximized;           // [T/F] Only track maximized windows
-    gboolean show_on_desktop;      // [T/F] Show the plugin on desktop
-    gchar      *button_layout;    // Button layout ["XXX"] (example "HMC" : H=Hide, M=Maximize/unMaximize, C=Close)
-    gchar       *theme;                 // Selected theme name ("Inherit" = inherit from current xfwm4 theme)
+    gboolean only_maximized;                // [T/F] Only track maximized windows
+    gboolean show_on_desktop;               // [T/F] Show the plugin on desktop
+    gchar       *theme;                     // Selected theme path
+    gchar      *button_layout;              // Button layout ["XXX"] (example "HMC" : H=Hide, M=Maximize/unMaximize, C=Close)
+    gboolean sync_wm_theme;       // [T/F] Try to use xfwm4 active theme if possible.
 } WCKPreferences;
 
 /* Definition for our button */
@@ -84,14 +86,15 @@ typedef struct {
     GtkWidget *ebox;
     GtkWidget *hvbox;
 
-    WindowButton  **button;             // Array of buttons
+    WindowButton  **button;         // Array of buttons
 
-    WCKPreferences *prefs;              // Main properties
+    WCKPreferences *prefs;          // Main properties
     WckUtils *win;
 
     gint        setting2;
 
     GdkPixbuf *pixbufs[IMAGES_STATES][IMAGES_BUTTONS];
+    XfconfChannel *wm_channel;      // window manager chanel
 } WBPlugin;
 
 void wckbuttons_save (XfcePanelPlugin *plugin, WBPlugin *wb);

@@ -31,6 +31,7 @@ libwckbuttons_la_CFLAGS = \
 	$(LIBXFCE4UI_CFLAGS) \
 	$(LIBXFCE4PANEL_CFLAGS) \
 	$(LIBWNCK_CFLAGS) \
+	$(XFCONF_CFLAGS) \
 	$(PLATFORM_CFLAGS) \
 	-DDATADIR=\"$(datadir)\"
 
@@ -47,7 +48,8 @@ libwckbuttons_la_LIBADD = \
 	$(LIBXFCE4UTIL_LIBS) \
 	$(LIBXFCE4UI_LIBS) \
 	$(LIBWNCK_LIBS) \
-	$(LIBXFCE4PANEL_LIBS)
+	$(LIBXFCE4PANEL_LIBS) \
+	$(XFCONF_LIBS)
 
 libactions_la_DEPENDENCIES = \
 	$(top_builddir)/common/libwck-common.la
