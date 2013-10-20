@@ -16,7 +16,7 @@
  *
  *  Copyright (C) 2013 Cedric Leporcq  <cedl38@gmail.com>
  *
- *  This stuff is mostly derived from xfwm4 sources (setting.c)
+ *  Parts of this code is derived from xfwm4 sources (setting.c)
  *
  */
 
@@ -27,66 +27,80 @@
 #include "theme.h"
 
 #define XPM_COLOR_SYMBOL_SIZE 22
-#define THEMERC "themerc"
+#define UNITY_TEST_FILE         "close_focused_normal.png"
 
-gchar *
-getSystemThemeDir (void)
+
+static gchar *getSystemThemeDir (const gchar *default_theme)
 {
-    return g_build_filename (DATADIR, "themes", DEFAULT_THEME, "xfwm4", NULL);
+    return g_build_filename (DATADIR, "themes", default_theme, "xfwm4", NULL);
 }
 
+
+gchar *test_theme_dir (const gchar *theme, const char *themedir, const gchar *file) {
+    gchar *test_file, *abs_path, *path;
+
+    path = g_build_filename (theme, themedir, file, NULL);
+
+    xfce_resource_push_path (XFCE_RESOURCE_THEMES,
+                             DATADIR G_DIR_SEPARATOR_S "themes");
+    test_file = xfce_resource_lookup (XFCE_RESOURCE_THEMES, path);
+    xfce_resource_pop_path (XFCE_RESOURCE_THEMES);
+
+    g_free (path);
+
+    if (test_file)
+    {
+        abs_path = g_path_get_dirname (test_file);
+        g_free (test_file);
+
+        return abs_path;
+    }
+
+    return NULL;
+}
+
+
 gchar *
-getThemeDir (const gchar * theme, const gchar * file)
+getThemeDir (const gchar *theme, const gchar *default_theme)
 {
-    static const char *themedir[] = {
-      "windowck",
-      "xfwm4"
+    const gchar *file;
+    gchar *abs_path;
+    gint i;
+
+    static const char *themedirs[] = {
+      "xfwm4",
+      "unity",
+      NULL
     };
 
-    if (!theme)
-    {
-        return g_build_filename (DATADIR, "themes", DEFAULT_THEME, "xfwm4",
-                                 NULL);
-    }
-    else if (g_path_is_absolute (theme))
+    if (g_path_is_absolute (theme))
     {
         if (g_file_test (theme, G_FILE_TEST_IS_DIR))
         {
             return g_strdup (theme);
         }
-        else
-        {
-            return getSystemThemeDir ();
-        }
     }
-    else
+
+    for (i=0; themedirs[i]; i++)
     {
-        gchar *test_file, *path;
-        gint i;
+        if (strcmp(themedirs[i], "unity") == 0)
+            file = UNITY_TEST_FILE;
+        else
+            file = "wckrc";
 
-        for (i=0; i<2; i++) {
+        abs_path = test_theme_dir (theme, themedirs[i], file);
 
-            path = g_build_filename (theme, themedir[i], file, NULL);
-
-            xfce_resource_push_path (XFCE_RESOURCE_THEMES,
-                                     DATADIR G_DIR_SEPARATOR_S "themes");
-            test_file = xfce_resource_lookup (XFCE_RESOURCE_THEMES, path);
-            xfce_resource_pop_path (XFCE_RESOURCE_THEMES);
-
-            g_free (path);
-
-            if (test_file)
-            {
-                path = g_path_get_dirname (test_file);
-                g_free (test_file);
-                return path;
-            }
-        }
+        if (abs_path)
+            return abs_path;
     }
 
     /* Pfew, really can't find that theme nowhere! */
-    return getSystemThemeDir ();
+    if (default_theme)
+        return getSystemThemeDir (default_theme);
+
+    return NULL;
 }
+
 
 static gboolean
 setGValue (const gchar * lvalue, const GValue *rvalue, Settings *rc)
@@ -123,6 +137,7 @@ setGValue (const gchar * lvalue, const GValue *rvalue, Settings *rc)
     return FALSE;
 }
 
+
 static gboolean
 setStringValue (const gchar * lvalue, const gchar *value, Settings *rc)
 {
@@ -132,9 +147,13 @@ setStringValue (const gchar * lvalue, const gchar *value, Settings *rc)
     return setGValue (lvalue, &tmp_val, rc);
 }
 
-/* load the theme according to xfwm4 theme format */
-void loadTheme (WBPlugin *wb)
-{
+
+/* use xfwm4 buttons naming */
+static void get_wm_pixbuf (const gchar *themedir, WBPlugin *wb) {
+    gint i,j;
+    gchar imagename[30];
+    xfwmColorSymbol colsym[ XPM_COLOR_SYMBOL_SIZE + 1 ];
+
     Settings rc[] = {
         /* Do not change the order of the following parameters */
         {"active_text_color", NULL, G_TYPE_STRING, FALSE},
@@ -213,7 +232,6 @@ void loadTheme (WBPlugin *wb)
         NULL
     };
 
-    /* use xfwm4 buttons naming */
     static const char *button_names[] = {
       //~ "menu",
       //~ "stick",
@@ -230,12 +248,6 @@ void loadTheme (WBPlugin *wb)
       "prelight",
       "pressed"
     };
-
-    gint i,j;
-    gchar imagename[30];
-    gchar *theme;
-    const char *spec;
-    xfwmColorSymbol colsym[ XPM_COLOR_SYMBOL_SIZE + 1 ];
 
     while (ui_part[i] && ui_state[i])
     {
@@ -255,17 +267,127 @@ void loadTheme (WBPlugin *wb)
     colsym[XPM_COLOR_SYMBOL_SIZE].name = NULL;
     colsym[XPM_COLOR_SYMBOL_SIZE].value = NULL;
 
-    /* get theme filename */
-    theme = getThemeDir (wb->prefs->theme, THEMERC);
-
     for (i = 0; i < IMAGES_BUTTONS; i++)
     {
         for (j = 0; j < IMAGES_STATES; j++)
         {
             g_snprintf(imagename, sizeof (imagename), "%s-%s", button_names[i], button_state_names[j]);
-            wb->pixbufs[i][j] = xfwmPixbufLoad (theme, imagename, colsym);
+            wb->pixbufs[i][j] = xfwmPixbufLoad (themedir, imagename, colsym);
         }
     }
+}
+
+
+static void get_unity_pixbuf (const gchar *themedir, WBPlugin *wb) {
+    gint i,j;
+    gchar imagename[40];
+
+    static const char *button_names[] = {
+      "minimize",
+      "unmaximize",
+      "maximize",
+      "close"
+    };
+
+    static const char *button_state_names[] = {
+      "unfocused",
+      "focused_normal",
+      "focused_prelight",
+      "focused_pressed"
+    };
+
+    for (i = 0; i < IMAGES_BUTTONS; i++)
+    {
+        for (j = 0; j < IMAGES_STATES; j++)
+        {
+            g_snprintf(imagename, sizeof (imagename), "%s_%s", button_names[i], button_state_names[j]);
+            wb->pixbufs[i][j] = pixbuf_alpha_load (themedir, imagename);
+        }
+    }
+}
+
+
+gchar *button_layout_filter  (const gchar *button_layout)
+{
+    gint i, j;
+    gchar filtered_layout[4] = {0};
+
+    j = 0;
+    for (i = 0; i < strlen (button_layout); i++)
+    {
+        switch (button_layout[i])
+        {
+            case 'H':
+                filtered_layout[j++] = 'H';
+                break;
+            case 'M':
+                filtered_layout[j++] = 'M';
+                break;
+            case 'C':
+                filtered_layout[j++] = 'C';
+        }
+    }
+    filtered_layout[j] = '\0';
+
+    return g_strdup (filtered_layout);
+}
+
+
+static int getButtonFromLetter (char chr)
+{
+
+    TRACE ("entering getButtonFromLetter");
+
+    switch (chr)
+    {
+        case 'H':
+                return MINIMIZE_BUTTON;
+        case 'M':
+                return MAXIMIZE_BUTTON;
+        case 'C':
+                return CLOSE_BUTTON;
+        default:
+            return -1;
+    }
+}
+
+
+/* Replace buttons accordingly to button_layout and visible state */
+static void replace_buttons (const gchar *button_layout, WBPlugin *wb)
+{
+    gint i, j, button;
+
+    j = 0;
+    for (i = 0; i < strlen (button_layout); i++)
+    {
+        button= getButtonFromLetter (button_layout[i]);
+        if (button >= 0 && wb->button[i]->visible)
+        {
+            gtk_box_reorder_child (GTK_BOX (wb->hvbox), GTK_WIDGET(wb->button[button]->eventbox), j++);
+            gtk_widget_show_all(GTK_WIDGET(wb->button[button]->eventbox));
+        }
+        else {
+            gtk_widget_hide_all(GTK_WIDGET(wb->button[button]->eventbox));
+        }
+    }
+}
+
+
+/* load the theme according to xfwm4 theme format */
+void loadTheme (WBPlugin *wb)
+{
+    gint i;
+    gchar *themedir;
+
+    /* get theme dir */
+    themedir = getThemeDir (wb->prefs->theme, DEFAULT_THEME);
+
+    if (strcmp (g_path_get_basename (themedir), "unity") == 0)
+        get_unity_pixbuf (themedir, wb);
+    else
+        get_wm_pixbuf (themedir, wb);
+
+    g_free (themedir);
 
     /* try to replace missing images */
 
@@ -290,4 +412,7 @@ void loadTheme (WBPlugin *wb)
         if (!wb->pixbufs[i][IMAGE_PRELIGHT])
             wb->pixbufs[i][IMAGE_PRELIGHT] = wb->pixbufs[i][IMAGE_PRESSED];
     }
+
+    /* Replace buttons accordingly to button_layout and visible state */
+    replace_buttons(wb->prefs->button_layout, wb);
 }

@@ -694,13 +694,11 @@ xpm_image_load (const char *filename, xfwmColorSymbol *color_sym)
     return pixbuf;
 }
 
-static GdkPixbuf *
-xfwmPixmapCompose (GdkPixbuf *pixbuf, const gchar * dir, const gchar * file)
+GdkPixbuf *
+pixbuf_alpha_load (const gchar * dir, const gchar * file)
 {
-    GdkPixbuf *alpha;
     gchar *filepng;
     gchar *filename;
-    gint width, height;
     int i;
 
     static const char* image_types[] = {
@@ -712,9 +710,7 @@ xfwmPixmapCompose (GdkPixbuf *pixbuf, const gchar * dir, const gchar * file)
       NULL };
 
     i = 0;
-    alpha = NULL;
-
-    while ((image_types[i]) && (!alpha))
+    while ((image_types[i]))
     {
         filepng = g_strdup_printf ("%s.%s", file, image_types[i]);
         filename = g_build_filename (dir, filepng, NULL);
@@ -722,11 +718,22 @@ xfwmPixmapCompose (GdkPixbuf *pixbuf, const gchar * dir, const gchar * file)
 
         if (g_file_test (filename, G_FILE_TEST_IS_REGULAR))
         {
-            alpha = gdk_pixbuf_new_from_file (filename, NULL);
+            return gdk_pixbuf_new_from_file (filename, NULL);
         }
         g_free (filename);
         ++i;
     }
+    return NULL;
+}
+
+
+static GdkPixbuf *
+xfwmPixmapCompose (GdkPixbuf *pixbuf, const gchar * dir, const gchar * file)
+{
+    GdkPixbuf *alpha;
+    gint width, height;
+
+    alpha = pixbuf_alpha_load (dir, file);
 
     if (!alpha)
     {

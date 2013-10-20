@@ -74,10 +74,10 @@ wckbuttons_save (XfcePanelPlugin *plugin,
         xfce_rc_write_bool_entry(rc, "only_maximized", wb->prefs->only_maximized);
         xfce_rc_write_bool_entry(rc, "show_on_desktop", wb->prefs->show_on_desktop);
         if (wb->prefs->button_layout)
-        xfce_rc_write_entry    (rc, "button_layout", wb->prefs->button_layout);
+            xfce_rc_write_entry (rc, "button_layout", wb->prefs->button_layout);
 
         if (wb->prefs->theme)
-        xfce_rc_write_entry    (rc, "theme", wb->prefs->theme);
+            xfce_rc_write_entry (rc, "theme", wb->prefs->theme);
 
         xfce_rc_write_int_entry  (rc, "setting2", wb->setting2);
 
@@ -115,7 +115,8 @@ wckbuttons_read (WBPlugin *wb)
         wb->prefs->only_maximized = xfce_rc_read_bool_entry(rc, "only_maximized", DEFAULT_ONLY_MAXIMIZED);
         wb->prefs->show_on_desktop = xfce_rc_read_bool_entry(rc, "show_on_desktop", DEFAULT_SHOW_ON_DESKTOP);
         button_layout = xfce_rc_read_entry (rc, "button_layout", DEFAULT_BUTTON_LAYOUT);
-        wb->prefs->button_layout = g_strdup (button_layout);
+        wb->prefs->button_layout = button_layout_filter (button_layout);
+
         theme = xfce_rc_read_entry (rc, "theme", DEFAULT_THEME);
         wb->prefs->theme = g_strdup (theme);
 
@@ -148,51 +149,17 @@ WindowButton **createButtons (WBPlugin *wb) {
         button[i]->eventbox = GTK_EVENT_BOX (gtk_event_box_new());
         button[i]->image = GTK_IMAGE (gtk_image_new());
 
-        // Woohooo! This line eliminates MatePanelPlugin borders - no more workarounds!
         gtk_widget_set_can_focus (GTK_WIDGET(button[i]->eventbox), TRUE);
 
         gtk_container_add (GTK_CONTAINER (button[i]->eventbox), GTK_WIDGET(button[i]->image));
         gtk_event_box_set_visible_window (button[i]->eventbox, FALSE);
+        gtk_box_pack_start (GTK_BOX (wb->hvbox), GTK_WIDGET(button[i]->eventbox), TRUE, TRUE, 0);
 
         /* Add hover events to eventboxes */
         gtk_widget_add_events (GTK_WIDGET (button[i]->eventbox), GDK_ENTER_NOTIFY_MASK); //add the "enter" signal
         gtk_widget_add_events (GTK_WIDGET (button[i]->eventbox), GDK_LEAVE_NOTIFY_MASK); //add the "leave" signal
     }
     return button;
-}
-
-static int
-getButtonFromLetter (char chr)
-{
-
-    TRACE ("entering getButtonFromLetter");
-
-    switch (chr)
-    {
-        case 'H':
-                return MINIMIZE_BUTTON;
-        case 'M':
-                return MAXIMIZE_BUTTON;
-        case 'C':
-                return CLOSE_BUTTON;
-        default:
-            return -1;
-    }
-}
-
-// Places our buttons in correct order
-void placeButtons(WBPlugin *wb) {
-    gint i, button;
-
-    for (i = 0; i < strlen (wb->prefs->button_layout); i++)
-    {
-        button= getButtonFromLetter (wb->prefs->button_layout[i]);
-        if (button >= 0 && wb->button[i]->visible)
-        {
-            gtk_box_pack_start (GTK_BOX (wb->hvbox), GTK_WIDGET(wb->button[button]->eventbox), TRUE, TRUE, 0);
-            gtk_widget_show_all(GTK_WIDGET(wb->button[button]->eventbox));
-        }
-    }
 }
 
 static WBPlugin *
@@ -223,9 +190,6 @@ wckbuttons_new (XfcePanelPlugin *plugin)
 
     /* load images */
     loadTheme(wb);
-
-    /* place buttons accordingly to button_layout pref */
-    placeButtons(wb);
 
     gtk_widget_show (wb->ebox);
     gtk_widget_show (wb->hvbox);

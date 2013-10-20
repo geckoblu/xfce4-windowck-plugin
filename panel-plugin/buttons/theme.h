@@ -28,6 +28,7 @@
 
 /* default settings */
 #define DEFAULT_THEME "Windowck"
+#define THEMERC "themerc"
 
 G_BEGIN_DECLS
 
@@ -38,7 +39,11 @@ typedef struct {
     gboolean required;
 } Settings;
 
-void loadTheme (WBPlugin *);
+
+void loadTheme (WBPlugin *wb);
+gchar *getThemeDir (const gchar *theme, const gchar *default_path);
+gchar *test_theme_dir (const gchar *theme, const char *themedir, const gchar *file);
+gchar *button_layout_filter  (const gchar *button_layout);
 
 G_END_DECLS
 

@@ -108,7 +108,6 @@ panel-plugin/title/Makefile
 panel-plugin/buttons/Makefile
 themes/Makefile
 themes/windowck/Makefile
-themes/elementary/Makefile
 po/Makefile.in
 ])
 

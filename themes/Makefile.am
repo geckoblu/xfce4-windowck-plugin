@@ -1,4 +1,4 @@
 # themes/Makefile.am
 #
 
-SUBDIRS = windowck elementary
+SUBDIRS = windowck

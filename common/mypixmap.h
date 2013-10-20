@@ -65,5 +65,7 @@ typedef struct
 XPMColor;
 
 GdkPixbuf *             xfwmPixbufLoad (const gchar *, const gchar *, xfwmColorSymbol *);
+GdkPixbuf *
+pixbuf_alpha_load (const gchar * dir, const gchar * file);
 
 #endif /* INC_MYPIXMAP_H */
