@@ -64,6 +64,7 @@ typedef enum {
 } WBImageIndices;
 
 typedef struct {
+    GtkBuilder *builder;
     gboolean only_maximized;                // [T/F] Only track maximized windows
     gboolean show_on_desktop;               // [T/F] Show the plugin on desktop
     gchar       *theme;                     // Selected theme path
@@ -75,7 +76,6 @@ typedef struct {
 typedef struct {
     GtkEventBox     *eventbox;
     GtkImage        *image;
-    gboolean        visible;            // Indicates whether the button is visible
 } WindowButton;
 
 /* plugin structure for title and buttons*/
@@ -95,6 +95,7 @@ typedef struct {
 
     GdkPixbuf *pixbufs[IMAGES_STATES][IMAGES_BUTTONS];
     XfconfChannel *wm_channel;      // window manager chanel
+    gulong wph;                 // xfwm chanel property changed handler id
 } WBPlugin;
 
 void wckbuttons_save (XfcePanelPlugin *plugin, WBPlugin *wb);

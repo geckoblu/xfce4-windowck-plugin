@@ -362,6 +362,34 @@ gchar *button_layout_filter  (const gchar *string, const gchar *default_layout)
 }
 
 
+gchar *opposite_layout_filter  (const gchar *string)
+{
+    gint i, j;
+    gchar chr;
+    gchar layout[8] = {0};
+
+    /* WARNING : beware of bluffer overflow !!!  */
+    j = 0;
+    for (i = 0; i < strlen (string) && j < 8; i++)
+    {
+        switch (string[i])
+        {
+            case 'H':
+            case 'M':
+            case 'C':
+                break;
+            default:
+                layout[j] = string[i];
+                j++;
+        }
+    }
+
+    layout[j] = '\0';
+
+    return g_strdup (layout);
+}
+
+
 static int getButtonFromLetter (char chr)
 {
 
@@ -393,7 +421,7 @@ void replace_buttons (const gchar *button_layout, WBPlugin *wb)
     for (i = 0; i < strlen (button_layout); i++)
     {
         button = getButtonFromLetter (button_layout[i]);
-        if (button >= 0 && wb->button[i]->visible)
+        if (button >= 0 && wb->button[button]->image)
         {
             gtk_box_reorder_child (GTK_BOX (wb->hvbox), GTK_WIDGET(wb->button[button]->eventbox), j);
 
@@ -453,14 +481,6 @@ void loadTheme (const gchar *theme, WBPlugin *wb)
     g_free (themedir);
 
     /* try to replace missing images */
-
-    for (i = 0; i < BUTTONS; i++)
-    {
-        if (G_LIKELY(wb->pixbufs[i][IMAGE_FOCUSED]))
-            wb->button[i]->visible = TRUE;
-        else
-            wb->button[i]->visible = FALSE;
-    }
 
     for (i = 0; i < IMAGES_STATES; i++)
     {

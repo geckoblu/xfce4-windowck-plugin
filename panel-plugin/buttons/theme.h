@@ -47,6 +47,7 @@ gchar *getThemeDir (const gchar *theme, const gchar *default_path);
 gchar *test_theme_dir (const gchar *theme, const char *themedir, const gchar *file);
 gchar *get_rc_button_layout (const gchar *theme);
 gchar *button_layout_filter  (const gchar *button_layout, const gchar *default_layout);
+gchar *opposite_layout_filter  (const gchar *string);
 
 G_END_DECLS
 

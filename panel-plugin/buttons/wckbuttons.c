@@ -42,6 +42,12 @@
 #define DEFAULT_BUTTON_LAYOUT "HMC"
 #define DEFAULT_SETTING2 1
 
+#define BUTTONS_SIGNALS_CONNECT(name, id) \
+        g_signal_connect (G_OBJECT (wb->button[id]->eventbox), "button-press-event", G_CALLBACK (name##_button_pressed), wb); \
+        g_signal_connect (G_OBJECT (wb->button[id]->eventbox), "button-release-event", G_CALLBACK (name##_button_release), wb); \
+        g_signal_connect (G_OBJECT (wb->button[id]->eventbox), "enter-notify-event", ((GCallback) (name##_button_hover_enter)), wb); \
+        g_signal_connect (G_OBJECT (wb->button[id]->eventbox), "leave-notify-event", G_CALLBACK (name##_button_hover_leave), wb);
+
 
 /* prototypes */
 static void
@@ -437,28 +443,6 @@ static gboolean on_close_button_hover_enter (GtkWidget *widget,
     return TRUE;
 }
 
-void initButtonsEvents (WBPlugin *wb) {
-    /* Connect buttons to their respective callback functions */
-    if (wb->button[MINIMIZE_BUTTON]->visible) {
-        g_signal_connect (G_OBJECT (wb->button[MINIMIZE_BUTTON]->eventbox), "button-press-event", G_CALLBACK (on_minimize_button_pressed), wb);
-        g_signal_connect (G_OBJECT (wb->button[MINIMIZE_BUTTON]->eventbox), "button-release-event", G_CALLBACK (on_minimize_button_release), wb);
-        g_signal_connect (G_OBJECT (wb->button[MINIMIZE_BUTTON]->eventbox), "enter-notify-event", G_CALLBACK (on_minimize_button_hover_enter), wb);
-        g_signal_connect (G_OBJECT (wb->button[MINIMIZE_BUTTON]->eventbox), "leave-notify-event", G_CALLBACK (on_minimize_button_hover_leave), wb);
-    }
-    if (wb->button[MAXIMIZE_BUTTON]->visible) {
-        g_signal_connect (G_OBJECT (wb->button[MAXIMIZE_BUTTON]->eventbox), "button-press-event", G_CALLBACK (on_maximize_button_pressed), wb);
-        g_signal_connect (G_OBJECT (wb->button[MAXIMIZE_BUTTON]->eventbox), "button-release-event", G_CALLBACK (on_maximize_button_release), wb);
-        g_signal_connect (G_OBJECT (wb->button[MAXIMIZE_BUTTON]->eventbox), "enter-notify-event", G_CALLBACK (on_maximize_button_hover_enter), wb);
-        g_signal_connect (G_OBJECT (wb->button[MAXIMIZE_BUTTON]->eventbox), "leave-notify-event", G_CALLBACK (on_maximize_button_hover_leave), wb);
-    }
-    if (wb->button[MAXIMIZE_BUTTON]->visible) {
-        g_signal_connect (G_OBJECT (wb->button[CLOSE_BUTTON]->eventbox), "button-press-event", G_CALLBACK (on_close_button_pressed), wb);
-        g_signal_connect (G_OBJECT (wb->button[CLOSE_BUTTON]->eventbox), "button-release-event", G_CALLBACK (on_close_button_release), wb);
-        g_signal_connect (G_OBJECT (wb->button[CLOSE_BUTTON]->eventbox), "enter-notify-event", G_CALLBACK (on_close_button_hover_enter), wb);
-        g_signal_connect (G_OBJECT (wb->button[CLOSE_BUTTON]->eventbox), "leave-notify-event", G_CALLBACK (on_close_button_hover_leave), wb);
-    }
-}
-
 static void on_refresh_item_activated (GtkMenuItem *refresh, WBPlugin *wb) {
     wckbuttons_read (wb);
     init_theme(wb);
@@ -519,7 +503,9 @@ wckbuttons_construct (XfcePanelPlugin *plugin)
     init_theme(wb);
 
     /* start tracking buttons events*/
-    initButtonsEvents(wb);
+    BUTTONS_SIGNALS_CONNECT(on_minimize, MINIMIZE_BUTTON);
+    BUTTONS_SIGNALS_CONNECT(on_maximize, MAXIMIZE_BUTTON);
+    BUTTONS_SIGNALS_CONNECT(on_close, CLOSE_BUTTON);
 }
 
 /* register the plugin */
