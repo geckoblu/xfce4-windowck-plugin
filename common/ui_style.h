@@ -33,7 +33,7 @@
 
 #define UNFOCUSED_TEXT_ALPHA 0.5
 
-GdkColor queryColor (GtkWidget * win, GdkColor c);
+GdkColor query_color (GtkWidget * win, GdkColor c);
 GdkColor mix(GdkColor  color2, GdkColor  color1, float a);
 gchar                   *getUIStyle                             (GtkWidget *,
                                                                  const gchar *,

@@ -49,12 +49,14 @@
 #include "mypixmap.h"
 #include "xpm-color-table.h"
 
+
 enum buf_op
 {
     op_header,
     op_cmap,
     op_body
 };
+
 
 struct file_handle
 {
@@ -107,12 +109,14 @@ struct file_handle
  * terms specified in this license.
  */
 
+
 static int
 compare_xcolor_entries (const void *a, const void *b)
 {
     return g_ascii_strcasecmp ((const char *) a,
                                color_names + ((const XPMColorEntry *) b)->name_offset);
 }
+
 
 static gboolean
 find_color(const char *name, XPMColor *colorPtr)
@@ -132,6 +136,7 @@ find_color(const char *name, XPMColor *colorPtr)
 
     return TRUE;
 }
+
 
 static gboolean
 parse_color (const char *spec, XPMColor   *colorPtr)
@@ -188,6 +193,7 @@ parse_color (const char *spec, XPMColor   *colorPtr)
     return TRUE;
 }
 
+
 static gint
 xpm_seek_string (FILE *infile, const gchar *str)
 {
@@ -207,6 +213,7 @@ xpm_seek_string (FILE *infile, const gchar *str)
 
     return FALSE;
 }
+
 
 static gint
 xpm_seek_char (FILE *infile, gchar c)
@@ -245,6 +252,7 @@ xpm_seek_char (FILE *infile, gchar c)
 
     return FALSE;
 }
+
 
 static gint
 xpm_read_string (FILE *infile, gchar **buffer, guint *buffer_size)
@@ -310,6 +318,7 @@ out:
     return ret;
 }
 
+
 static const gchar *
 search_color_symbol (gchar *symbol, xfwmColorSymbol *color_sym)
 {
@@ -326,6 +335,7 @@ search_color_symbol (gchar *symbol, xfwmColorSymbol *color_sym)
     }
     return NULL;
 }
+
 
 static gchar *
 xpm_extract_color (const gchar *buffer, xfwmColorSymbol *color_sym)
@@ -463,6 +473,7 @@ xpm_extract_color (const gchar *buffer, xfwmColorSymbol *color_sym)
     }
 }
 
+
 static const gchar *
 file_buffer (enum buf_op op, gpointer handle)
 {
@@ -500,6 +511,7 @@ file_buffer (enum buf_op op, gpointer handle)
 
     return NULL;
 }
+
 
 /* This function does all the work. */
 static GdkPixbuf *
@@ -662,6 +674,7 @@ pixbuf_create_from_xpm (gpointer handle, xfwmColorSymbol *color_sym)
     return pixbuf;
 }
 
+
 static GdkPixbuf *
 xpm_image_load (const char *filename, xfwmColorSymbol *color_sym)
 {
@@ -693,6 +706,7 @@ xpm_image_load (const char *filename, xfwmColorSymbol *color_sym)
 
     return pixbuf;
 }
+
 
 GdkPixbuf *
 pixbuf_alpha_load (const gchar * dir, const gchar * file)
@@ -728,7 +742,7 @@ pixbuf_alpha_load (const gchar * dir, const gchar * file)
 
 
 static GdkPixbuf *
-xfwmPixmapCompose (GdkPixbuf *pixbuf, const gchar * dir, const gchar * file)
+pixmap_compose (GdkPixbuf *pixbuf, const gchar * dir, const gchar * file)
 {
     GdkPixbuf *alpha;
     gint width, height;
@@ -760,8 +774,9 @@ xfwmPixmapCompose (GdkPixbuf *pixbuf, const gchar * dir, const gchar * file)
     return pixbuf;
 }
 
+
 GdkPixbuf *
-xfwmPixbufLoad (const gchar * dir, const gchar * file, xfwmColorSymbol * cs)
+pixbuf_load (const gchar * dir, const gchar * file, xfwmColorSymbol * cs)
 {
     gchar *filename;
     gchar *filexpm;
@@ -779,6 +794,6 @@ xfwmPixbufLoad (const gchar * dir, const gchar * file, xfwmColorSymbol * cs)
     g_free (filename);
 
     /* Compose with other image formats, if any available. */
-    pixbuf = xfwmPixmapCompose (pixbuf, dir, file);
+    pixbuf = pixmap_compose (pixbuf, dir, file);
     return pixbuf;
 }

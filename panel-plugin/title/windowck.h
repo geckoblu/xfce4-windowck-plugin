@@ -46,8 +46,8 @@ typedef enum SizeMode
 } SizeMode;
 
 typedef struct {
-	GtkEventBox 	*eventbox;
-	GtkImage 		*image;
+    GtkEventBox     *eventbox;
+    GtkImage        *image;
     gushort            size;
 } WindowIcon;
 
@@ -84,7 +84,7 @@ typedef struct {
     GtkWidget *hvbox;
     GtkWidget *alignment;
     GtkLabel *title;
-    WindowIcon  *icon;			    // Icon widget
+    WindowIcon  *icon;              // Icon widget
 
     WCKPreferences     *prefs;
     WckUtils *win;

@@ -95,7 +95,6 @@ wckbuttons_save (XfcePanelPlugin *plugin,
 }
 
 
-
 static void
 wckbuttons_read (WBPlugin *wb)
 {
@@ -104,7 +103,7 @@ wckbuttons_read (WBPlugin *wb)
     const gchar *button_layout, *theme;
 
     /* allocate memory for the preferences structure */
-    wb->prefs = g_slice_new0(WCKPreferences);
+    wb->prefs = g_slice_new0(WBPreferences);
 
     /* get the plugin config file location */
     file = xfce_panel_plugin_save_location (wb->plugin, TRUE);
@@ -149,11 +148,13 @@ wckbuttons_read (WBPlugin *wb)
     wb->setting2 = DEFAULT_SETTING2;
 }
 
-WindowButton **createButtons (WBPlugin *wb) {
+WindowButton **create_buttons (WBPlugin *wb)
+{
     WindowButton **button = g_new(WindowButton*, BUTTONS);
     gint i;
 
-    for (i=0; i<BUTTONS; i++) {
+    for (i=0; i<BUTTONS; i++)
+    {
         button[i] = g_new0 (WindowButton, 1);
         button[i]->eventbox = GTK_EVENT_BOX (gtk_event_box_new());
         button[i]->image = GTK_IMAGE (gtk_image_new());
@@ -170,6 +171,7 @@ WindowButton **createButtons (WBPlugin *wb) {
     }
     return button;
 }
+
 
 static WBPlugin *
 wckbuttons_new (XfcePanelPlugin *plugin)
@@ -195,7 +197,7 @@ wckbuttons_new (XfcePanelPlugin *plugin)
     wb->hvbox = xfce_hvbox_new (orientation, FALSE, 2);
 
     /* create buttons */
-    wb->button = createButtons (wb);
+    wb->button = create_buttons (wb);
 
     gtk_widget_show (wb->ebox);
     gtk_widget_show (wb->hvbox);
@@ -205,9 +207,7 @@ wckbuttons_new (XfcePanelPlugin *plugin)
 }
 
 
-
-static void
-wckbuttons_free (XfcePanelPlugin *plugin, WBPlugin    *wb)
+static void wckbuttons_free (XfcePanelPlugin *plugin, WBPlugin    *wb)
 {
     GtkWidget *dialog;
 
@@ -225,10 +225,9 @@ wckbuttons_free (XfcePanelPlugin *plugin, WBPlugin    *wb)
 
     /* free the plugin structure */
     g_slice_free(WckUtils, wb->win);
-    g_slice_free(WCKPreferences, wb->prefs);
+    g_slice_free(WBPreferences, wb->prefs);
     g_slice_free (WBPlugin, wb);
 }
-
 
 
 static void
@@ -239,7 +238,6 @@ wckbuttons_orientation_changed (XfcePanelPlugin *plugin,
   /* change the orienation of the box */
   xfce_hvbox_set_orientation (XFCE_HVBOX (wb->hvbox), orientation);
 }
-
 
 
 static gboolean
@@ -262,7 +260,9 @@ wckbuttons_size_changed (XfcePanelPlugin *plugin,
     return TRUE;
 }
 
-setMaximizeButtonImage (WBPlugin *wb, gushort image_state) {
+
+static set_maximize_button_image (WBPlugin *wb, gushort image_state)
+{
     if (wb->win->controlwindow && wnck_window_is_maximized(wb->win->controlwindow)) {
         gtk_image_set_from_pixbuf (wb->button[MAXIMIZE_BUTTON]->image, wb->pixbufs[IMAGE_UNMAXIMIZE][image_state]);
     } else {
@@ -270,7 +270,9 @@ setMaximizeButtonImage (WBPlugin *wb, gushort image_state) {
     }
 }
 
-void on_wck_state_changed (WnckWindow *controlwindow, WBPlugin *wb) {
+
+void on_wck_state_changed (WnckWindow *controlwindow, WBPlugin *wb)
+{
     gushort image_state;
 
     if (controlwindow && (wnck_window_is_active(controlwindow)))
@@ -281,36 +283,43 @@ void on_wck_state_changed (WnckWindow *controlwindow, WBPlugin *wb) {
     /* update buttons images */
     gtk_image_set_from_pixbuf (wb->button[MINIMIZE_BUTTON]->image, wb->pixbufs[IMAGE_MINIMIZE][image_state]);
 
-    setMaximizeButtonImage (wb, image_state);
+    set_maximize_button_image (wb, image_state);
 
     gtk_image_set_from_pixbuf (wb->button[CLOSE_BUTTON]->image, wb->pixbufs[IMAGE_CLOSE][image_state]);
 }
 
-void on_control_window_changed (WnckWindow *controlwindow, WnckWindow *previous, WBPlugin *wb) {
+
+void on_control_window_changed (WnckWindow *controlwindow, WnckWindow *previous, WBPlugin *wb)
+{
 
     if (controlwindow
-        && (wnck_window_get_window_type (controlwindow) != WNCK_WINDOW_DESKTOP)) {
+        && (wnck_window_get_window_type (controlwindow) != WNCK_WINDOW_DESKTOP))
+    {
         gtk_widget_set_sensitive(GTK_WIDGET(wb->hvbox), TRUE);
         on_wck_state_changed (controlwindow, wb);
         if (!gtk_widget_get_visible(GTK_WIDGET(wb->hvbox)))
             gtk_widget_show_all(GTK_WIDGET(wb->hvbox));
     }
-    else if (wb->prefs->show_on_desktop) {
+    else if (wb->prefs->show_on_desktop)
+    {
         gtk_widget_set_sensitive(GTK_WIDGET(wb->hvbox), FALSE);
         on_wck_state_changed (controlwindow, wb);
         if (!gtk_widget_get_visible(GTK_WIDGET(wb->hvbox)))
             gtk_widget_show_all(GTK_WIDGET(wb->hvbox));
     }
-    else {
+    else
+    {
         if (gtk_widget_get_visible(GTK_WIDGET(wb->hvbox)))
             gtk_widget_hide_all(GTK_WIDGET(wb->hvbox));
     }
 }
 
+
 /* Called when we release the click on a button */
 static gboolean on_minimize_button_release (GtkWidget *event_box,
                                GdkEventButton *event,
-                               WBPlugin *wb) {
+                               WBPlugin *wb)
+{
 
     if (event->button != 1) return FALSE;
 
@@ -319,10 +328,12 @@ static gboolean on_minimize_button_release (GtkWidget *event_box,
     return TRUE;
 }
 
+
 /* Called when we click on a button */
 static gboolean on_minimize_button_pressed (GtkWidget *event_box,
                              GdkEventButton *event,
-                             WBPlugin *wb) {
+                             WBPlugin *wb)
+{
 
     if (event->button != 1) return FALSE;
 
@@ -331,10 +342,12 @@ static gboolean on_minimize_button_pressed (GtkWidget *event_box,
     return TRUE;
 }
 
+
 /* Makes the button stop 'glowing' when the mouse leaves it */
 static gboolean on_minimize_button_hover_leave (GtkWidget *widget,
                          GdkEventCrossing *event,
-                         WBPlugin *wb) {
+                         WBPlugin *wb)
+{
     gboolean image_state;
     image_state = wnck_window_is_active(wb->win->controlwindow);
 
@@ -342,67 +355,73 @@ static gboolean on_minimize_button_hover_leave (GtkWidget *widget,
     return TRUE;
 }
 
+
 /* Makes the button 'glow' when the mouse enters it */
 static gboolean on_minimize_button_hover_enter (GtkWidget *widget,
                          GdkEventCrossing *event,
-                         WBPlugin *wb) {
-
+                         WBPlugin *wb)
+{
     gtk_image_set_from_pixbuf (wb->button[MINIMIZE_BUTTON]->image, wb->pixbufs[IMAGE_MINIMIZE][IMAGE_PRELIGHT]);
 
     return TRUE;
 }
 
+
 /* Called when we release the click on a button */
 static gboolean on_maximize_button_release (GtkWidget *event_box,
                                GdkEventButton *event,
-                               WBPlugin *wb) {
-
+                               WBPlugin *wb)
+{
     if (event->button != 1) return FALSE;
 
-    toggleMaximize(wb->win->controlwindow);
+    toggle_maximize(wb->win->controlwindow);
 
     return TRUE;
 }
+
 
 /* Called when we click on a button */
 static gboolean on_maximize_button_pressed (GtkWidget *event_box,
                              GdkEventButton *event,
-                             WBPlugin *wb) {
-
+                             WBPlugin *wb)
+{
     if (event->button != 1) return FALSE;
 
-    setMaximizeButtonImage (wb, IMAGE_PRESSED);
+    set_maximize_button_image (wb, IMAGE_PRESSED);
 
     return TRUE;
 }
 
+
 /* Makes the button stop 'glowing' when the mouse leaves it */
 static gboolean on_maximize_button_hover_leave (GtkWidget *widget,
                          GdkEventCrossing *event,
-                         WBPlugin *wb) {
-
+                         WBPlugin *wb)
+{
     if (wb->win->controlwindow) {
-        setMaximizeButtonImage (wb, wnck_window_is_active(wb->win->controlwindow));
+        set_maximize_button_image (wb, wnck_window_is_active(wb->win->controlwindow));
     }
 
     return TRUE;
 }
 
+
 /* Makes the button 'glow' when the mouse enters it */
 static gboolean on_maximize_button_hover_enter (GtkWidget *widget,
                          GdkEventCrossing *event,
-                         WBPlugin *wb) {
-
-    setMaximizeButtonImage (wb, IMAGE_PRELIGHT);
+                         WBPlugin *wb)
+{
+    set_maximize_button_image (wb, IMAGE_PRELIGHT);
 
     return TRUE;
 }
 
+
 /* Called when we release the click on a button */
 static gboolean on_close_button_release (GtkWidget *event_box,
                                GdkEventButton *event,
-                               WBPlugin *wb) {
-
+                               WBPlugin *wb)
+{
     if (event->button != 1) return FALSE;
 
     wnck_window_close(wb->win->controlwindow, GDK_CURRENT_TIME);
@@ -410,11 +429,12 @@ static gboolean on_close_button_release (GtkWidget *event_box,
     return TRUE;
 }
 
+
 /* Called when we click on a button */
 static gboolean on_close_button_pressed (GtkWidget *event_box,
                              GdkEventButton *event,
-                             WBPlugin *wb) {
-
+                             WBPlugin *wb)
+{
     if (event->button != 1) return FALSE;
 
     gtk_image_set_from_pixbuf (wb->button[CLOSE_BUTTON]->image, wb->pixbufs[IMAGE_CLOSE][IMAGE_PRESSED]);
@@ -422,10 +442,12 @@ static gboolean on_close_button_pressed (GtkWidget *event_box,
     return TRUE;
 }
 
+
 /* Makes the button stop 'glowing' when the mouse leaves it */
 static gboolean on_close_button_hover_leave (GtkWidget *widget,
                          GdkEventCrossing *event,
-                         WBPlugin *wb) {
+                         WBPlugin *wb)
+{
     gboolean image_state;
     image_state = wnck_window_is_active(wb->win->controlwindow);
 
@@ -433,21 +455,25 @@ static gboolean on_close_button_hover_leave (GtkWidget *widget,
     return TRUE;
 }
 
+
 /* Makes the button 'glow' when the mouse enters it */
 static gboolean on_close_button_hover_enter (GtkWidget *widget,
                          GdkEventCrossing *event,
-                         WBPlugin *wb) {
-
+                         WBPlugin *wb)
+{
     gtk_image_set_from_pixbuf (wb->button[CLOSE_BUTTON]->image, wb->pixbufs[IMAGE_CLOSE][IMAGE_PRELIGHT]);
 
     return TRUE;
 }
 
-static void on_refresh_item_activated (GtkMenuItem *refresh, WBPlugin *wb) {
+
+static void on_refresh_item_activated (GtkMenuItem *refresh, WBPlugin *wb)
+{
     wckbuttons_read (wb);
     init_theme(wb);
-    initWnck(wb->win, wb->prefs->only_maximized, wb);
+    init_wnck(wb->win, wb->prefs->only_maximized, wb);
 }
+
 
 static void
 wckbuttons_construct (XfcePanelPlugin *plugin)
@@ -497,7 +523,7 @@ wckbuttons_construct (XfcePanelPlugin *plugin)
 
     /* start tracking windows */
     wb->win = g_slice_new0 (WckUtils);
-    initWnck(wb->win, wb->prefs->only_maximized, wb);
+    init_wnck(wb->win, wb->prefs->only_maximized, wb);
 
     /* get theme */
     init_theme(wb);
@@ -507,6 +533,7 @@ wckbuttons_construct (XfcePanelPlugin *plugin)
     BUTTONS_SIGNALS_CONNECT(on_maximize, MAXIMIZE_BUTTON);
     BUTTONS_SIGNALS_CONNECT(on_close, CLOSE_BUTTON);
 }
+
 
 /* register the plugin */
 XFCE_PANEL_PLUGIN_REGISTER (wckbuttons_construct);

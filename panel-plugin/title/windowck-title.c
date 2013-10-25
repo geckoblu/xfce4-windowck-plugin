@@ -27,9 +27,12 @@
 /* Prototypes */
 static void on_name_changed(WnckWindow *window, WindowckPlugin *);
 
-void updateFont(WindowckPlugin *wckp) {
+
+void update_font(WindowckPlugin *wckp)
+{
     PangoFontDescription *font;
-    if (wckp->prefs->custom_font) {
+    if (wckp->prefs->custom_font)
+    {
         font = pango_font_description_from_string(wckp->prefs->title_font);
         gtk_widget_modify_font(GTK_WIDGET(wckp->title), font);
         pango_font_description_free(font);
@@ -39,11 +42,14 @@ void updateFont(WindowckPlugin *wckp) {
     }
 }
 
-static void on_icon_changed(WnckWindow *controlwindow, WindowckPlugin *wckp) {
+
+static void on_icon_changed(WnckWindow *controlwindow, WindowckPlugin *wckp)
+{
     GdkPixbuf *pixbuf = NULL;
     GdkPixbuf *grayscale = NULL;
 
-    if (controlwindow) {
+    if (controlwindow)
+    {
         /* This only returns a pointer - it SHOULDN'T be unrefed! */
         if (wckp->icon->size == GTK_ICON_SIZE_MENU)
             pixbuf = wnck_window_get_mini_icon(controlwindow);
@@ -51,7 +57,8 @@ static void on_icon_changed(WnckWindow *controlwindow, WindowckPlugin *wckp) {
             pixbuf = wnck_window_get_icon(controlwindow);
     }
 
-    if (controlwindow && !wnck_window_is_active(controlwindow)) {
+    if (controlwindow && !wnck_window_is_active(controlwindow))
+    {
         /* icon color is set to grayscale */
         grayscale = gdk_pixbuf_copy(pixbuf);
         gdk_pixbuf_saturate_and_pixelate(grayscale, grayscale, 0, FALSE);
@@ -60,10 +67,12 @@ static void on_icon_changed(WnckWindow *controlwindow, WindowckPlugin *wckp) {
     }
 
     if (controlwindow
-        && (wnck_window_get_window_type (controlwindow) != WNCK_WINDOW_DESKTOP)) {
+        && (wnck_window_get_window_type (controlwindow) != WNCK_WINDOW_DESKTOP))
+    {
         gtk_image_set_from_pixbuf(wckp->icon->image, pixbuf);
     }
-    else if (controlwindow && wckp->prefs->show_on_desktop) {
+    else if (controlwindow && wckp->prefs->show_on_desktop)
+    {
         gtk_image_set_from_stock(wckp->icon->image,GTK_STOCK_HOME, wckp->icon->size);
     }
     else {
@@ -74,9 +83,11 @@ static void on_icon_changed(WnckWindow *controlwindow, WindowckPlugin *wckp) {
         g_object_unref (G_OBJECT (grayscale));
 }
 
-/* Triggers when controlwindow's name OR ICON changes */
+
+/* Triggers when controlwindow's name changes */
 /* Warning! This function is called very often, so it should only do the most necessary things! */
-static void on_name_changed(WnckWindow *controlwindow, WindowckPlugin *wckp) {
+static void on_name_changed(WnckWindow *controlwindow, WindowckPlugin *wckp)
+{
     gint i, n;
     const gchar *title_text, *title_markup;
     const gchar *title_color, *title_font;
@@ -85,11 +96,13 @@ static void on_name_changed(WnckWindow *controlwindow, WindowckPlugin *wckp) {
 
     if (controlwindow
         && ((wnck_window_get_window_type (controlwindow) != WNCK_WINDOW_DESKTOP)
-            || wckp->prefs->show_on_desktop)) {
+            || wckp->prefs->show_on_desktop))
+    {
 
         title_text = wnck_window_get_name(controlwindow);
 
-        if (wnck_window_is_active(controlwindow)) {
+        if (wnck_window_is_active(controlwindow))
+        {
             /* window focused */
             //~ gtk_widget_set_sensitive(GTK_WIDGET(wckp->title), TRUE);
             title_color = wckp->prefs->active_text_color;
@@ -106,24 +119,24 @@ static void on_name_changed(WnckWindow *controlwindow, WindowckPlugin *wckp) {
             title_font = "";
 
         /* Set tooltips */
-        if (wckp->prefs->show_tooltips) {
+        if (wckp->prefs->show_tooltips)
+        {
             gtk_widget_set_tooltip_text(GTK_WIDGET(wckp->title), title_text);
         }
 
         /* get application and instance names */
-        if (wckp->prefs->full_name) {
+        if (wckp->prefs->full_name)
+        {
             title_markup = g_markup_printf_escaped("<span font=\"%s\" color=\"%s\">%s</span>", title_font, title_color, title_text);
         }
         else {
+            /* split title text */
+            part = g_strsplit (title_text, " - ", 0);
+            n=0;
+            for (i=0; part[i]; i++) n++;
 
-        	/* split title text */
-        	part = g_strsplit (title_text, " - ", 0);
-        	n=0;
-        	for (i=0; part[i]; i++) {
-            	n++;
-        	}
-
-            if (n > 1) {
+            if (n > 1)
+            {
                 title_markup = g_markup_printf_escaped("<span font=\"%s\" color=\"%s\">%s</span>", title_font, title_color, part[n-1]);
             }
             else {
@@ -141,14 +154,17 @@ static void on_name_changed(WnckWindow *controlwindow, WindowckPlugin *wckp) {
     }
 }
 
-void on_wck_state_changed (WnckWindow *controlwindow, WindowckPlugin *wckp) {
+
+void on_wck_state_changed (WnckWindow *controlwindow, WindowckPlugin *wckp)
+{
     on_name_changed (controlwindow, wckp);
     if (wckp->prefs->show_icon)
         on_icon_changed (wckp->win->controlwindow, wckp);
 }
 
-void on_control_window_changed (WnckWindow *controlwindow, WnckWindow *previous, WindowckPlugin *wckp) {
 
+void on_control_window_changed (WnckWindow *controlwindow, WnckWindow *previous, WindowckPlugin *wckp)
+{
     /* disconect previous window title signal */
     wck_signal_handler_disconnect (G_OBJECT(previous), wckp->cnh);
 
@@ -173,8 +189,11 @@ void on_control_window_changed (WnckWindow *controlwindow, WnckWindow *previous,
 
 }
 
-void resizeTitle(WindowckPlugin *wckp) {
-    switch (wckp->prefs->size_mode) {
+
+void resize_title(WindowckPlugin *wckp)
+{
+    switch (wckp->prefs->size_mode)
+    {
         case SHRINK:
             gtk_label_set_max_width_chars(wckp->title, wckp->prefs->title_size);
             break;
@@ -186,15 +205,18 @@ void resizeTitle(WindowckPlugin *wckp) {
     }
 }
 
-gboolean on_title_pressed(GtkWidget *title, GdkEventButton *event, WindowckPlugin *wckp) {
 
+gboolean on_title_pressed(GtkWidget *title, GdkEventButton *event, WindowckPlugin *wckp)
+{
     if (!wckp->win->controlwindow)
         return FALSE;
 
-    if (event->button == 1) {
+    if (event->button == 1)
+    {
         /* double/tripple click */
-        if (event->type == GDK_2BUTTON_PRESS || event->type == GDK_3BUTTON_PRESS) {
-            toggleMaximize(wckp->win->controlwindow);
+        if (event->type == GDK_2BUTTON_PRESS || event->type == GDK_3BUTTON_PRESS)
+        {
+            toggle_maximize(wckp->win->controlwindow);
         }
         else {
         /* left-click */
@@ -203,7 +225,8 @@ gboolean on_title_pressed(GtkWidget *title, GdkEventButton *event, WindowckPlugi
         return TRUE;
     }
 
-    if (event->button == 3) {
+    if (event->button == 3)
+    {
         /* right-click */
         wnck_window_activate(wckp->win->controlwindow, gtk_get_current_event_time());
 
@@ -214,12 +237,14 @@ gboolean on_title_pressed(GtkWidget *title, GdkEventButton *event, WindowckPlugi
     return FALSE;
 }
 
-gboolean on_title_released(GtkWidget *title, GdkEventButton *event, WindowckPlugin *wckp) {
 
+gboolean on_title_released(GtkWidget *title, GdkEventButton *event, WindowckPlugin *wckp)
+{
     if (!wckp->win->controlwindow)
         return FALSE;
 
-    if (event->button == 2) {
+    if (event->button == 2)
+    {
         /* middle-click */
         wnck_window_close(wckp->win->controlwindow, GDK_CURRENT_TIME);
         return TRUE;
@@ -229,8 +254,8 @@ gboolean on_title_released(GtkWidget *title, GdkEventButton *event, WindowckPlug
 }
 
 
-gboolean on_icon_released(GtkWidget *title, GdkEventButton *event, WindowckPlugin *wckp) {
-
+gboolean on_icon_released(GtkWidget *title, GdkEventButton *event, WindowckPlugin *wckp)
+{
     if (event->button != 1)
         return FALSE;
 
@@ -246,7 +271,9 @@ gboolean on_icon_released(GtkWidget *title, GdkEventButton *event, WindowckPlugi
     return TRUE;
 }
 
-static void setTitleColors(WindowckPlugin *wckp) {
+
+static void set_title_colors(WindowckPlugin *wckp)
+{
     gchar *title_color;
     GdkPixbuf *icon_pixbuf;
     GdkColor  color, textColor, bgColor;
@@ -261,11 +288,12 @@ static void setTitleColors(WindowckPlugin *wckp) {
     wckp->prefs->inactive_text_color = gdk_color_to_string(&color);
 }
 
-void initTitle (WindowckPlugin *wckp) {
 
-    setTitleColors(wckp);
+void init_title (WindowckPlugin *wckp)
+{
+    set_title_colors(wckp);
     wckp->icon->size = GTK_ICON_SIZE_MENU;
-    resizeTitle(wckp);
+    resize_title(wckp);
 
     gtk_label_set_ellipsize(wckp->title, PANGO_ELLIPSIZE_END);
 

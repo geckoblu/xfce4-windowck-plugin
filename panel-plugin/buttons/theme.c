@@ -31,7 +31,7 @@
 #define UNITY_TEST_FILE         "close_focused_normal.png"
 
 
-static gchar *getSystemThemeDir (const gchar *default_theme)
+static gchar *get_system_theme_dir (const gchar *default_theme)
 {
     return g_build_filename (DATADIR, "themes", default_theme, "xfwm4", NULL);
 }
@@ -62,7 +62,7 @@ gchar *test_theme_dir (const gchar *theme, const char *themedir, const gchar *fi
 
 
 gchar *
-getThemeDir (const gchar *theme, const gchar *default_theme)
+get_theme_dir (const gchar *theme, const gchar *default_theme)
 {
     const gchar *file;
     gchar *abs_path;
@@ -97,14 +97,14 @@ getThemeDir (const gchar *theme, const gchar *default_theme)
 
     /* Pfew, really can't find that theme nowhere! */
     if (default_theme)
-        return getSystemThemeDir (default_theme);
+        return get_system_theme_dir (default_theme);
 
     return NULL;
 }
 
 
 static gboolean
-setGValue (const gchar * lvalue, const GValue *rvalue, Settings *rc)
+set_g_value (const gchar * lvalue, const GValue *rvalue, Settings *rc)
 {
     gint i;
 
@@ -140,12 +140,12 @@ setGValue (const gchar * lvalue, const GValue *rvalue, Settings *rc)
 
 
 static gboolean
-setStringValue (const gchar * lvalue, const gchar *value, Settings *rc)
+set_string_value (const gchar * lvalue, const gchar *value, Settings *rc)
 {
     GValue tmp_val = {0, };
     g_value_init(&tmp_val, G_TYPE_STRING);
     g_value_set_static_string(&tmp_val, value);
-    return setGValue (lvalue, &tmp_val, rc);
+    return set_g_value (lvalue, &tmp_val, rc);
 }
 
 
@@ -255,7 +255,7 @@ static void get_wm_pixbuf (const gchar *themedir, WBPlugin *wb) {
         gchar *color;
 
         color = getUIStyle  (GTK_WIDGET(wb->plugin), ui_part[i], ui_state[i]);
-        setStringValue (rc[i].option, color, rc);
+        set_string_value (rc[i].option, color, rc);
         g_free (color);
         ++i;
     }
@@ -273,7 +273,7 @@ static void get_wm_pixbuf (const gchar *themedir, WBPlugin *wb) {
         for (j = 0; j < IMAGES_STATES; j++)
         {
             g_snprintf(imagename, sizeof (imagename), "%s-%s", button_names[i], button_state_names[j]);
-            wb->pixbufs[i][j] = xfwmPixbufLoad (themedir, imagename, colsym);
+            wb->pixbufs[i][j] = pixbuf_load (themedir, imagename, colsym);
         }
     }
 }
@@ -390,10 +390,10 @@ gchar *opposite_layout_filter  (const gchar *string)
 }
 
 
-static int getButtonFromLetter (char chr)
+static int get_button_from_letter (char chr)
 {
 
-    TRACE ("entering getButtonFromLetter");
+    TRACE ("entering get_button_from_letter");
 
     switch (chr)
     {
@@ -420,7 +420,7 @@ void replace_buttons (const gchar *button_layout, WBPlugin *wb)
     j = 0;
     for (i = 0; i < strlen (button_layout); i++)
     {
-        button = getButtonFromLetter (button_layout[i]);
+        button = get_button_from_letter (button_layout[i]);
         if (button >= 0 && wb->button[button]->image)
         {
             gtk_box_reorder_child (GTK_BOX (wb->hvbox), GTK_WIDGET(wb->button[button]->eventbox), j);
@@ -465,13 +465,13 @@ gchar *get_rc_button_layout (const gchar *theme)
 
 
 /* load the theme according to xfwm4 theme format */
-void loadTheme (const gchar *theme, WBPlugin *wb)
+void load_theme (const gchar *theme, WBPlugin *wb)
 {
     gint i;
     gchar *themedir;
 
     /* get theme dir */
-    themedir = getThemeDir (wb->prefs->theme, DEFAULT_THEME);
+    themedir = get_theme_dir (wb->prefs->theme, DEFAULT_THEME);
 
     if (strcmp (g_path_get_basename (themedir), "unity") == 0)
         get_unity_pixbuf (themedir, wb);
@@ -507,7 +507,7 @@ void apply_wm_theme (WBPlugin *wb)
         gchar *button_layout;
 
         wb->prefs->theme = g_strdup (wm_theme);
-        loadTheme (wb->prefs->theme, wb);
+        load_theme (wb->prefs->theme, wb);
 
         button_layout = get_rc_button_layout (wm_theme);
 
@@ -566,7 +566,7 @@ gchar *init_theme (WBPlugin *wb)
     }
     else
     {
-        loadTheme (wb->prefs->theme, wb);
+        load_theme (wb->prefs->theme, wb);
         replace_buttons (wb->prefs->button_layout, wb);
     }
 }

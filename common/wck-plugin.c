@@ -24,10 +24,10 @@
 
 #include <string.h>
 #include <gtk/gtk.h>
-
 #include <libxfce4ui/libxfce4ui.h>
 
 #include "wck-plugin.h"
+
 
 void
 wck_about (XfcePanelPlugin *plugin, const gchar *icon_name)
@@ -36,11 +36,13 @@ wck_about (XfcePanelPlugin *plugin, const gchar *icon_name)
     * or the XfceAboutInfo widget */
     GdkPixbuf *icon;
 
-    const gchar *auth[] = {
+    const gchar *auth[] =
+    {
         "Alessio Piccoli <alepic@geckoblu.net>",
         "Cedric Leporcq <cedl38@gmail.com>",
         "\nThis code is based on original 'Window Applets' from Andrej Belcijan.\nSee http://gnome-look.org/content/show.php?content=103732 for details.",
-        NULL };
+        NULL
+    };
 
     icon = xfce_panel_pixbuf_from_source(icon_name, NULL, 32);
 
@@ -60,7 +62,9 @@ wck_about (XfcePanelPlugin *plugin, const gchar *icon_name)
         g_object_unref(G_OBJECT(icon) );
 }
 
-GtkWidget *show_refresh_item (XfcePanelPlugin *plugin) {
+
+GtkWidget *show_refresh_item (XfcePanelPlugin *plugin)
+{
     GtkWidget *refresh;
     refresh = gtk_image_menu_item_new_from_stock  (GTK_STOCK_REFRESH, NULL);
     xfce_panel_plugin_menu_insert_item(plugin, GTK_MENU_ITEM(refresh));

@@ -41,9 +41,9 @@ typedef struct {
 
 
 gchar *init_theme (WBPlugin *wb);
-void loadTheme (const gchar *theme, WBPlugin *wb);
+void load_theme (const gchar *theme, WBPlugin *wb);
 void replace_buttons (const gchar *button_layout, WBPlugin *wb);
-gchar *getThemeDir (const gchar *theme, const gchar *default_path);
+gchar *get_theme_dir (const gchar *theme, const gchar *default_path);
 gchar *test_theme_dir (const gchar *theme, const char *themedir, const gchar *file);
 gchar *get_rc_button_layout (const gchar *theme);
 gchar *button_layout_filter  (const gchar *button_layout, const gchar *default_layout);

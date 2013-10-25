@@ -104,7 +104,7 @@ name_value (const gchar * s)
 }
 
 GdkColor
-queryColor (GtkWidget * win, GdkColor c)
+query_color (GtkWidget * win, GdkColor c)
 {
     GdkColor real_color;
     GdkColormap *cmap;
@@ -135,7 +135,7 @@ static gchar *
 print_colors (GtkWidget * win, GdkColor * x, int n)
 {
     GdkColor color;
-    color = queryColor (win, x[n]);
+    color = query_color (win, x[n]);
     return print_color(win, x[n]);
 }
 
@@ -179,8 +179,8 @@ print_rc_style (GtkWidget * win, const gchar * name, const gchar * state,
             s = print_colors (win, style->mid, n);
             break;
         case MIX_BG_TEXT:
-            bgColor = queryColor (win, style->bg[n]);
-            textColor = queryColor (win, style->text[n]);
+            bgColor = query_color (win, style->bg[n]);
+            textColor = query_color (win, style->text[n]);
             color = mix(bgColor, textColor, UNFOCUSED_TEXT_ALPHA);
             s = print_color (win, color);
             break;

@@ -53,14 +53,17 @@
 /* prototypes */
 static void windowck_construct(XfcePanelPlugin *plugin);
 
-void windowck_save(XfcePanelPlugin *plugin, WindowckPlugin *wckp) {
+
+void windowck_save(XfcePanelPlugin *plugin, WindowckPlugin *wckp)
+{
     XfceRc *rc;
     gchar *file;
 
     /* get the config file location */
     file = xfce_panel_plugin_save_location(plugin, TRUE);
 
-    if (G_UNLIKELY (file == NULL)) {
+    if (G_UNLIKELY (file == NULL))
+    {
         DBG("Failed to open config file");
         return;
     }
@@ -69,7 +72,8 @@ void windowck_save(XfcePanelPlugin *plugin, WindowckPlugin *wckp) {
     rc = xfce_rc_simple_open(file, FALSE);
     g_free(file);
 
-    if (G_LIKELY (rc != NULL)) {
+    if (G_LIKELY (rc != NULL))
+    {
         /* save the settings */
         DBG(".");
         xfce_rc_write_bool_entry(rc, "only_maximized", wckp->prefs->only_maximized);
@@ -93,7 +97,9 @@ void windowck_save(XfcePanelPlugin *plugin, WindowckPlugin *wckp) {
     }
 }
 
-static void windowck_read(WindowckPlugin *wckp) {
+
+static void windowck_read(WindowckPlugin *wckp)
+{
     XfceRc *rc;
     gchar *file;
     const gchar *title_font;
@@ -104,14 +110,16 @@ static void windowck_read(WindowckPlugin *wckp) {
     /* get the plugin config file location */
     file = xfce_panel_plugin_save_location(wckp->plugin, TRUE);
 
-    if (G_LIKELY (file != NULL)) {
+    if (G_LIKELY (file != NULL))
+    {
         /* open the config file, readonly */
         rc = xfce_rc_simple_open(file, TRUE);
 
         /* cleanup */
         g_free(file);
 
-        if (G_LIKELY (rc != NULL)) {
+        if (G_LIKELY (rc != NULL))
+        {
             /* read the settings */
             wckp->prefs->only_maximized = xfce_rc_read_bool_entry(rc, "only_maximized", DEFAULT_ONLY_MAXIMIZED);
             wckp->prefs->show_on_desktop = xfce_rc_read_bool_entry(rc, "show_on_desktop", DEFAULT_SHOW_ON_DESKTOP);
@@ -154,7 +162,9 @@ static void windowck_read(WindowckPlugin *wckp) {
     wckp->prefs->title_padding = DEFAULT_TITLE_PADDING;
 }
 
-static void createIcon (WindowckPlugin *wckp) {
+
+static void create_icon (WindowckPlugin *wckp)
+{
     wckp->icon = g_slice_new0 (WindowIcon);
     wckp->icon->eventbox = GTK_EVENT_BOX (gtk_event_box_new());
     wckp->icon->image = GTK_IMAGE (gtk_image_new());
@@ -169,7 +179,9 @@ static void createIcon (WindowckPlugin *wckp) {
     gtk_widget_show_all(GTK_WIDGET(wckp->icon->eventbox));
 }
 
-static WindowckPlugin * windowck_new(XfcePanelPlugin *plugin) {
+
+static WindowckPlugin * windowck_new(XfcePanelPlugin *plugin)
+{
     WindowckPlugin *wckp;
     WckUtils *win;
 
@@ -205,11 +217,12 @@ static WindowckPlugin * windowck_new(XfcePanelPlugin *plugin) {
     label = gtk_label_new("");
     wckp->title = GTK_LABEL (label);
 
-    createIcon (wckp);
+    create_icon (wckp);
 
     gtk_box_pack_start (GTK_BOX(wckp->hvbox), label, TRUE, TRUE, 0);
 
-    if (wckp->prefs->icon_on_right) {
+    if (wckp->prefs->icon_on_right)
+    {
         gtk_box_reorder_child (GTK_BOX (wckp->hvbox), GTK_WIDGET(wckp->icon->eventbox), 1);
     }
 
@@ -225,7 +238,9 @@ static WindowckPlugin * windowck_new(XfcePanelPlugin *plugin) {
     return wckp;
 }
 
-static void windowck_free(XfcePanelPlugin *plugin, WindowckPlugin *wckp) {
+
+static void windowck_free(XfcePanelPlugin *plugin, WindowckPlugin *wckp)
+{
     GtkWidget *dialog;
 
     /* check if the dialog is still open. if so, destroy it */
@@ -243,21 +258,28 @@ static void windowck_free(XfcePanelPlugin *plugin, WindowckPlugin *wckp) {
     g_slice_free(WindowckPlugin, wckp);
 }
 
-static void windowck_orientation_changed(XfcePanelPlugin *plugin, GtkOrientation orientation, WindowckPlugin *wckp) {
+
+static void windowck_orientation_changed(XfcePanelPlugin *plugin, GtkOrientation orientation, WindowckPlugin *wckp)
+{
     /* change the orienation of the box */
     xfce_hvbox_set_orientation(XFCE_HVBOX (wckp->hvbox), orientation);
 }
 
-static void windowck_screen_position_changed(XfcePanelPlugin *plugin, XfceScreenPosition *position, WindowckPlugin *wckp) {
-    if (wckp->prefs->size_mode != SHRINK) {
+
+static void windowck_screen_position_changed(XfcePanelPlugin *plugin, XfceScreenPosition *position, WindowckPlugin *wckp)
+{
+    if (wckp->prefs->size_mode != SHRINK)
+    {
         xfce_panel_plugin_set_shrink (plugin, FALSE);
         gtk_label_set_width_chars(wckp->title, 1);
         xfce_panel_plugin_set_shrink (plugin, TRUE);
-        resizeTitle(wckp);
+        resize_title(wckp);
     }
 }
 
-static gboolean windowck_size_changed(XfcePanelPlugin *plugin, gint size, WindowckPlugin *wckp) {
+
+static gboolean windowck_size_changed(XfcePanelPlugin *plugin, gint size, WindowckPlugin *wckp)
+{
     GtkOrientation orientation;
 
     /* get the orientation of the plugin */
@@ -279,12 +301,16 @@ static gboolean windowck_size_changed(XfcePanelPlugin *plugin, gint size, Window
     return TRUE;
 }
 
-static void on_refresh_item_activated (GtkMenuItem *refresh, WindowckPlugin *wckp) {
-    initTitle(wckp);
-    initWnck(wckp->win, wckp->prefs->only_maximized, wckp);
+
+static void on_refresh_item_activated (GtkMenuItem *refresh, WindowckPlugin *wckp)
+{
+    init_title(wckp);
+    init_wnck(wckp->win, wckp->prefs->only_maximized, wckp);
 }
 
-static void windowck_construct(XfcePanelPlugin *plugin) {
+
+static void windowck_construct(XfcePanelPlugin *plugin)
+{
     WindowckPlugin *wckp;
     GtkWidget *refresh;
 
@@ -333,12 +359,13 @@ static void windowck_construct(XfcePanelPlugin *plugin) {
     g_signal_connect (G_OBJECT (refresh), "activate", G_CALLBACK (on_refresh_item_activated), wckp);
 
     /* start tracking title size */
-    initTitle(wckp);
+    init_title(wckp);
 
     /* start tracking title text */
     wckp->win = g_slice_new0 (WckUtils);
-    initWnck(wckp->win, wckp->prefs->only_maximized, wckp);
+    init_wnck(wckp->win, wckp->prefs->only_maximized, wckp);
 }
+
 
 /* register the plugin */
 XFCE_PANEL_PLUGIN_REGISTER(windowck_construct);

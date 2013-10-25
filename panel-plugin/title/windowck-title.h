@@ -25,11 +25,11 @@
 
 #define TITLE_SIZE_MAX 999 /* title size max for expand option in characters */
 
-void initTitle (WindowckPlugin *wckp);
-void resizeTitle(WindowckPlugin *wckp);
+void init_title (WindowckPlugin *wckp);
+void resize_title(WindowckPlugin *wckp);
 void on_wck_state_changed (WnckWindow *controlwindow, WindowckPlugin *wckp);
 void on_control_window_changed(WnckWindow *controlwindow, WnckWindow *previous, WindowckPlugin *wckp);
-void updateFont(WindowckPlugin *wckp);
+void update_font(WindowckPlugin *wckp);
 gboolean on_title_pressed(GtkWidget *title, GdkEventButton *event, WindowckPlugin *wckp);
 gboolean on_title_released(GtkWidget *title, GdkEventButton *event, WindowckPlugin *wckp);
 gboolean on_icon_released(GtkWidget *title, GdkEventButton *event, WindowckPlugin *wckp);
