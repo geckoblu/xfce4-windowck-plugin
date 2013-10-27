@@ -28,7 +28,6 @@ libwindowck_la_SOURCES = \
 
 libwindowck_la_CFLAGS = \
 	$(GTK_CFLAGS) \
-	$(XFCONF_CFLAGS) \
 	$(LIBXFCE4UTIL_CFLAGS) \
 	$(LIBXFCE4UI_CFLAGS) \
 	$(LIBXFCE4PANEL_CFLAGS) \
@@ -48,8 +47,7 @@ libwindowck_la_LIBADD = \
 	$(LIBXFCE4UTIL_LIBS) \
 	$(LIBXFCE4UI_LIBS) \
 	$(LIBXFCE4PANEL_LIBS) \
-	$(LIBWNCK_LIBS) \
-	$(XFCONF_LIBS)
+	$(LIBWNCK_LIBS)
 
 libactions_la_DEPENDENCIES = \
 	$(top_builddir)/common/libwck-common.la
@@ -71,8 +69,6 @@ EXTRA_DIST =								\
 
 CLEANFILES =								\
 	$(desktop_DATA)
-
-
 
 BUILT_SOURCES = \
 	$(libwindowck_built_sources)

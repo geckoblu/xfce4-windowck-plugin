@@ -26,6 +26,7 @@ libwckbuttons_la_SOURCES = \
 	wckbuttons-dialogs.h
 
 libwckbuttons_la_CFLAGS = \
+	$(GTK_CFLAGS) \
 	$(LIBXFCE4UTIL_CFLAGS) \
 	$(LIBXFCE4UI_CFLAGS) \
 	$(LIBXFCE4PANEL_CFLAGS) \
@@ -42,6 +43,7 @@ libwckbuttons_la_LDFLAGS = \
 
 libwckbuttons_la_LIBADD = \
 	$(top_builddir)/common/libwck-common.la \
+	$(GTK_LIBS) \
 	$(LIBXFCE4UTIL_LIBS) \
 	$(LIBXFCE4UI_LIBS) \
 	$(LIBWNCK_LIBS) \
