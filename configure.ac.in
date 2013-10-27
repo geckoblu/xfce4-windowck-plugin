@@ -9,7 +9,7 @@ dnl ***************************
 dnl *** Version information ***
 dnl ***************************
 m4_define([windowck_version_major], [0])
-m4_define([windowck_version_minor], [1])
+m4_define([windowck_version_minor], [2])
 m4_define([windowck_version_micro], [0])
 m4_define([windowck_version], [windowck_version_major().windowck_version_minor().windowck_version_micro()])
 
@@ -110,6 +110,7 @@ panel-plugin/buttons/Makefile
 themes/Makefile
 themes/windowck/Makefile
 po/Makefile.in
+arch/PKGBUILD
 ])
 
 dnl ***************************

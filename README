@@ -9,7 +9,7 @@ It's main features are:
 - Allow window actions on buttons and title clicks (activate, (un)maximize, close).
 - Allow window action menu on left button click.
 - Title formatting options.
-- xfwm4 theming support for buttons.
+- xfwm4/unity theming support for buttons.
 
 FAQ:
 Q: How do I hide the window decorations on maximized windows on xfce ?
@@ -27,6 +27,7 @@ The file 'INSTALL' contains generic installation instructions. For more
 detailed information, visit the plugin website at
 http://goodies.xfce.org/projects/panel-plugins/xfce4-windowck-plugin
 
+note : to upgrade from version 0.1.x to version 0.2.x you need to remove v0.1.x previously.
 
 How to report bugs?
 ===================
