@@ -151,6 +151,8 @@ static void on_custom_font_toggled(GtkToggleButton *custom_font, WindowckPlugin 
         gtk_widget_set_sensitive(GTK_WIDGET(title_font), TRUE );
     else
         gtk_widget_set_sensitive(GTK_WIDGET(title_font), FALSE );
+
+    update_font(wckp);
 }
 
 static void on_title_font_font_set(GtkFontButton *title_font, WindowckPlugin *wckp) {

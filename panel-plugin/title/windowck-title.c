@@ -105,8 +105,6 @@ static void on_name_changed(WnckWindow *controlwindow, WindowckPlugin *wckp) {
         else
             title_font = "";
 
-        updateFont(wckp);
-
         /* Set tooltips */
         if (wckp->prefs->show_tooltips) {
             gtk_widget_set_tooltip_text(GTK_WIDGET(wckp->title), title_text);
