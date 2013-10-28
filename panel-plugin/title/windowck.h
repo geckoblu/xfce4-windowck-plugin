@@ -52,6 +52,7 @@ typedef struct {
 } WindowIcon;
 
 typedef struct {
+    GtkBuilder *builder;
     gboolean only_maximized;           // [T/F] Only track maximized windows
     gboolean show_on_desktop;      // [T/F] Show the plugin on desktop
     //gboolean hide_icon;                // [T/F] Hide the icon
