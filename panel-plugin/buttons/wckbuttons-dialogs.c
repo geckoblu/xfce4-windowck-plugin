@@ -96,14 +96,12 @@ wckbuttons_theme_selection_changed (GtkTreeSelection *selection,
 {
     GtkTreeModel *model;
     GtkTreeIter   iter;
-    const gchar *theme, *themedir;
+    const gchar *theme;
     GtkWidget    *entry;
 
     if (gtk_tree_selection_get_selected (selection, &model, &iter))
     {
-        gtk_tree_model_get (model, &iter,
-                          COL_THEME_NAME, &theme,
-                          COL_THEME_RC, &themedir, -1);
+        gtk_tree_model_get (model, &iter, COL_THEME_NAME, &theme, -1);
 
         /* set the theme name */
         wb->prefs->theme = g_strdup (theme);
@@ -148,7 +146,7 @@ wckbuttons_load_themes (GtkWidget *view, WBPlugin *wb)
     GDir         *dir;
     const gchar  *file;
     gchar       **theme_dirs;
-    gchar        *themedir, *test;
+    gchar        *themedir;
     gint          i;
 
     themes = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
@@ -192,7 +190,7 @@ wckbuttons_load_themes (GtkWidget *view, WBPlugin *wb)
                 gtk_list_store_append (GTK_LIST_STORE (model), &iter);
                 gtk_list_store_set (GTK_LIST_STORE (model), &iter,
                                   COL_THEME_NAME, file,
-                                  COL_THEME_RC, themedir, -1);
+                                  COL_THEME_RC, g_path_get_basename (themedir), -1);
 
                     if (G_UNLIKELY (g_str_equal (wb->prefs->theme, file)))
                     {
@@ -318,8 +316,8 @@ static GtkWidget * build_properties_area(WBPlugin *wb, const gchar *buffer, gsiz
 
             renderer = gtk_cell_renderer_text_new ();
 
-            //~ gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (theme_name_treeview),
-                                                         //~ 0, _("Path"), renderer, "text", 1, NULL);
+            gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (theme_name_treeview),
+                                                         0, _("Directory"), renderer, "text", 1, NULL);
             gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (theme_name_treeview),
                                                          0, _("Themes usable"), renderer, "text", 0, NULL);
             selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (theme_name_treeview));
