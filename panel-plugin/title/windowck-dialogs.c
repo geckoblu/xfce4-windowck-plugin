@@ -117,10 +117,9 @@ static void on_show_icon_toggled(GtkToggleButton *show_icon, WindowckPlugin *wck
 {
     wckp->prefs->show_icon = gtk_toggle_button_get_active(show_icon);
 
-    if (wckp->prefs->show_icon)
-        gtk_widget_show(GTK_WIDGET(wckp->icon->eventbox));
-    else
-        gtk_widget_hide(GTK_WIDGET(wckp->icon->eventbox));
+    create_symbol (wckp);
+
+    on_wck_state_changed (wckp->win->controlwindow, wckp);
 }
 
 
@@ -132,6 +131,20 @@ static void on_icon_on_right_toggled(GtkToggleButton *icon_on_right, WindowckPlu
         gtk_box_reorder_child (GTK_BOX (wckp->hvbox), GTK_WIDGET(wckp->icon->eventbox), 1);
     else
         gtk_box_reorder_child (GTK_BOX (wckp->hvbox), GTK_WIDGET(wckp->icon->eventbox), 0);
+}
+
+
+static void on_show_window_menu_toggled(GtkToggleButton *show_window_menu, WindowckPlugin *wckp)
+{
+    wckp->prefs->show_window_menu = gtk_toggle_button_get_active(show_window_menu);
+
+    if (!wckp->prefs->show_icon)
+    {
+        create_symbol (wckp);
+
+        if (wckp->prefs->show_window_menu)
+            on_wck_state_changed (wckp->win->controlwindow, wckp);
+    }
 }
 
 
@@ -202,8 +215,8 @@ static GtkWidget * build_properties_area(WindowckPlugin *wckp, const gchar *buff
     GtkComboBox *size_mode, *title_alignment;
     GtkToggleButton *custom_font;
     GtkRadioButton *only_maximized, *active_window;
-    GtkToggleButton *show_on_desktop;
-    GtkToggleButton *full_name, *show_icon, *icon_on_right;
+    GtkToggleButton *show_on_desktop, *full_name;
+    GtkToggleButton *show_icon, *icon_on_right, *show_window_menu;
     GtkFontButton *title_font;
     GtkLabel *width_unit;
 
@@ -268,6 +281,17 @@ static GtkWidget * build_properties_area(WindowckPlugin *wckp, const gchar *buff
             }
             else {
                 DBG("No widget with the name \"icon_on_right\" found");
+            }
+
+            show_window_menu = GTK_TOGGLE_BUTTON(gtk_builder_get_object(wckp->prefs->builder, "show_window_menu"));
+
+            if (G_LIKELY (show_window_menu != NULL))
+            {
+                gtk_toggle_button_set_active(show_window_menu, wckp->prefs->show_window_menu);
+                g_signal_connect(show_window_menu, "toggled", G_CALLBACK(on_show_window_menu_toggled), wckp);
+            }
+            else {
+                DBG("No widget with the name \"show_window_menu\" found");
             }
 
             titlesize = GTK_SPIN_BUTTON(gtk_builder_get_object(wckp->prefs->builder, "titlesize"));

@@ -43,6 +43,7 @@
 #define DEFAULT_SHOW_TOOLTIPS TRUE
 #define DEFAULT_SHOW_ICON TRUE
 #define DEFAULT_ICON_ON_RIGHT FALSE
+#define DEFAULT_SHOW_WINDOW_MENU TRUE
 #define DEFAULT_SIZE_MODE FIXE
 #define DEFAULT_TITLE_SIZE 80
 #define DEFAULT_TITLE_ALIGNMENT CENTER
@@ -80,6 +81,7 @@ void windowck_save(XfcePanelPlugin *plugin, WindowckPlugin *wckp)
         xfce_rc_write_bool_entry(rc, "show_on_desktop", wckp->prefs->show_on_desktop);
         xfce_rc_write_bool_entry(rc, "show_icon", wckp->prefs->show_icon);
         xfce_rc_write_bool_entry(rc, "icon_on_right", wckp->prefs->icon_on_right);
+        xfce_rc_write_bool_entry(rc, "show_window_menu", wckp->prefs->show_window_menu);
         xfce_rc_write_bool_entry(rc, "hide_title", wckp->prefs->hide_title);
         xfce_rc_write_bool_entry(rc, "full_name", wckp->prefs->full_name);
         xfce_rc_write_bool_entry(rc, "show_tooltips", wckp->prefs->show_tooltips);
@@ -125,6 +127,7 @@ static void windowck_read(WindowckPlugin *wckp)
             wckp->prefs->show_on_desktop = xfce_rc_read_bool_entry(rc, "show_on_desktop", DEFAULT_SHOW_ON_DESKTOP);
             wckp->prefs->show_icon = xfce_rc_read_bool_entry(rc, "show_icon", DEFAULT_SHOW_ICON);
             wckp->prefs->icon_on_right = xfce_rc_read_bool_entry(rc, "icon_on_right", DEFAULT_ICON_ON_RIGHT);
+            wckp->prefs->show_window_menu = xfce_rc_read_bool_entry(rc, "show_window_menu", DEFAULT_SHOW_WINDOW_MENU);
             wckp->prefs->hide_title = xfce_rc_read_bool_entry(rc, "hide_title", DEFAULT_HIDE_TITLE);
             wckp->prefs->full_name = xfce_rc_read_bool_entry(rc, "full_name", DEFAULT_FULL_NAME);
             wckp->prefs->show_tooltips = xfce_rc_read_bool_entry(rc, "show_tooltips", DEFAULT_SHOW_TOOLTIPS);
@@ -151,6 +154,7 @@ static void windowck_read(WindowckPlugin *wckp)
     wckp->prefs->show_on_desktop = DEFAULT_SHOW_ON_DESKTOP;
     wckp->prefs->show_icon = DEFAULT_SHOW_ICON;
     wckp->prefs->icon_on_right = DEFAULT_ICON_ON_RIGHT;
+    wckp->prefs->show_window_menu = DEFAULT_SHOW_WINDOW_MENU;
     wckp->prefs->hide_title = DEFAULT_HIDE_TITLE;
     wckp->prefs->full_name = DEFAULT_FULL_NAME;
     wckp->prefs->show_tooltips = DEFAULT_SHOW_TOOLTIPS;
@@ -163,20 +167,44 @@ static void windowck_read(WindowckPlugin *wckp)
 }
 
 
+void create_symbol (WindowckPlugin *wckp)
+{
+    if (wckp->icon->symbol)
+        gtk_widget_destroy (wckp->icon->symbol);
+
+    if (wckp->prefs->show_icon)
+        wckp->icon->symbol = gtk_image_new();
+    else if (wckp->prefs->show_window_menu)
+        wckp->icon->symbol = gtk_arrow_new (GTK_ARROW_DOWN, GTK_SHADOW_NONE);
+    else
+        wckp->icon->symbol = NULL;
+
+
+    if (wckp->prefs->show_icon || wckp->prefs->show_window_menu)
+    {
+        gtk_container_add (GTK_CONTAINER (wckp->icon->eventbox), wckp->icon->symbol);
+        gtk_widget_show_all (GTK_WIDGET(wckp->icon->eventbox));
+    }
+    else
+    {
+        gtk_widget_hide_all (GTK_WIDGET(wckp->icon->eventbox));
+    }
+}
+
+
 static void create_icon (WindowckPlugin *wckp)
 {
     wckp->icon = g_slice_new0 (WindowIcon);
     wckp->icon->eventbox = GTK_EVENT_BOX (gtk_event_box_new());
-    wckp->icon->image = GTK_IMAGE (gtk_image_new());
+    wckp->icon->symbol = NULL;
 
     gtk_widget_set_can_focus (GTK_WIDGET(wckp->icon->eventbox), TRUE);
 
-    gtk_container_add (GTK_CONTAINER (wckp->icon->eventbox), GTK_WIDGET(wckp->icon->image));
     gtk_event_box_set_visible_window (wckp->icon->eventbox, FALSE);
 
     gtk_box_pack_start (GTK_BOX (wckp->hvbox), GTK_WIDGET(wckp->icon->eventbox), FALSE, FALSE, 0);
 
-    gtk_widget_show_all(GTK_WIDGET(wckp->icon->eventbox));
+    create_symbol (wckp);
 }
 
 

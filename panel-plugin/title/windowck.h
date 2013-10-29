@@ -47,7 +47,7 @@ typedef enum SizeMode
 
 typedef struct {
     GtkEventBox     *eventbox;
-    GtkImage        *image;
+    GtkWidget        *symbol;
     gushort            size;
 } WindowIcon;
 
@@ -59,7 +59,7 @@ typedef struct {
     gboolean hide_title;               // [T/F] Hide the title
     gboolean show_icon;                 // [T/F] Show the window icon
     gboolean icon_on_right;          // [T/F] Place icon on the right
-    //gboolean show_window_menu;       // [T/F] Show window action menu on right click
+    gboolean show_window_menu;       // [T/F] Show window action menu
     gboolean full_name;                // [T/F] Show full name
     gboolean show_tooltips;            // [T/F] Show tooltips
 
@@ -96,6 +96,7 @@ typedef struct {
 } WindowckPlugin;
 
 void windowck_save(XfcePanelPlugin *plugin, WindowckPlugin *wckp);
+void create_symbol (WindowckPlugin *wckp);
 
 G_END_DECLS
 
