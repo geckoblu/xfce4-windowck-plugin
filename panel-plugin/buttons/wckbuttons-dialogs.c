@@ -46,14 +46,14 @@ enum
 static void on_only_maximized_toggled(GtkRadioButton *only_maximized, WBPlugin *wb)
 {
     wb->prefs->only_maximized = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(only_maximized));
-    init_wnck(wb->win, wb->prefs->only_maximized, wb);
+    reload_wnck (wb->win, wb->prefs->only_maximized, wb);
 }
 
 
 static void on_show_on_desktop_toggled(GtkToggleButton *show_on_desktop, WBPlugin *wb)
 {
     wb->prefs->show_on_desktop = gtk_toggle_button_get_active(show_on_desktop);
-    init_wnck(wb->win, wb->prefs->only_maximized, wb);
+    reload_wnck (wb->win, wb->prefs->only_maximized, wb);
 }
 
 

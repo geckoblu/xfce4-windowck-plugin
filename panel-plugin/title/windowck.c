@@ -333,7 +333,7 @@ static gboolean windowck_size_changed(XfcePanelPlugin *plugin, gint size, Window
 static void on_refresh_item_activated (GtkMenuItem *refresh, WindowckPlugin *wckp)
 {
     init_title(wckp);
-    init_wnck(wckp->win, wckp->prefs->only_maximized, wckp);
+    reload_wnck_title (wckp);
 }
 
 

@@ -43,14 +43,14 @@
 static void on_only_maximized_toggled(GtkRadioButton *only_maximized, WindowckPlugin *wckp)
 {
     wckp->prefs->only_maximized = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(only_maximized));
-    init_wnck(wckp->win, wckp->prefs->only_maximized, wckp);
+    reload_wnck_title (wckp);
 }
 
 
 static void on_show_on_desktop_toggled(GtkToggleButton *show_on_desktop, WindowckPlugin *wckp)
 {
     wckp->prefs->show_on_desktop = gtk_toggle_button_get_active(show_on_desktop);
-    init_wnck(wckp->win, wckp->prefs->only_maximized, wckp);
+    reload_wnck_title (wckp);
 }
 
 
@@ -109,7 +109,7 @@ static void on_size_mode_changed (GtkComboBox *size_mode, WindowckPlugin *wckp)
 static void on_full_name_toggled(GtkToggleButton *full_name, WindowckPlugin *wckp)
 {
     wckp->prefs->full_name = gtk_toggle_button_get_active(full_name);
-    init_wnck(wckp->win, wckp->prefs->only_maximized, wckp);
+    on_wck_state_changed (wckp->win->controlwindow, wckp);
 }
 
 
@@ -118,6 +118,9 @@ static void on_show_icon_toggled(GtkToggleButton *show_icon, WindowckPlugin *wck
     wckp->prefs->show_icon = gtk_toggle_button_get_active(show_icon);
 
     create_symbol (wckp);
+
+    if (!wckp->prefs->show_icon)
+        wck_signal_handler_disconnect (G_OBJECT(wckp->win->controlwindow), wckp->cih);
 
     on_wck_state_changed (wckp->win->controlwindow, wckp);
 }

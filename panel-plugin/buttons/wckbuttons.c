@@ -291,7 +291,6 @@ void on_wck_state_changed (WnckWindow *controlwindow, WBPlugin *wb)
 
 void on_control_window_changed (WnckWindow *controlwindow, WnckWindow *previous, WBPlugin *wb)
 {
-
     if (controlwindow
         && (wnck_window_get_window_type (controlwindow) != WNCK_WINDOW_DESKTOP))
     {
@@ -471,7 +470,7 @@ static void on_refresh_item_activated (GtkMenuItem *refresh, WBPlugin *wb)
 {
     wckbuttons_read (wb);
     init_theme(wb);
-    init_wnck(wb->win, wb->prefs->only_maximized, wb);
+    reload_wnck (wb->win, wb->prefs->only_maximized, wb);
 }
 
 
