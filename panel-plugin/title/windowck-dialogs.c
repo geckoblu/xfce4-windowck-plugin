@@ -50,6 +50,9 @@ static void on_only_maximized_toggled(GtkRadioButton *only_maximized, WindowckPl
 static void on_show_on_desktop_toggled(GtkToggleButton *show_on_desktop, WindowckPlugin *wckp)
 {
     wckp->prefs->show_on_desktop = gtk_toggle_button_get_active(show_on_desktop);
+
+    if (wckp->icon->symbol)
+        gtk_widget_set_sensitive (wckp->icon->symbol, TRUE);
     reload_wnck_title (wckp);
 }
 

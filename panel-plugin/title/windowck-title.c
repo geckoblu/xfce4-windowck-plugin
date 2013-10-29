@@ -58,35 +58,43 @@ static void on_icon_changed(WnckWindow *controlwindow, WindowckPlugin *wckp)
     GdkPixbuf *pixbuf = NULL;
     GdkPixbuf *grayscale = NULL;
 
-    if (controlwindow)
+
+    if (!controlwindow)
+    {
+        gtk_image_clear(GTK_IMAGE (wckp->icon->symbol));
+    }
+    else if (wckp->prefs->show_on_desktop)
+    {
+        gtk_widget_set_sensitive (wckp->icon->symbol, TRUE);
+
+        if (wnck_window_get_window_type (controlwindow) == WNCK_WINDOW_DESKTOP)
+        {
+            if (!wnck_window_is_active(controlwindow))
+                gtk_widget_set_sensitive (wckp->icon->symbol, FALSE);
+
+            gtk_image_set_from_stock(GTK_IMAGE (wckp->icon->symbol),GTK_STOCK_HOME, wckp->icon->size);
+        }
+    }
+
+    if (controlwindow
+        && wnck_window_get_window_type (controlwindow) != WNCK_WINDOW_DESKTOP)
     {
         /* This only returns a pointer - it SHOULDN'T be unrefed! */
         if (wckp->icon->size == GTK_ICON_SIZE_MENU)
             pixbuf = wnck_window_get_mini_icon(controlwindow);
         else
             pixbuf = wnck_window_get_icon(controlwindow);
-    }
 
-    if (controlwindow && !wnck_window_is_active(controlwindow))
-    {
-        /* icon color is set to grayscale */
-        grayscale = gdk_pixbuf_copy(pixbuf);
-        gdk_pixbuf_saturate_and_pixelate(grayscale, grayscale, 0, FALSE);
-        if (G_UNLIKELY (grayscale != NULL))
-            pixbuf = grayscale;
-    }
+        if (!wnck_window_is_active(controlwindow))
+        {
+            /* icon color is set to grayscale */
+            grayscale = gdk_pixbuf_copy(pixbuf);
+            gdk_pixbuf_saturate_and_pixelate(grayscale, grayscale, 0, FALSE);
+            if (G_UNLIKELY (grayscale != NULL))
+                pixbuf = grayscale;
+        }
 
-    if (controlwindow
-        && (wnck_window_get_window_type (controlwindow) != WNCK_WINDOW_DESKTOP))
-    {
         gtk_image_set_from_pixbuf(GTK_IMAGE (wckp->icon->symbol), pixbuf);
-    }
-    else if (controlwindow && wckp->prefs->show_on_desktop)
-    {
-        gtk_image_set_from_stock(GTK_IMAGE (wckp->icon->symbol),GTK_STOCK_HOME, wckp->icon->size);
-    }
-    else {
-        gtk_image_clear(GTK_IMAGE (wckp->icon->symbol));
     }
 
     if (grayscale != NULL && grayscale != pixbuf)
@@ -177,14 +185,19 @@ void on_wck_state_changed (WnckWindow *controlwindow, WindowckPlugin *wckp)
     {
         GdkColor color;
 
-        if (controlwindow && wnck_window_is_active(controlwindow))
+        if (controlwindow
+            && ((wnck_window_get_window_type (controlwindow) != WNCK_WINDOW_DESKTOP)
+                || wckp->prefs->show_on_desktop))
         {
-            if (gdk_color_parse (wckp->prefs->active_text_color, &color))
+            if (wnck_window_is_active(controlwindow)
+                && gdk_color_parse (wckp->prefs->active_text_color, &color))
+            {
                 gtk_widget_modify_fg (wckp->icon->symbol, GTK_STATE_NORMAL, &color);
-        }
-        else {
-            if (gdk_color_parse (wckp->prefs->inactive_text_color, &color))
+            }
+            else if (gdk_color_parse (wckp->prefs->inactive_text_color, &color))
+            {
                 gtk_widget_modify_fg (wckp->icon->symbol, GTK_STATE_NORMAL, &color);
+            }
         }
     }
 }
@@ -195,25 +208,38 @@ void on_control_window_changed (WnckWindow *controlwindow, WnckWindow *previous,
     /* disconect previous window title signal */
     wck_signal_handler_disconnect (G_OBJECT(previous), wckp->cnh);
 
-    on_name_changed (controlwindow, wckp);
+    on_wck_state_changed (controlwindow, wckp);
 
     if (controlwindow)
     {
-        wckp->cnh = g_signal_connect(G_OBJECT(controlwindow), "name-changed", G_CALLBACK(on_name_changed), wckp);
+        if (wnck_window_get_window_type (controlwindow) != WNCK_WINDOW_DESKTOP)
+        {
+            wckp->cnh = g_signal_connect(G_OBJECT(controlwindow), "name-changed", G_CALLBACK(on_name_changed), wckp);
+            if (!gtk_widget_get_visible(GTK_WIDGET(wckp->icon->eventbox)))
+                gtk_widget_show_all (GTK_WIDGET(wckp->icon->eventbox));
+        }
+        else
+        {
+            if (!wckp->prefs->show_on_desktop || !wckp->prefs->show_window_menu)
+            {
+                if (gtk_widget_get_visible(GTK_WIDGET(wckp->icon->eventbox)))
+                    gtk_widget_hide_all (GTK_WIDGET(wckp->icon->eventbox));
+            }
+        }
+    }
+    else
+    {
+        if (gtk_widget_get_visible(GTK_WIDGET(wckp->icon->eventbox)))
+            gtk_widget_hide_all (GTK_WIDGET(wckp->icon->eventbox));
     }
 
     if (wckp->prefs->show_icon)
     {
         wck_signal_handler_disconnect (G_OBJECT(previous), wckp->cih);
 
-        on_icon_changed (controlwindow, wckp);
-
         if (controlwindow)
-        {
             wckp->cih = g_signal_connect(G_OBJECT(controlwindow), "icon-changed", G_CALLBACK(on_icon_changed), wckp);
-        }
     }
-
 }
 
 
@@ -267,7 +293,8 @@ gboolean on_title_pressed(GtkWidget *title, GdkEventButton *event, WindowckPlugi
 
 gboolean on_title_released(GtkWidget *title, GdkEventButton *event, WindowckPlugin *wckp)
 {
-    if (!wckp->win->controlwindow)
+    if (!wckp->win->controlwindow
+        || (wnck_window_get_window_type (wckp->win->controlwindow) == WNCK_WINDOW_DESKTOP))
         return FALSE;
 
     if (event->button == 2)
@@ -283,7 +310,9 @@ gboolean on_title_released(GtkWidget *title, GdkEventButton *event, WindowckPlug
 
 gboolean on_icon_released(GtkWidget *title, GdkEventButton *event, WindowckPlugin *wckp)
 {
-    if ((event->button != 1) || !wckp->prefs->show_window_menu)
+    if ((event->button != 1)
+        || !wckp->prefs->show_window_menu
+        || (wnck_window_get_window_type (wckp->win->controlwindow) == WNCK_WINDOW_DESKTOP))
         return FALSE;
 
     GtkWidget *menu;
