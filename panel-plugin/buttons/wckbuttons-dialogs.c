@@ -76,7 +76,7 @@ static void on_button_layout_changed (GtkEditable *entry, WBPlugin *wb)
             if (wm_button_layout[0] == part[0])
                 layout = g_strconcat (part, wb->prefs->button_layout, NULL);
             else
-                layout = g_strconcat (wb->prefs->button_layout, part);
+                layout = g_strconcat (wb->prefs->button_layout, part, NULL);
 
             xfconf_channel_set_string (wb->wm_channel, "/general/button_layout", layout);
             g_free (part);
