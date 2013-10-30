@@ -27,5 +27,4 @@ po/Makefile.in.in
 po/POTFILES
 stamp-*
 po/*.mo
-debian/*
-arch/*
+arch/PKGBUILD
