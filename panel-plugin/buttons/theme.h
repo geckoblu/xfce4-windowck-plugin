@@ -40,7 +40,7 @@ typedef struct {
 } Settings;
 
 
-gchar *init_theme (WBPlugin *wb);
+void init_theme (WBPlugin *wb);
 void load_theme (const gchar *theme, WBPlugin *wb);
 void replace_buttons (const gchar *button_layout, WBPlugin *wb);
 gchar *get_theme_dir (const gchar *theme, const gchar *default_path);

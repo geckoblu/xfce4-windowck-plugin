@@ -132,7 +132,6 @@ static void track_controled_window (WckUtils *win)
 {
     WnckWindow      *previous_umax = NULL;
     WnckWindow      *previous_control = NULL;
-    gint i;
 
     previous_control = win->controlwindow;
 
@@ -144,8 +143,8 @@ static void track_controled_window (WckUtils *win)
     }
     else if (win->activewindow
             && (!win->activeworkspace
-                || wnck_window_is_in_viewport(win->activewindow, win->activeworkspace)
-            && !wnck_window_is_minimized(win->activewindow)))
+                || wnck_window_is_in_viewport(win->activewindow, win->activeworkspace))
+            && !wnck_window_is_minimized(win->activewindow))
     {
             win->controlwindow = win->activewindow;
     }
@@ -225,7 +224,6 @@ static void active_window_changed (WnckScreen *screen,
                                    WnckWindow *previous,
                                    WckUtils *win)
 {
-    gint i;
 
     win->activewindow = wnck_screen_get_active_window(screen);
 

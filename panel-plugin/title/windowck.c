@@ -211,7 +211,6 @@ static void create_icon (WindowckPlugin *wckp)
 static WindowckPlugin * windowck_new(XfcePanelPlugin *plugin)
 {
     WindowckPlugin *wckp;
-    WckUtils *win;
 
     GtkOrientation orientation;
     GtkWidget *label;

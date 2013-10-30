@@ -40,7 +40,9 @@ wck_about (XfcePanelPlugin *plugin, const gchar *icon_name)
     {
         "Alessio Piccoli <alepic@geckoblu.net>",
         "Cedric Leporcq <cedl38@gmail.com>",
-        "\nThis code is based on original 'Window Applets' from Andrej Belcijan.\nSee http://gnome-look.org/content/show.php?content=103732 for details.",
+        "",
+        "This code is derived from 'Window Applets' from Andrej Belcijan.",
+        "See http://gnome-look.org/content/show.php?content=103732 for details.",
         NULL
     };
 
@@ -53,7 +55,7 @@ wck_about (XfcePanelPlugin *plugin, const gchar *icon_name)
             "program-name", xfce_panel_plugin_get_display_name (plugin),
             "comments", xfce_panel_plugin_get_comment (plugin),
             "website", PLUGIN_WEBSITE,
-            "copyright", _("Copyright \302\251 2013\n"),
+            "copyright", "Copyright \302\251 2013\n",
             "authors", auth,
             NULL );
     // TODO: add translators.

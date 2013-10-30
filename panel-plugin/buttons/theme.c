@@ -365,7 +365,6 @@ gchar *button_layout_filter  (const gchar *string, const gchar *default_layout)
 gchar *opposite_layout_filter  (const gchar *string)
 {
     gint i, j;
-    gchar chr;
     gchar layout[8] = {0};
 
     /* WARNING : beware of bluffer overflow !!!  */
@@ -552,7 +551,7 @@ on_xfwm_channel_property_changed (XfconfChannel *wm_channel, const gchar *proper
 }
 
 
-gchar *init_theme (WBPlugin *wb)
+void init_theme (WBPlugin *wb)
 {
     /* get the xfwm4 chanel */
     wb->wm_channel = wck_properties_get_channel (G_OBJECT (wb->plugin));
