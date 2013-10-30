@@ -136,7 +136,7 @@ print_colors (GtkWidget * win, GdkColor * x, int n)
 {
     GdkColor color;
     color = query_color (win, x[n]);
-    return print_color(win, x[n]);
+    return print_color(win, color);
 }
 
 static gchar *
