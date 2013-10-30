@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-29 11:51+0100\n"
+"POT-Creation-Date: 2013-10-30 20:28+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../panel-plugin/title/windowck-dialogs.c:407
+#: ../panel-plugin/title/windowck-dialogs.c:413
 #: ../panel-plugin/buttons/wckbuttons-dialogs.c:381
 #, c-format
 msgid "Unable to open the following url: %s"

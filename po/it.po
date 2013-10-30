@@ -7,18 +7,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xfce4-windowck-plugin 0.1.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-29 11:51+0100\n"
+"POT-Creation-Date: 2013-10-30 20:28+0100\n"
 "PO-Revision-Date: 2013-10-29 12:03+0100\n"
 "Last-Translator: Cdric Leporcq <cedl38@gmail.com>\n"
 "Language-Team: Italian\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=ASCII\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 1.5.7\n"
 
-#: ../panel-plugin/title/windowck-dialogs.c:407
+#: ../panel-plugin/title/windowck-dialogs.c:413
 #: ../panel-plugin/buttons/wckbuttons-dialogs.c:381
 #, c-format
 msgid "Unable to open the following url: %s"

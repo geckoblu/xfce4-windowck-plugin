@@ -1,3 +1,10 @@
+0.2.1
+    Disable actions on desktop window.
+    Fix wck_utils to properly disconnect signals.
+    Fix missing PKGBUILD.in.
+    Fix gcc warnings.
+    Fix xfwm4 theme loading.
+
 0.2.0
     Provide compatibility with unity button themes.
     Add option to sync the theme with the window manager.
@@ -6,6 +13,9 @@
     Add option to show/hide the menu button.
     Change dialogs windows appearance.
     Fix reloadplugins.sh
+
+0.1.2
+    Backport 0.2.1 updates.
 
 0.1.1
     Add tooltip on size_mode combobox and correct a misspelling.
@@ -24,7 +34,6 @@
     Add xfwm4 theme support for buttons.
     Add plugins icons and a few themes.
     Add window icon to windowck plugin.
-
     Fix title overflow for expand option (use xfce_panel_plugin_set_shrink).
 
 0.0.2

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-29 11:51+0100\n"
-"PO-Revision-Date: 2013-10-29 11:52+0100\n"
+"POT-Creation-Date: 2013-10-30 20:28+0100\n"
+"PO-Revision-Date: 2013-10-30 19:45+0100\n"
 "Last-Translator: Cédric Leporcq <cedl38@gmail.com>\n"
 "Language-Team: French\n"
 "Language: fr\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.5.7\n"
 
-#: ../panel-plugin/title/windowck-dialogs.c:407
+#: ../panel-plugin/title/windowck-dialogs.c:413
 #: ../panel-plugin/buttons/wckbuttons-dialogs.c:381
 #, c-format
 msgid "Unable to open the following url: %s"
@@ -168,5 +168,3 @@ msgstr "Entête des Fenêtres - Boutons"
 msgid "Put the maximized window buttons on the panel."
 msgstr "Placer les boutons des fenêtres maximisées sur le tableau de bord."
 
-#~ msgid "Path"
-#~ msgstr "Chemin"
