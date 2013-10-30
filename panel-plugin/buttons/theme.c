@@ -150,7 +150,8 @@ set_string_value (const gchar * lvalue, const gchar *value, Settings *rc)
 
 
 /* use xfwm4 buttons naming */
-static void get_wm_pixbuf (const gchar *themedir, WBPlugin *wb) {
+static void get_wm_pixbuf (const gchar *themedir, WBPlugin *wb)
+{
     gint i,j;
     gchar imagename[30];
     xfwmColorSymbol colsym[ XPM_COLOR_SYMBOL_SIZE + 1 ];
@@ -250,14 +251,13 @@ static void get_wm_pixbuf (const gchar *themedir, WBPlugin *wb) {
       "pressed"
     };
 
-    while (ui_part[i] && ui_state[i])
+    for (i = 0; ui_part[i] && ui_state[i]; i++)
     {
         gchar *color;
 
         color = getUIStyle  (GTK_WIDGET(wb->plugin), ui_part[i], ui_state[i]);
         set_string_value (rc[i].option, color, rc);
         g_free (color);
-        ++i;
     }
 
     for (i = 0; i < XPM_COLOR_SYMBOL_SIZE; i++)
