@@ -311,7 +311,7 @@ void init_wnck (WckUtils *win, gboolean only_maximized, gpointer data)
     win->controlwindow = NULL;
     win->only_maximized = only_maximized;
 
-    // Global window tracking
+    /* Global window tracking */
     g_signal_connect(win->activescreen, "active-window-changed", G_CALLBACK (active_window_changed), win);
 
     if (win->only_maximized)
@@ -322,5 +322,9 @@ void init_wnck (WckUtils *win, gboolean only_maximized, gpointer data)
         win->swh = g_signal_connect(win->activescreen, "active-workspace-changed", G_CALLBACK (active_workspace_changed), win);
     }
 
+    /* Get controled window */
     track_controled_window (win);
+    
+    if (!win->controlwindow)
+        on_control_window_changed (NULL, NULL, win->data);
 }
