@@ -32,6 +32,5 @@ note : to upgrade from version 0.1.x to version 0.2.x you need to remove v0.1.x 
 How to report bugs?
 ===================
 
-Bugs should be reported to the Xfce bug tracking system
-(http://bugzilla.xfce.org, product 'Xfce Panel Plugins', Component
-'Windowck'). You will need to create an account for yourself.
+Bugs should be reported to the GitHub project
+(https://github.com/cedl38/xfce4-windowck-plugin). You will need to create an account for yourself.
