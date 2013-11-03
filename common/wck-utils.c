@@ -159,6 +159,7 @@ static void track_controled_window (WckUtils *win)
     {
         if (win->umaxwindow && (win->umaxwindow != previous_umax))
         {
+            /* track the new upper maximized window state */
             win->msh = g_signal_connect(G_OBJECT(win->umaxwindow),
                                            "state-changed",
                                            G_CALLBACK (on_umaxed_window_state_changed),
@@ -168,9 +169,9 @@ static void track_controled_window (WckUtils *win)
                                         G_CALLBACK (umax_window_workspace_changed),
                                         win);
         }
-        else
+        else if (win->controlwindow == previous_control)
         {
-            /* track previous umaxed window on desktop */
+            /* track previous upper maximized window state on desktop */
             win->umaxwindow = previous_umax;
             if (win->umaxwindow) {
                 win->msh = g_signal_connect(G_OBJECT(win->umaxwindow),
@@ -182,18 +183,12 @@ static void track_controled_window (WckUtils *win)
     }
 
     if (!win->controlwindow)
-    {
         win->controlwindow = get_root_window(win->activescreen);
-    }
 
     if (win->controlwindow != previous_control)
-    {
         on_control_window_changed(win->controlwindow, previous_control, win->data);
-    }
     else
-    {
         on_wck_state_changed(win->controlwindow, win->data);
-    }
 }
 
 
