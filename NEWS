@@ -1,10 +1,13 @@
+0.2.3
+    Fix a wrong title display when desktop is shown.
+0.2.2
+    Fix #2 plugin initialization issue
 0.2.1
     Disable actions on desktop window.
     Fix wck_utils to properly disconnect signals.
     Fix missing PKGBUILD.in.
     Fix gcc warnings.
     Fix xfwm4 theme loading.
-
 0.2.0
     Provide compatibility with unity button themes.
     Add option to sync the theme with the window manager.
