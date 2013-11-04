@@ -209,9 +209,9 @@ static void get_wm_pixbuf (const gchar *themedir, WBPlugin *wb)
     };
 
     static const char *ui_state[] = {
-        "active",
         "normal",
-        "active",
+        "normal",
+        "normal",
         "insensitive",
         "normal",
         "normal",
@@ -557,7 +557,7 @@ void init_theme (WBPlugin *wb)
     wb->wm_channel = wck_properties_get_channel (G_OBJECT (wb->plugin));
 
     /* try to use the xfwm4 theme */
-    if (wb->prefs->sync_wm_theme)
+    if (wb->wm_channel && wb->prefs->sync_wm_theme)
     {
         apply_wm_theme (wb);
 

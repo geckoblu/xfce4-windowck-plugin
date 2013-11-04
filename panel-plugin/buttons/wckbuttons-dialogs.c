@@ -242,7 +242,7 @@ static void on_sync_theme_with_wm_toggled(GtkToggleButton *sync_wm_theme, WBPlug
 {
     GtkWidget   *view;
 
-    view = g_object_get_data(G_OBJECT(wb->plugin), "view");
+    view = GTK_WIDGET(gtk_builder_get_object(wb->prefs->builder, "theme_name_treeview"));
 
     wb->prefs->sync_wm_theme = gtk_toggle_button_get_active(sync_wm_theme);
 
@@ -332,9 +332,14 @@ static GtkWidget * build_properties_area(WBPlugin *wb, const gchar *buffer, gsiz
 
             if (G_LIKELY (sync_wm_theme != NULL))
             {
-                gtk_toggle_button_set_active(sync_wm_theme, wb->prefs->sync_wm_theme);
-                g_object_set_data(G_OBJECT(wb->plugin), "view", view);
-                g_signal_connect(sync_wm_theme, "toggled", G_CALLBACK(on_sync_theme_with_wm_toggled), wb);
+                if (wb->wm_channel)
+                {
+                    gtk_toggle_button_set_active(sync_wm_theme, wb->prefs->sync_wm_theme);
+                    g_signal_connect(sync_wm_theme, "toggled", G_CALLBACK(on_sync_theme_with_wm_toggled), wb);
+                }
+                else {
+                    gtk_widget_set_sensitive (GTK_WIDGET(sync_wm_theme), FALSE);
+                }
             }
             else {
                 DBG("No widget with the name \"sync_wm_theme\" found");
@@ -345,7 +350,6 @@ static GtkWidget * build_properties_area(WBPlugin *wb, const gchar *buffer, gsiz
             if (G_LIKELY (button_layout != NULL))
             {
                 gtk_entry_set_text(button_layout, wb->prefs->button_layout);
-                g_object_set_data (G_OBJECT (wb->plugin), "button_layout", button_layout);
                 g_signal_connect(GTK_EDITABLE(button_layout), "changed", G_CALLBACK(on_button_layout_changed), wb);
             }
             else {

@@ -336,11 +336,10 @@ static void set_title_colors(WindowckPlugin *wckp)
     GdkColor  color, textColor, bgColor;
 
     /* get plugin widget style */
-    textColor =  GTK_WIDGET(wckp->plugin)->style->text[GTK_STATE_ACTIVE];
+    textColor =  GTK_WIDGET(wckp->plugin)->style->text[GTK_STATE_NORMAL];
     wckp->prefs->active_text_color = gdk_color_to_string(&textColor);
 
     bgColor =  GTK_WIDGET(wckp->plugin)->style->bg[GTK_STATE_NORMAL];
-    textColor =  GTK_WIDGET(wckp->plugin)->style->text[GTK_STATE_NORMAL];
     color = mix(bgColor, textColor, UNFOCUSED_TEXT_ALPHA);
     wckp->prefs->inactive_text_color = gdk_color_to_string(&color);
 }
