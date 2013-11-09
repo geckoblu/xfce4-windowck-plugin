@@ -32,6 +32,7 @@
 
 #include <gtk/gtk.h>
 #include <common/wck-utils.h>
+#include <common/wck-plugin.h>
 
 G_BEGIN_DECLS
 
@@ -93,6 +94,7 @@ typedef struct {
     gulong cnh;                         // controled window name handler id
     gulong cih;                         // controled window icon handler id
 
+    XfconfChannel *x_channel;      // xsettings chanel
 } WindowckPlugin;
 
 void windowck_save(XfcePanelPlugin *plugin, WindowckPlugin *wckp);

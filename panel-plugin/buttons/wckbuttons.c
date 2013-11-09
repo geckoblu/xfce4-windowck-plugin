@@ -29,7 +29,6 @@
 #include <libxfce4util/libxfce4util.h>
 #include <libxfce4panel/xfce-panel-plugin.h>
 #include <libxfce4panel/xfce-hvbox.h>
-#include <common/wck-plugin.h>
 
 #include "wckbuttons.h"
 #include "wckbuttons-dialogs.h"

@@ -29,7 +29,6 @@
 #include <gtk/gtk.h>
 #include <libxfce4util/libxfce4util.h>
 #include <libxfce4panel/libxfce4panel.h>
-#include <common/wck-plugin.h>
 
 #include "windowck.h"
 #include "windowck-dialogs.h"

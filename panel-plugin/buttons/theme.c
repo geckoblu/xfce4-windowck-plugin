@@ -23,7 +23,6 @@
 #include <libxfce4util/libxfce4util.h>
 #include <common/ui_style.h>
 #include <common/mypixmap.h>
-#include <xfconf/xfconf.h>
 
 #include "theme.h"
 
@@ -308,29 +307,6 @@ static void get_unity_pixbuf (const gchar *themedir, WBPlugin *wb) {
 }
 
 
-static XfconfChannel *
-wck_properties_get_channel (GObject *object_for_weak_ref)
-{
-  GError        *error = NULL;
-  XfconfChannel *channel;
-
-  g_return_val_if_fail (G_IS_OBJECT (object_for_weak_ref), NULL);
-
-  if (!xfconf_init (&error))
-    {
-      g_critical ("Failed to initialize Xfconf: %s", error->message);
-      g_error_free (error);
-      return NULL;
-    }
-
-  //~ channel = xfconf_channel_get (XFCE_PANEL_CHANNEL_NAME);
-  channel = xfconf_channel_get ("xfwm4");
-  g_object_weak_ref (object_for_weak_ref, (GWeakNotify) xfconf_shutdown, NULL);
-
-  return channel;
-}
-
-
 gchar *button_layout_filter  (const gchar *string, const gchar *default_layout)
 {
     gint i, j;
@@ -529,6 +505,28 @@ void apply_wm_theme (WBPlugin *wb)
 
 
 static void
+on_x_chanel_property_changed (XfconfChannel *x_channel, const gchar *property_name, const GValue *value, WBPlugin *wb)
+{
+    if (g_str_has_prefix(property_name, "/Net/") == TRUE)
+    {
+        const gchar *name = &property_name[5];
+        switch (G_VALUE_TYPE(value))
+        {
+            case G_TYPE_STRING:
+                if (!strcmp (name, "ThemeName"))
+                {
+                    apply_wm_theme (wb);
+                }
+                break;
+            default:
+                g_warning("The property '%s' is not supported", property_name);
+                break;
+        }
+    }
+}
+
+
+static void
 on_xfwm_channel_property_changed (XfconfChannel *wm_channel, const gchar *property_name, const GValue *value, WBPlugin *wb)
 {
     if (g_str_has_prefix(property_name, "/general/") == TRUE)
@@ -554,7 +552,7 @@ on_xfwm_channel_property_changed (XfconfChannel *wm_channel, const gchar *proper
 void init_theme (WBPlugin *wb)
 {
     /* get the xfwm4 chanel */
-    wb->wm_channel = wck_properties_get_channel (G_OBJECT (wb->plugin));
+    wb->wm_channel = wck_properties_get_channel (G_OBJECT (wb->plugin), "xfwm4");
 
     /* try to use the xfwm4 theme */
     if (wb->wm_channel && wb->prefs->sync_wm_theme)
@@ -568,4 +566,10 @@ void init_theme (WBPlugin *wb)
         load_theme (wb->prefs->theme, wb);
         replace_buttons (wb->prefs->button_layout, wb);
     }
+
+    /* get the xsettings chanel to update the gtk theme */
+    wb->x_channel = wck_properties_get_channel (G_OBJECT (wb->plugin), "xsettings");
+
+    if (wb->x_channel)
+        g_signal_connect (wb->x_channel, "property-changed", G_CALLBACK (on_x_chanel_property_changed), wb);
 }

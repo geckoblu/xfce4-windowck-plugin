@@ -32,6 +32,7 @@ libwindowck_la_CFLAGS = \
 	$(LIBXFCE4UI_CFLAGS) \
 	$(LIBXFCE4PANEL_CFLAGS) \
 	$(LIBWNCK_CFLAGS) \
+	$(XFCONF_CFLAGS) \
 	$(PLATFORM_CFLAGS)
 
 libwindowck_la_LDFLAGS = \
@@ -47,9 +48,10 @@ libwindowck_la_LIBADD = \
 	$(LIBXFCE4UTIL_LIBS) \
 	$(LIBXFCE4UI_LIBS) \
 	$(LIBXFCE4PANEL_LIBS) \
-	$(LIBWNCK_LIBS)
+	$(LIBWNCK_LIBS) \
+	$(XFCONF_LIBS)
 
-libactions_la_DEPENDENCIES = \
+libwindowck_la_DEPENDENCIES = \
 	$(top_builddir)/common/libwck-common.la
 
 #

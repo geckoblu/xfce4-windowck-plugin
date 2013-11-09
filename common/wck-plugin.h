@@ -21,6 +21,7 @@
 #ifndef WCK_PLUGIN_H_
 #define WCK_PLUGIN_H_
 
+#include <xfconf/xfconf.h>
 #include <libxfce4panel/xfce-panel-plugin.h>
 
 /* the website url */
@@ -28,6 +29,8 @@
 
 G_BEGIN_DECLS
 
+XfconfChannel *
+wck_properties_get_channel (GObject *object_for_weak_ref, const gchar *channel_name);
 void wck_about (XfcePanelPlugin *plugin, const gchar *icon_name);
 GtkWidget *show_refresh_item (XfcePanelPlugin *plugin);
 

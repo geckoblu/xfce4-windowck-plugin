@@ -51,7 +51,7 @@ libwckbuttons_la_LIBADD = \
 	$(LIBXFCE4PANEL_LIBS) \
 	$(XFCONF_LIBS)
 
-libactions_la_DEPENDENCIES = \
+libwckbuttons_la_DEPENDENCIES = \
 	$(top_builddir)/common/libwck-common.la
 
 #

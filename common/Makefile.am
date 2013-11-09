@@ -2,8 +2,6 @@
 AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-DG_LOG_DOMAIN=\"libwck-common\" \
-	-DLIBXFCE4PANEL_COMPILATION \
-	-DHELPDIR=\"$(docdir)/html\" \
 	$(PLATFORM_CPPFLAGS)
 
 noinst_LTLIBRARIES = \
@@ -21,8 +19,8 @@ libwck_common_la_SOURCES = \
 	xpm-color-table.h 
 
 libwck_common_la_CFLAGS = \
-	$(XFCONF_CFLAGS) \
 	$(GTK_CFLAGS) \
+	$(XFCONF_CFLAGS) \
 	$(LIBXFCE4UI_CFLAGS) \
 	$(LIBXFCE4PANEL_CFLAGS) \
 	$(LIBWNCK_CFLAGS) \
@@ -33,8 +31,8 @@ libwck_common_la_LDFLAGS = \
 	$(PLATFORM_LDFLAGS)
 
 libwck_common_la_LIBADD = \
-	$(XFCONF_LIBS) \
 	$(GTK_LIBS) \
+	$(XFCONF_LIBS) \
 	$(LIBXFCE4UI_LIBS) \
 	$(LIBXFCE4PANEL_LIBS) \
 	$(LIBWNCK_LIBS)

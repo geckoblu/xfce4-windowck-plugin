@@ -28,6 +28,28 @@
 
 #include "wck-plugin.h"
 
+XfconfChannel *
+wck_properties_get_channel (GObject *object_for_weak_ref, const gchar *channel_name)
+{
+  GError        *error = NULL;
+  XfconfChannel *channel;
+
+  g_return_val_if_fail (G_IS_OBJECT (object_for_weak_ref), NULL);
+
+  if (!xfconf_init (&error))
+    {
+      g_critical ("Failed to initialize Xfconf: %s", error->message);
+      g_error_free (error);
+      return NULL;
+    }
+
+  //~ channel = xfconf_channel_get (XFCE_PANEL_CHANNEL_NAME);
+  channel = xfconf_channel_get (channel_name);
+  g_object_weak_ref (object_for_weak_ref, (GWeakNotify) xfconf_shutdown, NULL);
+
+  return channel;
+}
+
 
 void
 wck_about (XfcePanelPlugin *plugin, const gchar *icon_name)

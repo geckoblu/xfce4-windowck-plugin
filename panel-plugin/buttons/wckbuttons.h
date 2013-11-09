@@ -22,7 +22,7 @@
 #define __WCKBUTTONS_H__
 
 #include <common/wck-utils.h>
-#include <xfconf/xfconf.h>
+#include <common/wck-plugin.h>
 
 G_BEGIN_DECLS
 
@@ -95,6 +95,7 @@ typedef struct {
 
     GdkPixbuf *pixbufs[IMAGES_STATES][IMAGES_BUTTONS];
     XfconfChannel *wm_channel;      // window manager chanel
+    XfconfChannel *x_channel;      // xsettings chanel
     gulong wph;                 // xfwm chanel property changed handler id
 } WBPlugin;
 

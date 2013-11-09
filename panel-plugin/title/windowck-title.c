@@ -104,7 +104,7 @@ static void on_icon_changed(WnckWindow *controlwindow, WindowckPlugin *wckp)
 
 /* Triggers when controlwindow's name changes */
 /* Warning! This function is called very often, so it should only do the most necessary things! */
-static void on_name_changed(WnckWindow *controlwindow, WindowckPlugin *wckp)
+static void on_name_changed (WnckWindow *controlwindow, WindowckPlugin *wckp)
 {
     gint i, n;
     const gchar *title_text, *title_markup;
@@ -345,6 +345,29 @@ static void set_title_colors(WindowckPlugin *wckp)
 }
 
 
+static void
+on_x_chanel_property_changed (XfconfChannel *x_channel, const gchar *property_name, const GValue *value, WindowckPlugin *wckp)
+{
+    if (g_str_has_prefix(property_name, "/Net/") == TRUE)
+    {
+        const gchar *name = &property_name[5];
+        switch (G_VALUE_TYPE(value))
+        {
+            case G_TYPE_STRING:
+                if (!strcmp (name, "ThemeName"))
+                {
+                    set_title_colors(wckp);
+                    on_name_changed (wckp->win->controlwindow, wckp);
+                }
+                break;
+            default:
+                g_warning("The property '%s' is not supported", property_name);
+                break;
+        }
+    }
+}
+
+
 void init_title (WindowckPlugin *wckp)
 {
     set_title_colors(wckp);
@@ -358,4 +381,10 @@ void init_title (WindowckPlugin *wckp)
 
     gtk_alignment_set_padding(GTK_ALIGNMENT(wckp->alignment), 0, 0, wckp->prefs->title_padding, wckp->prefs->title_padding);
     gtk_box_set_spacing (GTK_BOX(wckp->hvbox), wckp->prefs->title_padding);
+
+    /* get the xsettings chanel to update the gtk theme */
+    wckp->x_channel = wck_properties_get_channel (G_OBJECT (wckp->plugin), "xsettings");
+
+    if (wckp->x_channel)
+        g_signal_connect (wckp->x_channel, "property-changed", G_CALLBACK (on_x_chanel_property_changed), wckp);
 }
