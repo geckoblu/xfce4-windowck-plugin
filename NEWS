@@ -1,3 +1,7 @@
+0.2.4
+    Update plugin when the gtk theme changed
+    Fix fg color issue with some themes
+    Fix autogen warnings
 0.2.3
     Fix a wrong title display when desktop is shown.
 0.2.2
@@ -17,8 +21,8 @@
     Change dialogs windows appearance.
     Fix reloadplugins.sh
 
-0.1.2
-    Backport 0.2.1 updates.
+0.1.3
+    Backport 0.2.2 updates.
 
 0.1.1
     Add tooltip on size_mode combobox and correct a misspelling.

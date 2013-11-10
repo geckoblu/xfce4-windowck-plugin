@@ -10,10 +10,10 @@ dnl *** Version information ***
 dnl ***************************
 m4_define([windowck_version_major], [0])
 m4_define([windowck_version_minor], [2])
-m4_define([windowck_version_micro], [3])
+m4_define([windowck_version_micro], [4])
 m4_define([windowck_version_nano],  []) dnl leave this empty to have no nano version
 m4_define([windowck_version_build], [@REVISION@])
-m4_define([windowck_version_tag],   [git])
+m4_define([windowck_version_tag],   [])
 m4_define([windowck_version], [windowck_version_major().windowck_version_minor().windowck_version_micro()ifelse(windowck_version_nano(), [], [], [.windowck_version_nano()])ifelse(windowck_version_tag(), [git], [windowck_version_tag()-windowck_version_build()], [windowck_version_tag()])])
 
 dnl ***************************

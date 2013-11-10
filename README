@@ -1,5 +1,5 @@
 What is it?
-===========
+-----------
 
 Xfce panel plugin which allows to put the maximized window title and windows buttons on the panel.
 
@@ -19,18 +19,29 @@ http://xfce-look.org/content/show.php?content=139915.
 
 This code is derived from original 'Window Applets' from Andrej Belcijan.
 See http://gnome-look.org/content/show.php?content=103732 for infos.
- 
-Installation
-============
 
+Generate
+Run ./autogen.sh --prefix=usr (you need to have xfce4-dev-tools installed)
+
+Installation
+------------
+
+1) Install dependencies:
+            xfce4-panel
+To build:   intltool, xfce4-dev-tools
+
+2) Generate common makefiles:
+Run ./autogen.sh --prefix=usr
+
+3) compile and install the plugin with make
 The file 'INSTALL' contains generic installation instructions. For more
 detailed information, visit the plugin website at
 http://goodies.xfce.org/projects/panel-plugins/xfce4-windowck-plugin
 
-note : to upgrade from version 0.1.x to version 0.2.x you need to remove v0.1.x previously.
+note: to upgrade from version 0.1.x to version 0.2.x you need to remove v0.1.x previously.
 
 How to report bugs?
-===================
+-------------------
 
 Bugs should be reported to the GitHub project
 (https://github.com/cedl38/xfce4-windowck-plugin). You will need to create an account for yourself.
