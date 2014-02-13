@@ -20,8 +20,8 @@ libwckbuttons_la_SOURCES = \
 	$(libwckbuttons_built_sources) \
 	wckbuttons.c \
 	wckbuttons.h \
-	theme.c \
-	theme.h \
+	wckbuttons-theme.c \
+	wckbuttons-theme.h \
 	wckbuttons-dialogs.c \
 	wckbuttons-dialogs.h
 

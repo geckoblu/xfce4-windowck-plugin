@@ -32,7 +32,7 @@
 
 #include "wckbuttons.h"
 #include "wckbuttons-dialogs.h"
-#include "theme.h"
+#include "wckbuttons-theme.h"
 
 /* default settings */
 #define DEFAULT_ONLY_MAXIMIZED TRUE

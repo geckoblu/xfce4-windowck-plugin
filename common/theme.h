@@ -24,30 +24,14 @@
 #define __THEME_H__
 
 #include <gtk/gtk.h>
-#include "wckbuttons.h"
 
 /* default settings */
-#define DEFAULT_THEME "Windowck"
 #define THEMERC "themerc"
 
 G_BEGIN_DECLS
 
-typedef struct {
-    gchar  *option;
-    GValue *value;
-    GType   type;
-    gboolean required;
-} Settings;
-
-
-void init_theme (WBPlugin *wb);
-void load_theme (const gchar *theme, WBPlugin *wb);
-void replace_buttons (const gchar *button_layout, WBPlugin *wb);
 gchar *get_theme_dir (const gchar *theme, const gchar *default_path);
 gchar *test_theme_dir (const gchar *theme, const char *themedir, const gchar *file);
-gchar *get_rc_button_layout (const gchar *theme);
-gchar *button_layout_filter  (const gchar *button_layout, const gchar *default_layout);
-gchar *opposite_layout_filter  (const gchar *string);
 
 G_END_DECLS
 

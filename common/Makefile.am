@@ -10,6 +10,8 @@ noinst_LTLIBRARIES = \
 libwck_common_la_SOURCES = \
 	mypixmap.c \
 	mypixmap.h \
+	theme.c \
+	theme.h \
 	ui_style.c \
 	ui_style.h \
 	wck-plugin.c \
@@ -21,10 +23,12 @@ libwck_common_la_SOURCES = \
 libwck_common_la_CFLAGS = \
 	$(GTK_CFLAGS) \
 	$(XFCONF_CFLAGS) \
+	$(LIBXFCE4UTIL_CFLAGS) \
 	$(LIBXFCE4UI_CFLAGS) \
 	$(LIBXFCE4PANEL_CFLAGS) \
 	$(LIBWNCK_CFLAGS) \
-	$(PLATFORM_CFLAGS)
+	$(PLATFORM_CFLAGS) \
+	-DDATADIR=\"$(datadir)\"
 
 libwck_common_la_LDFLAGS = \
 	-no-undefined \
@@ -33,6 +37,7 @@ libwck_common_la_LDFLAGS = \
 libwck_common_la_LIBADD = \
 	$(GTK_LIBS) \
 	$(XFCONF_LIBS) \
+	$(LIBXFCE4UTIL_LIBS) \
 	$(LIBXFCE4UI_LIBS) \
 	$(LIBXFCE4PANEL_LIBS) \
 	$(LIBWNCK_LIBS)
