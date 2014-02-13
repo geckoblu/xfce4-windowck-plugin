@@ -49,6 +49,8 @@
 #define DEFAULT_TITLE_PADDING 3
 #define DEFAULT_CUSTOM_FONT FALSE
 #define DEFAULT_TITLE_FONT "sans 10"
+#define DEFAULT_INACTIVE_TEXT_ALPHA 60
+#define DEFAULT_INACTIVE_TEXT_SHADE 110
 
 /* prototypes */
 static void windowck_construct(XfcePanelPlugin *plugin);
@@ -92,6 +94,8 @@ void windowck_save(XfcePanelPlugin *plugin, WindowckPlugin *wckp)
 
         xfce_rc_write_int_entry(rc, "title_alignment", wckp->prefs->title_alignment);
         xfce_rc_write_int_entry(rc, "title_padding", wckp->prefs->title_padding);
+        xfce_rc_write_int_entry(rc, "inactive_text_alpha", wckp->prefs->inactive_text_alpha);
+        xfce_rc_write_int_entry(rc, "inactive_text_shade", wckp->prefs->inactive_text_shade);
 
         /* close the rc file */
         xfce_rc_close(rc);
@@ -137,6 +141,8 @@ static void windowck_read(WindowckPlugin *wckp)
             wckp->prefs->title_font = g_strdup(title_font);
             wckp->prefs->title_alignment = xfce_rc_read_int_entry(rc, "title_alignment", DEFAULT_TITLE_ALIGNMENT);
             wckp->prefs->title_padding = xfce_rc_read_int_entry(rc, "title_padding", DEFAULT_TITLE_PADDING);
+            wckp->prefs->inactive_text_alpha = xfce_rc_read_int_entry(rc, "inactive_text_alpha", DEFAULT_INACTIVE_TEXT_ALPHA);
+            wckp->prefs->inactive_text_shade = xfce_rc_read_int_entry(rc, "inactive_text_shade", DEFAULT_INACTIVE_TEXT_SHADE);
 
             /* cleanup */
             xfce_rc_close(rc);
@@ -163,6 +169,8 @@ static void windowck_read(WindowckPlugin *wckp)
     wckp->prefs->title_font = DEFAULT_TITLE_FONT;
     wckp->prefs->title_alignment = DEFAULT_TITLE_ALIGNMENT;
     wckp->prefs->title_padding = DEFAULT_TITLE_PADDING;
+    wckp->prefs->inactive_text_alpha = DEFAULT_INACTIVE_TEXT_ALPHA;
+    wckp->prefs->inactive_text_shade = DEFAULT_INACTIVE_TEXT_SHADE;
 }
 
 

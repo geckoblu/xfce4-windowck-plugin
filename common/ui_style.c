@@ -45,7 +45,7 @@ char *states[] = {
 };
 
 char *names[] = {
-    "fg", "bg", "text", "base", "light", "dark", "mid", "mix_bg_text", NULL
+    "fg", "bg", "text", "base", "light", "dark", "mid", NULL
 };
 
 typedef enum {
@@ -61,7 +61,17 @@ typedef enum {
     COLOR_NAMES
 } ColorNames;
 
-GdkColor mix(GdkColor  color2, GdkColor  color1, float a) {
+GdkColor shade (GdkColor  color, float b)
+{
+    color.red = color.red * b;
+    color.green = color.green * b;
+    color.blue = color.blue * b;
+
+    return color;
+}
+
+GdkColor mix (GdkColor  color2, GdkColor  color1, float a)
+{
     GdkColor color;
 
     color.red = color1.red * a + color2.red * (1 - a);
@@ -143,8 +153,6 @@ static gchar *
 print_rc_style (GtkWidget * win, const gchar * name, const gchar * state,
                 GtkStyle * style)
 {
-    GdkColor color, bgColor, textColor;
-
     gchar *s;
     gint n, m;
 
@@ -178,35 +186,66 @@ print_rc_style (GtkWidget * win, const gchar * name, const gchar * state,
         case GTKSTYLE_MID:
             s = print_colors (win, style->mid, n);
             break;
-        case MIX_BG_TEXT:
-            bgColor = query_color (win, style->bg[n]);
-            textColor = query_color (win, style->text[n]);
-            color = mix(bgColor, textColor, UNFOCUSED_TEXT_ALPHA);
-            s = print_color (win, color);
-            break;
     }
     return (s);
 }
 
-gchar *
-getUIStyle (GtkWidget * win, const gchar * name, const gchar * state)
+static GtkStyle *
+get_ui_style (GtkWidget * win)
 {
     GtkStyle *style;
-    gchar *s;
 
-    TRACE ("entering getUIStyle");
-
-    g_return_val_if_fail (win != NULL, NULL);
-    g_return_val_if_fail (GTK_IS_WIDGET (win), NULL);
-    g_return_val_if_fail (GTK_WIDGET_REALIZED (win), NULL);
+    TRACE ("entering get_ui_style");
 
     style = gtk_rc_get_style (win);
     if (!style)
     {
         style = gtk_widget_get_style (win);
     }
+    return (style);
+}
+
+gchar *
+get_ui_color (GtkWidget * win, const gchar * name, const gchar * state)
+{
+    GtkStyle *style;
+    gchar *s;
+
+    TRACE ("entering get_ui_color");
+
+    g_return_val_if_fail (win != NULL, NULL);
+    g_return_val_if_fail (GTK_IS_WIDGET (win), NULL);
+    g_return_val_if_fail (GTK_WIDGET_REALIZED (win), NULL);
+
+    style = get_ui_style (win);
     s = print_rc_style (win, name, state, style);
     TRACE ("%s[%s]=%s", name, state, s);
+    return (s);
+}
+
+gchar *
+mix_bg_fg (GtkWidget * win, const gchar * state, float alpha, float beta)
+{
+    GdkColor color, bgColor, fgColor;
+    GtkStyle *style;
+    gchar *s;
+    gint n;
+
+    TRACE ("entering mix_bg_fg_ui");
+
+    g_return_val_if_fail (win != NULL, NULL);
+    g_return_val_if_fail (GTK_IS_WIDGET (win), NULL);
+    g_return_val_if_fail (GTK_WIDGET_REALIZED (win), NULL);
+
+    style = get_ui_style (win);
+    n = state_value (state);
+
+    bgColor = query_color (win, style->bg[n]);
+    fgColor = query_color (win, style->fg[n]);
+    color = shade (mix (bgColor, fgColor, alpha), beta);
+    s = print_color (win, color);
+
+    TRACE ("mix_bg_fg[%s]=%s", state, s);
     return (s);
 }
 

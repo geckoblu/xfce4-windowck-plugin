@@ -39,7 +39,8 @@
 #define DEFAULT_SHOW_ON_DESKTOP FALSE
 #define DEFAULT_SYNC_WM_THEME TRUE
 #define DEFAULT_BUTTON_LAYOUT "HMC"
-#define DEFAULT_SETTING2 1
+#define DEFAULT_INACTIVE_TEXT_ALPHA 60
+#define DEFAULT_INACTIVE_TEXT_SHADE 110
 
 #define BUTTONS_SIGNALS_CONNECT(name, id) \
         g_signal_connect (G_OBJECT (wb->button[id]->eventbox), "button-press-event", G_CALLBACK (name##_button_pressed), wb); \
@@ -86,7 +87,8 @@ wckbuttons_save (XfcePanelPlugin *plugin,
         if (wb->prefs->theme)
             xfce_rc_write_entry (rc, "theme", wb->prefs->theme);
 
-        xfce_rc_write_int_entry  (rc, "setting2", wb->setting2);
+        xfce_rc_write_int_entry  (rc, "inactive_text_alpha", wb->prefs->inactive_text_alpha);
+        xfce_rc_write_int_entry  (rc, "inactive_text_shade", wb->prefs->inactive_text_shade);
 
         /* close the rc file */
         xfce_rc_close (rc);
@@ -126,7 +128,8 @@ wckbuttons_read (WBPlugin *wb)
             theme = xfce_rc_read_entry (rc, "theme", DEFAULT_THEME);
             wb->prefs->theme = g_strdup (theme);
 
-            wb->setting2 = xfce_rc_read_int_entry (rc, "setting2", DEFAULT_SETTING2);
+            wb->prefs->inactive_text_alpha = xfce_rc_read_int_entry (rc, "inactive_text_alpha", DEFAULT_INACTIVE_TEXT_ALPHA);
+            wb->prefs->inactive_text_shade = xfce_rc_read_int_entry (rc, "inactive_text_shade", DEFAULT_INACTIVE_TEXT_SHADE);
 
             /* cleanup */
             xfce_rc_close (rc);
@@ -144,7 +147,8 @@ wckbuttons_read (WBPlugin *wb)
     wb->prefs->sync_wm_theme = DEFAULT_SYNC_WM_THEME;
     wb->prefs->button_layout = DEFAULT_BUTTON_LAYOUT;
     wb->prefs->theme = DEFAULT_THEME;
-    wb->setting2 = DEFAULT_SETTING2;
+    wb->prefs->inactive_text_alpha = DEFAULT_INACTIVE_TEXT_ALPHA;
+    wb->prefs->inactive_text_shade = DEFAULT_INACTIVE_TEXT_SHADE;
 }
 
 WindowButton **create_buttons (WBPlugin *wb)

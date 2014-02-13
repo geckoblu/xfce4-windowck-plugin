@@ -71,8 +71,10 @@ typedef struct {
 
     gboolean custom_font;              // [T/F] Use custom font
     gchar *title_font;                  // Custom title font
-    gchar *active_text_color;           // active text color
-    gchar *inactive_text_color;         // inactive text color
+    gint inactive_text_alpha;       // Title inactive alpha
+    gint inactive_text_shade;       // Title inactive shade
+    gchar *active_text_color;       // active text color
+    gchar *inactive_text_color;     // inactive text color
 
     gint title_alignment;            // Title alignment [0=left, 5=center, 10=right]
 } WCKPreferences;

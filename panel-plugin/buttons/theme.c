@@ -182,8 +182,8 @@ static void get_wm_pixbuf (const gchar *themedir, WBPlugin *wb)
     };
 
     static const char *ui_part[] = {
-        "text",
-        "mix_bg_text",
+        "fg",
+        "mix_bg_fg",
         "dark",
         "dark",
         "fg",
@@ -254,7 +254,14 @@ static void get_wm_pixbuf (const gchar *themedir, WBPlugin *wb)
     {
         gchar *color;
 
-        color = getUIStyle  (GTK_WIDGET(wb->plugin), ui_part[i], ui_state[i]);
+        if (strcmp (ui_part[i],  "mix_bg_fg") == 0)
+        {
+            color = mix_bg_fg  (GTK_WIDGET(wb->plugin), "normal", wb->prefs->inactive_text_alpha / 100.0, wb->prefs->inactive_text_shade / 100.0);
+        }
+        else
+        {
+            color = get_ui_color  (GTK_WIDGET(wb->plugin), ui_part[i], ui_state[i]);
+        }
         set_string_value (rc[i].option, color, rc);
         g_free (color);
     }

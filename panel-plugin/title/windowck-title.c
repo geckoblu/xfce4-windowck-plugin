@@ -333,15 +333,9 @@ gboolean on_icon_released(GtkWidget *title, GdkEventButton *event, WindowckPlugi
 
 static void set_title_colors(WindowckPlugin *wckp)
 {
-    GdkColor  color, textColor, bgColor;
-
     /* get plugin widget style */
-    textColor =  GTK_WIDGET(wckp->plugin)->style->text[GTK_STATE_NORMAL];
-    wckp->prefs->active_text_color = gdk_color_to_string(&textColor);
-
-    bgColor =  GTK_WIDGET(wckp->plugin)->style->bg[GTK_STATE_NORMAL];
-    color = mix(bgColor, textColor, UNFOCUSED_TEXT_ALPHA);
-    wckp->prefs->inactive_text_color = gdk_color_to_string(&color);
+    wckp->prefs->active_text_color = get_ui_color  (GTK_WIDGET(wckp->plugin), "fg", "normal");
+    wckp->prefs->inactive_text_color = mix_bg_fg (GTK_WIDGET(wckp->plugin), "normal", wckp->prefs->inactive_text_alpha / 100.0, wckp->prefs->inactive_text_shade / 100.0);
 }
 
 

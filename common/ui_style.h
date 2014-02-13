@@ -31,11 +31,14 @@
 #include <gtk/gtk.h>
 #include <pango/pango-font.h>
 
-#define UNFOCUSED_TEXT_ALPHA 0.5
-
 GdkColor query_color (GtkWidget * win, GdkColor c);
-GdkColor mix(GdkColor  color2, GdkColor  color1, float a);
-gchar                   *getUIStyle                             (GtkWidget *,
+GdkColor shade (GdkColor  color, float s);
+GdkColor mix (GdkColor color2, GdkColor  color1, float a);
+gchar                   *mix_bg_fg                              (GtkWidget * win,
+                                                                 const gchar * state,
+                                                                 float alpha,
+                                                                 float beta);
+gchar                   *get_ui_color                             (GtkWidget *,
                                                                  const gchar *,
                                                                  const gchar *);
 GdkGC                   *getUIStyle_gc                          (GtkWidget *,

@@ -65,11 +65,13 @@ typedef enum {
 
 typedef struct {
     GtkBuilder *builder;
-    gboolean only_maximized;                // [T/F] Only track maximized windows
-    gboolean show_on_desktop;               // [T/F] Show the plugin on desktop
-    gchar       *theme;                     // Selected theme path
-    gchar      *button_layout;              // Button layout ["XXX"] (example "HMC" : H=Hide, M=Maximize/unMaximize, C=Close)
-    gboolean sync_wm_theme;       // [T/F] Try to use xfwm4 active theme if possible.
+    gboolean only_maximized;        // [T/F] Only track maximized windows
+    gboolean show_on_desktop;       // [T/F] Show the plugin on desktop
+    gchar       *theme;             // Selected theme path
+    gchar      *button_layout;      // Button layout ["XXX"] (example "HMC" : H=Hide, M=Maximize/unMaximize, C=Close)
+    gboolean sync_wm_theme;         // [T/F] Try to use xfwm4 active theme if possible.
+    gint inactive_text_alpha;       // Title inactive alpha
+    gint inactive_text_shade;       // Title inactive shade
 } WBPreferences;
 
 /* Definition for our button */
@@ -88,15 +90,13 @@ typedef struct {
 
     WindowButton  **button;         // Array of buttons
 
-    WBPreferences *prefs;          // Main properties
+    WBPreferences *prefs;           // Main properties
     WckUtils *win;
-
-    gint        setting2;
 
     GdkPixbuf *pixbufs[IMAGES_STATES][IMAGES_BUTTONS];
     XfconfChannel *wm_channel;      // window manager chanel
-    XfconfChannel *x_channel;      // xsettings chanel
-    gulong wph;                 // xfwm chanel property changed handler id
+    XfconfChannel *x_channel;       // xsettings chanel
+    gulong wph;                     // xfwm chanel property changed handler id
 } WBPlugin;
 
 void wckbuttons_save (XfcePanelPlugin *plugin, WBPlugin *wb);
