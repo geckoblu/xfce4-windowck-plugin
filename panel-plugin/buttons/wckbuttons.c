@@ -151,7 +151,7 @@ wckbuttons_read (WBPlugin *wb)
     wb->prefs->inactive_text_shade = DEFAULT_INACTIVE_TEXT_SHADE;
 }
 
-WindowButton **create_buttons (WBPlugin *wb)
+static WindowButton **create_buttons (WBPlugin *wb)
 {
     WindowButton **button = g_new(WindowButton*, BUTTONS);
     gint i;

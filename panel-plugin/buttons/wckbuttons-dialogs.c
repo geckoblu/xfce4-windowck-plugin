@@ -109,10 +109,9 @@ wckbuttons_theme_selection_changed (GtkTreeSelection *selection,
 
         if (wb->prefs->sync_wm_theme)
         {
-            xfconf_channel_set_string (wb->wm_channel, "/general/theme", wb->prefs->theme);
-
             gchar *button_layout;
 
+            xfconf_channel_set_string (wb->wm_channel, "/general/theme", wb->prefs->theme);
             button_layout = get_rc_button_layout (theme);
 
             if (button_layout)
@@ -170,7 +169,9 @@ wckbuttons_load_themes (GtkWidget *view, WBPlugin *wb)
         {
             /* check if there is not already a theme with the
             * same name in the database */
-            if (g_hash_table_lookup (themes, file) == NULL) {
+            if (g_hash_table_lookup (themes, file) == NULL)
+            {
+                GtkTreeIter   iter;
 
                 if (wb->prefs->sync_wm_theme)
                 {
@@ -182,7 +183,6 @@ wckbuttons_load_themes (GtkWidget *view, WBPlugin *wb)
                 if (!themedir)
                     continue;
 
-                GtkTreeIter   iter;
                 g_hash_table_insert (themes, g_strdup (file), GINT_TO_POINTER (1));
 
                 /* insert in the list store */
@@ -237,7 +237,7 @@ wckbuttons_theme_sort_func (GtkTreeModel *model,
 }
 
 
-static void on_sync_theme_with_wm_toggled(GtkToggleButton *sync_wm_theme, WBPlugin *wb)
+static void on_sync_wm_theme_toggled(GtkToggleButton *sync_wm_theme, WBPlugin *wb)
 {
     GtkWidget   *view;
 
@@ -334,7 +334,7 @@ static GtkWidget * build_properties_area(WBPlugin *wb, const gchar *buffer, gsiz
                 if (wb->wm_channel)
                 {
                     gtk_toggle_button_set_active(sync_wm_theme, wb->prefs->sync_wm_theme);
-                    g_signal_connect(sync_wm_theme, "toggled", G_CALLBACK(on_sync_theme_with_wm_toggled), wb);
+                    g_signal_connect(sync_wm_theme, "toggled", G_CALLBACK(on_sync_wm_theme_toggled), wb);
                 }
                 else {
                     gtk_widget_set_sensitive (GTK_WIDGET(sync_wm_theme), FALSE);

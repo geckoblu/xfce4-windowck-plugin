@@ -19,8 +19,8 @@
  *
  */
 
-#ifndef __WINDOWCKTITLE_DIALOGS_H__
-#define __WINDOWCKTITLE_DIALOGS_H__
+#ifndef __WINDOWCK_DIALOGS_H__
+#define __WINDOWCK_DIALOGS_H__
 
 G_BEGIN_DECLS
 
@@ -28,4 +28,4 @@ void windowck_configure(XfcePanelPlugin *plugin, WindowckPlugin *wckp);
 
 G_END_DECLS
 
-#endif
+#endif /* !__WINDOWCK_DIALOGS_H__ */

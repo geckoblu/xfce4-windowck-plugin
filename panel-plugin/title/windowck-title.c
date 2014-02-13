@@ -274,9 +274,9 @@ gboolean on_title_pressed(GtkWidget *title, GdkEventButton *event, WindowckPlugi
         {
             toggle_maximize(wckp->win->controlwindow);
         }
-        else {
-        /* left-click */
-        wnck_window_activate(wckp->win->controlwindow, gtk_get_current_event_time());
+        else /* left-click */
+        {
+            wnck_window_activate(wckp->win->controlwindow, gtk_get_current_event_time());
         }
         return TRUE;
     }
@@ -313,12 +313,13 @@ gboolean on_title_released(GtkWidget *title, GdkEventButton *event, WindowckPlug
 
 gboolean on_icon_released(GtkWidget *title, GdkEventButton *event, WindowckPlugin *wckp)
 {
+    GtkWidget *menu;
+
     if ((event->button != 1)
         || !wckp->prefs->show_window_menu
         || (wnck_window_get_window_type (wckp->win->controlwindow) == WNCK_WINDOW_DESKTOP))
         return FALSE;
 
-    GtkWidget *menu;
     menu = wnck_action_menu_new (wckp->win->controlwindow);
 
     gtk_menu_attach_to_widget(GTK_MENU(menu), GTK_WIDGET(wckp->icon->eventbox), NULL);

@@ -316,7 +316,7 @@ static void get_unity_pixbuf (const gchar *themedir, WBPlugin *wb) {
 
 gchar *button_layout_filter  (const gchar *string, const gchar *default_layout)
 {
-    gint i, j;
+    guint i, j;
     gchar layout[BUTTONS] = {0};
 
     /* WARNING : beware of bluffer overflow !!!  */
@@ -347,7 +347,7 @@ gchar *button_layout_filter  (const gchar *string, const gchar *default_layout)
 
 gchar *opposite_layout_filter  (const gchar *string)
 {
-    gint i, j;
+    guint i, j;
     gchar layout[8] = {0};
 
     /* WARNING : beware of bluffer overflow !!!  */
@@ -394,7 +394,8 @@ static int get_button_from_letter (char chr)
 /* Replace buttons accordingly to button_layout and visible state */
 void replace_buttons (const gchar *button_layout, WBPlugin *wb)
 {
-    gint i, j, button;
+    guint i, j;
+    gint button;
 
     for (i = 0; i < BUTTONS; i++)
         gtk_widget_hide_all(GTK_WIDGET(wb->button[i]->eventbox));
@@ -480,7 +481,7 @@ void load_theme (const gchar *theme, WBPlugin *wb)
 }
 
 
-void apply_wm_theme (WBPlugin *wb)
+static void apply_wm_theme (WBPlugin *wb)
 {
    const gchar *wm_theme = xfconf_channel_get_string (wb->wm_channel, "/general/theme", NULL);
 
