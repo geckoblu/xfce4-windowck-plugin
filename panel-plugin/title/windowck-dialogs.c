@@ -168,26 +168,29 @@ static void on_show_window_menu_toggled(GtkToggleButton *show_window_menu, Windo
 }
 
 
-static void on_custom_font_toggled(GtkToggleButton *custom_font, WindowckPlugin *wckp)
+static void on_sync_wm_font_toggled(GtkToggleButton *sync_wm_font, WindowckPlugin *wckp)
 {
-    GtkWidget *title_font;
+    GtkFontButton *title_font;
 
-    title_font = GTK_WIDGET (gtk_builder_get_object (wckp->prefs->builder, "title_font"));
-
-    wckp->prefs->custom_font = gtk_toggle_button_get_active (custom_font);
-    if (wckp->prefs->custom_font)
-        gtk_widget_set_sensitive(title_font, TRUE );
-    else
-        gtk_widget_set_sensitive(title_font, FALSE );
-
-    update_font(wckp);
+    wckp->prefs->sync_wm_font = gtk_toggle_button_get_active (sync_wm_font);
+    init_title (wckp);
+    title_font = GTK_FONT_BUTTON(gtk_builder_get_object(wckp->prefs->builder, "title_font"));
+    gtk_font_button_set_font_name(title_font, wckp->prefs->title_font);
 }
 
 
 static void on_title_font_font_set(GtkFontButton *title_font, WindowckPlugin *wckp)
 {
+    PangoFontDescription *font;
+
     wckp->prefs->title_font = g_strdup(gtk_font_button_get_font_name(title_font));
-    update_font(wckp);
+
+    font = pango_font_description_from_string(wckp->prefs->title_font);
+    gtk_widget_modify_font(GTK_WIDGET(wckp->title), font);
+    pango_font_description_free(font);
+
+    if (wckp->prefs->sync_wm_font)
+        xfconf_channel_set_string (wckp->wm_channel, "/general/title_font", wckp->prefs->title_font);
 }
 
 static void on_title_alignment_changed (GtkComboBox *title_alignment, WindowckPlugin *wckp)
@@ -233,7 +236,7 @@ static GtkWidget * build_properties_area(WindowckPlugin *wckp, const gchar *buff
     GObject *area = NULL;
     GtkSpinButton *titlesize, *title_padding;
     GtkComboBox *size_mode, *title_alignment;
-    GtkToggleButton *custom_font;
+    GtkToggleButton *sync_wm_font;
     GtkRadioButton *only_maximized, *active_window;
     GtkToggleButton *show_on_desktop, *full_name;
     GtkToggleButton *show_app_icon, *icon_on_right, *show_window_menu;
@@ -328,19 +331,22 @@ static GtkWidget * build_properties_area(WindowckPlugin *wckp, const gchar *buff
                 DBG("No widget with the name \"titlesize\" found");
             }
 
-            custom_font = GTK_TOGGLE_BUTTON(gtk_builder_get_object(wckp->prefs->builder, "custom_font"));
+            sync_wm_font = GTK_TOGGLE_BUTTON(gtk_builder_get_object(wckp->prefs->builder, "sync_wm_font"));
             title_font = GTK_FONT_BUTTON(gtk_builder_get_object(wckp->prefs->builder, "title_font"));
 
-            if (!wckp->prefs->custom_font)
-                gtk_widget_set_sensitive(GTK_WIDGET(title_font), FALSE );
-
-            if (G_LIKELY (custom_font != NULL))
+            if (G_LIKELY (sync_wm_font != NULL))
             {
-                gtk_toggle_button_set_active(custom_font, wckp->prefs->custom_font);
-                g_signal_connect(custom_font, "toggled", G_CALLBACK(on_custom_font_toggled), wckp);
+                if (wckp->wm_channel)
+                {
+                    gtk_toggle_button_set_active(sync_wm_font, wckp->prefs->sync_wm_font);
+                    g_signal_connect(sync_wm_font, "toggled", G_CALLBACK(on_sync_wm_font_toggled), wckp);
+                }
+                else {
+                    gtk_widget_set_sensitive (GTK_WIDGET(sync_wm_font), FALSE);
+                }
             }
             else {
-                DBG("No widget with the name \"custom_font\" found");
+                DBG("No widget with the name \"sync_wm_font\" found");
             }
 
             if (G_LIKELY (title_font != NULL))

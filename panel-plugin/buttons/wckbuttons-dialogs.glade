@@ -117,7 +117,7 @@
                     <property name="spacing">6</property>
                     <child>
                       <object class="GtkCheckButton" id="sync_wm_theme">
-                        <property name="label" translatable="yes">Sync it with the window manager theme.</property>
+                        <property name="label" translatable="yes">Get in sync with the window manager theme.</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>

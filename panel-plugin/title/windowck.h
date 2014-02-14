@@ -64,19 +64,18 @@ typedef struct {
     gboolean full_name;             // [T/F] Show full name
     gboolean show_tooltips;         // [T/F] Show tooltips
 
-    SizeMode size_mode;               // Size mode : Length=[MINIMAL,FIXE,EXPAND]
+    SizeMode size_mode;             // Size mode : Length=[MINIMAL,FIXE,EXPAND]
 
-    gint title_size;                   // Title size in chars
-    gint title_padding;                 // Title padding
+    gint title_size;                // Title size in chars
+    gint title_padding;             // Title padding
 
-    gboolean custom_font;              // [T/F] Use custom font
-    gchar *title_font;                  // Custom title font
+    gboolean sync_wm_font;         // [T/F] Try to use xfwm4 active theme if possible.
+    gchar *title_font;              // Custom title font
+    gint title_alignment;            // Title alignment [LEFT, CENTER, RIGHT]
     gint inactive_text_alpha;       // Title inactive alpha
     gint inactive_text_shade;       // Title inactive shade
     gchar *active_text_color;       // active text color
     gchar *inactive_text_color;     // inactive text color
-
-    gint title_alignment;            // Title alignment [0=left, 5=center, 10=right]
 } WCKPreferences;
 
 /* plugin structure */
@@ -93,10 +92,11 @@ typedef struct {
     WCKPreferences     *prefs;
     WckUtils *win;
 
-    gulong cnh;                         // controled window name handler id
-    gulong cih;                         // controled window icon handler id
+    gulong cnh;                     // controled window name handler id
+    gulong cih;                     // controled window icon handler id
 
-    XfconfChannel *x_channel;      // xsettings chanel
+    XfconfChannel *wm_channel;      // window manager chanel
+    XfconfChannel *x_channel;       // xsettings chanel
 } WindowckPlugin;
 
 void windowck_save(XfcePanelPlugin *plugin, WindowckPlugin *wckp);

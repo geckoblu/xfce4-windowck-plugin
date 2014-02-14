@@ -47,7 +47,7 @@
 #define DEFAULT_TITLE_SIZE 80
 #define DEFAULT_TITLE_ALIGNMENT CENTER
 #define DEFAULT_TITLE_PADDING 3
-#define DEFAULT_CUSTOM_FONT FALSE
+#define DEFAULT_sync_wm_font TRUE
 #define DEFAULT_TITLE_FONT "sans 10"
 #define DEFAULT_INACTIVE_TEXT_ALPHA 60
 #define DEFAULT_INACTIVE_TEXT_SHADE 110
@@ -88,7 +88,7 @@ void windowck_save(XfcePanelPlugin *plugin, WindowckPlugin *wckp)
         xfce_rc_write_bool_entry(rc, "show_tooltips", wckp->prefs->show_tooltips);
         xfce_rc_write_int_entry(rc, "size_mode", wckp->prefs->size_mode);
         xfce_rc_write_int_entry(rc, "title_size", wckp->prefs->title_size);
-        xfce_rc_write_bool_entry(rc, "custom_font", wckp->prefs->custom_font);
+        xfce_rc_write_bool_entry(rc, "sync_wm_font", wckp->prefs->sync_wm_font);
         if (wckp->prefs->title_font)
             xfce_rc_write_entry(rc, "title_font", wckp->prefs->title_font);
 
@@ -136,7 +136,7 @@ static void windowck_read(WindowckPlugin *wckp)
             wckp->prefs->show_tooltips = xfce_rc_read_bool_entry(rc, "show_tooltips", DEFAULT_SHOW_TOOLTIPS);
             wckp->prefs->size_mode = xfce_rc_read_int_entry (rc, "size_mode", DEFAULT_SIZE_MODE);
             wckp->prefs->title_size = xfce_rc_read_int_entry(rc, "title_size", DEFAULT_TITLE_SIZE);
-            wckp->prefs->custom_font = xfce_rc_read_bool_entry(rc, "custom_font", DEFAULT_CUSTOM_FONT);
+            wckp->prefs->sync_wm_font = xfce_rc_read_bool_entry(rc, "sync_wm_font", DEFAULT_sync_wm_font);
             title_font = xfce_rc_read_entry(rc, "title_font", DEFAULT_TITLE_FONT);
             wckp->prefs->title_font = g_strdup(title_font);
             wckp->prefs->title_alignment = xfce_rc_read_int_entry(rc, "title_alignment", DEFAULT_TITLE_ALIGNMENT);
@@ -165,7 +165,7 @@ static void windowck_read(WindowckPlugin *wckp)
     wckp->prefs->show_tooltips = DEFAULT_SHOW_TOOLTIPS;
     wckp->prefs->size_mode = DEFAULT_SIZE_MODE;
     wckp->prefs->title_size = DEFAULT_TITLE_SIZE;
-    wckp->prefs->custom_font = DEFAULT_CUSTOM_FONT;
+    wckp->prefs->sync_wm_font = DEFAULT_sync_wm_font;
     wckp->prefs->title_font = DEFAULT_TITLE_FONT;
     wckp->prefs->title_alignment = DEFAULT_TITLE_ALIGNMENT;
     wckp->prefs->title_padding = DEFAULT_TITLE_PADDING;
@@ -176,7 +176,7 @@ static void windowck_read(WindowckPlugin *wckp)
 
 void create_symbol (gboolean show_app_icon, WindowckPlugin *wckp)
 {
-    if (wckp->icon->symbol)
+    if (GTK_IS_WIDGET (wckp->icon->symbol))
         gtk_widget_destroy (wckp->icon->symbol);
 
     if (wckp->prefs->show_window_menu)
@@ -389,12 +389,12 @@ static void windowck_construct(XfcePanelPlugin *plugin)
     refresh = show_refresh_item (plugin);
     g_signal_connect (G_OBJECT (refresh), "activate", G_CALLBACK (on_refresh_item_activated), wckp);
 
-    /* start tracking title size */
-    init_title(wckp);
-
     /* start tracking title text */
     wckp->win = g_slice_new0 (WckUtils);
     init_wnck(wckp->win, wckp->prefs->only_maximized, wckp);
+
+    /* start tracking title size */
+    init_title(wckp);
 }
 
 

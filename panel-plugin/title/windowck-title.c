@@ -40,21 +40,6 @@ void reload_wnck_title (WindowckPlugin *wckp)
 }
 
 
-void update_font(WindowckPlugin *wckp)
-{
-    PangoFontDescription *font;
-    if (wckp->prefs->custom_font)
-    {
-        font = pango_font_description_from_string(wckp->prefs->title_font);
-        gtk_widget_modify_font(GTK_WIDGET(wckp->title), font);
-        pango_font_description_free(font);
-    }
-    else {
-        gtk_widget_modify_font(GTK_WIDGET(wckp->title), NULL);
-    }
-}
-
-
 static void on_icon_changed(WnckWindow *controlwindow, WindowckPlugin *wckp)
 {
     GdkPixbuf *pixbuf = NULL;
@@ -132,10 +117,7 @@ static void on_name_changed (WnckWindow *controlwindow, WindowckPlugin *wckp)
             title_color = wckp->prefs->inactive_text_color;
         }
 
-        if (wckp->prefs->custom_font)
             title_font = wckp->prefs->title_font;
-        else
-            title_font = "";
 
         /* Set tooltips */
         if (wckp->prefs->show_tooltips)
@@ -344,6 +326,20 @@ static void set_title_colors(WindowckPlugin *wckp)
 }
 
 
+static void apply_wm_settings (WindowckPlugin *wckp)
+{
+    const gchar *wm_theme = xfconf_channel_get_string (wckp->wm_channel, "/general/theme", NULL);
+
+    if (G_LIKELY(wm_theme))
+    {
+        const gchar *wm_title_font = xfconf_channel_get_string (wckp->wm_channel, "/general/title_font", wckp->prefs->title_font);
+        wckp->prefs->title_font = g_strdup (wm_title_font);
+
+        on_name_changed (wckp->win->controlwindow, wckp);
+    }
+}
+
+
 static void
 on_x_chanel_property_changed (XfconfChannel *x_channel, const gchar *property_name, const GValue *value, WindowckPlugin *wckp)
 {
@@ -367,6 +363,33 @@ on_x_chanel_property_changed (XfconfChannel *x_channel, const gchar *property_na
 }
 
 
+static void on_xfwm_channel_property_changed (XfconfChannel *wm_channel, const gchar *property_name, const GValue *value, WindowckPlugin *wckp)
+{
+    if (g_str_has_prefix(property_name, "/general/") == TRUE)
+    {
+        const gchar *name = &property_name[9];
+        switch (G_VALUE_TYPE(value))
+        {
+            case G_TYPE_STRING:
+                if (!strcmp (name, "title_font")
+					|| !strcmp (name, "show_app_icon"))
+                {
+                    apply_wm_settings (wckp);
+                }
+                else if (!strcmp (name, "theme"))
+                {
+					init_title(wckp);
+					reload_wnck_title (wckp);
+                }
+                break;
+            default:
+                g_warning("The property '%s' is not supported", property_name);
+                break;
+        }
+    }
+}
+
+
 void init_title (WindowckPlugin *wckp)
 {
     set_title_colors(wckp);
@@ -377,6 +400,16 @@ void init_title (WindowckPlugin *wckp)
 
     if (wckp->prefs->size_mode != SHRINK)
         gtk_misc_set_alignment(GTK_MISC(wckp->title), wckp->prefs->title_alignment / 10.0, 0.5);
+
+    /* get the xfwm4 chanel */
+    wckp->wm_channel = wck_properties_get_channel (G_OBJECT (wckp->plugin), "xfwm4");
+
+    /* try to set title settings from the xfwm4 theme */
+    if (wckp->wm_channel && wckp->prefs->sync_wm_font)
+    {
+        apply_wm_settings (wckp);
+        g_signal_connect (wckp->wm_channel, "property-changed", G_CALLBACK (on_xfwm_channel_property_changed), wckp);
+    }
 
     gtk_alignment_set_padding(GTK_ALIGNMENT(wckp->alignment), 0, 0, wckp->prefs->title_padding, wckp->prefs->title_padding);
     gtk_box_set_spacing (GTK_BOX(wckp->hvbox), wckp->prefs->title_padding);
