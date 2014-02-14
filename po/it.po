@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xfce4-windowck-plugin 0.1.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-30 20:28+0100\n"
+"POT-Creation-Date: 2014-02-14 23:14+0100\n"
 "PO-Revision-Date: 2013-10-29 12:03+0100\n"
 "Last-Translator: Cdric Leporcq <cedl38@gmail.com>\n"
 "Language-Team: Italian\n"
@@ -18,8 +18,8 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 1.5.7\n"
 
-#: ../panel-plugin/title/windowck-dialogs.c:413
-#: ../panel-plugin/buttons/wckbuttons-dialogs.c:381
+#: ../panel-plugin/title/windowck-dialogs.c:433
+#: ../panel-plugin/buttons/wckbuttons-dialogs.c:385
 #, c-format
 msgid "Unable to open the following url: %s"
 msgstr "Impossibile aprire l'url: %s"
@@ -57,7 +57,7 @@ msgstr "Mostra l'icona della finestra."
 
 #: ../panel-plugin/title/windowck-dialogs.glade.h:8
 #, fuzzy
-msgid "Place the icon or the arrow on right."
+msgid "Place the menu icon on right."
 msgstr "Mostra l'icona sulla destra"
 
 #: ../panel-plugin/title/windowck-dialogs.glade.h:9
@@ -73,23 +73,23 @@ msgid "chars"
 msgstr "caratteri"
 
 #: ../panel-plugin/title/windowck-dialogs.glade.h:12
-msgid "Alignment:"
-msgstr "Allineamento:"
-
-#: ../panel-plugin/title/windowck-dialogs.glade.h:13
 msgid "Padding:"
 msgstr ""
 
-#: ../panel-plugin/title/windowck-dialogs.glade.h:14
+#: ../panel-plugin/title/windowck-dialogs.glade.h:13
 msgid "pixels"
 msgstr ""
 
+#: ../panel-plugin/title/windowck-dialogs.glade.h:14
+msgid "Alignment:"
+msgstr "Allineamento:"
+
 #: ../panel-plugin/title/windowck-dialogs.glade.h:15
-msgid "Font style:"
-msgstr "Stile carattere:"
+msgid "Get in sync with the window manager."
+msgstr ""
 
 #: ../panel-plugin/title/windowck-dialogs.glade.h:16
-msgid "custom"
+msgid "Font"
 msgstr ""
 
 #: ../panel-plugin/title/windowck-dialogs.glade.h:17
@@ -142,7 +142,7 @@ msgid "Show the buttons on desktop."
 msgstr ""
 
 #: ../panel-plugin/buttons/wckbuttons-dialogs.glade.h:5
-msgid "Sync it with the window manager theme."
+msgid "Get in sync with the window manager theme."
 msgstr ""
 
 #: ../panel-plugin/buttons/wckbuttons-dialogs.glade.h:6
@@ -163,3 +163,6 @@ msgstr ""
 #: ../panel-plugin/buttons/wckbuttons.desktop.in.h:2
 msgid "Put the maximized window buttons on the panel."
 msgstr ""
+
+#~ msgid "Font style:"
+#~ msgstr "Stile carattere:"

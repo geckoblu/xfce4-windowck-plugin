@@ -7,18 +7,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-30 20:28+0100\n"
-"PO-Revision-Date: 2013-10-30 19:45+0100\n"
+"POT-Creation-Date: 2014-02-14 23:14+0100\n"
+"PO-Revision-Date: 2014-02-14 23:21+0100\n"
 "Last-Translator: Cédric Leporcq <cedl38@gmail.com>\n"
 "Language-Team: French\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.5.7\n"
+"X-Generator: Poedit 1.6.4\n"
 
-#: ../panel-plugin/title/windowck-dialogs.c:413
-#: ../panel-plugin/buttons/wckbuttons-dialogs.c:381
+#: ../panel-plugin/title/windowck-dialogs.c:433
+#: ../panel-plugin/buttons/wckbuttons-dialogs.c:385
 #, c-format
 msgid "Unable to open the following url: %s"
 msgstr "Impossible d'ouvrir l'url suivant : %s"
@@ -55,8 +55,8 @@ msgid "Show the window Icon."
 msgstr "Afficher l'icône des fenêtres."
 
 #: ../panel-plugin/title/windowck-dialogs.glade.h:8
-msgid "Place the icon or the arrow on right."
-msgstr "Placer l'icône ou la flèche sur la droite."
+msgid "Place the menu icon on right."
+msgstr "Placer l'icône du menu sur la droite."
 
 #: ../panel-plugin/title/windowck-dialogs.glade.h:9
 msgid "Width:"
@@ -73,24 +73,24 @@ msgid "chars"
 msgstr "caractères"
 
 #: ../panel-plugin/title/windowck-dialogs.glade.h:12
-msgid "Alignment:"
-msgstr "Alignement :"
-
-#: ../panel-plugin/title/windowck-dialogs.glade.h:13
 msgid "Padding:"
 msgstr "Espacement :"
 
-#: ../panel-plugin/title/windowck-dialogs.glade.h:14
+#: ../panel-plugin/title/windowck-dialogs.glade.h:13
 msgid "pixels"
 msgstr "pixels"
 
+#: ../panel-plugin/title/windowck-dialogs.glade.h:14
+msgid "Alignment:"
+msgstr "Alignement :"
+
 #: ../panel-plugin/title/windowck-dialogs.glade.h:15
-msgid "Font style:"
-msgstr "Police :"
+msgid "Get in sync with the window manager."
+msgstr "Se synchroniser avec le gestionnaire de fenêtres."
 
 #: ../panel-plugin/title/windowck-dialogs.glade.h:16
-msgid "custom"
-msgstr "personnalisée"
+msgid "Font"
+msgstr "Police"
 
 #: ../panel-plugin/title/windowck-dialogs.glade.h:17
 #: ../panel-plugin/buttons/wckbuttons-dialogs.glade.h:10
@@ -142,8 +142,8 @@ msgid "Show the buttons on desktop."
 msgstr "Afficher le plugin sur le bureau."
 
 #: ../panel-plugin/buttons/wckbuttons-dialogs.glade.h:5
-msgid "Sync it with the window manager theme."
-msgstr "Synchroniser le thème avec celui du gestionnaire de fenêtres."
+msgid "Get in sync with the window manager theme."
+msgstr "Se synchroniser avec le theme du gestionnaire de fenêtres."
 
 #: ../panel-plugin/buttons/wckbuttons-dialogs.glade.h:6
 msgid "Button layout:"
@@ -168,3 +168,8 @@ msgstr "Entête des Fenêtres - Boutons"
 msgid "Put the maximized window buttons on the panel."
 msgstr "Placer les boutons des fenêtres maximisées sur le tableau de bord."
 
+#~ msgid "Font style:"
+#~ msgstr "Police :"
+
+#~ msgid "custom"
+#~ msgstr "personnalisée"

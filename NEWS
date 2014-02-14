@@ -1,3 +1,8 @@
+0.2.5
+    Add option to sync font with window manager for title plugin
+    Change show_window_menu option behaviour
+    Fix gcc warnings
+    Fix inactive title color for dark themes
 0.2.4
     Update plugin when the gtk theme changed
     Fix fg color issue with some themes
