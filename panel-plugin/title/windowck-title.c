@@ -180,26 +180,29 @@ void on_wck_state_changed (WnckWindow *controlwindow, gpointer data)
 
     on_name_changed (controlwindow, wckp);
 
-    if (wckp->prefs->show_icon)
+    if (wckp->prefs->show_window_menu)
     {
-        on_icon_changed (wckp->win->controlwindow, wckp);
-    }
-    else if (wckp->prefs->show_window_menu)
-    {
-        GdkColor color;
-
-        if (controlwindow
-            && ((wnck_window_get_window_type (controlwindow) != WNCK_WINDOW_DESKTOP)
-                || wckp->prefs->show_on_desktop))
+        if (wckp->prefs->show_app_icon)
         {
-            if (wnck_window_is_active(controlwindow)
-                && gdk_color_parse (wckp->prefs->active_text_color, &color))
+            on_icon_changed (wckp->win->controlwindow, wckp);
+        }
+        else
+        {
+            GdkColor color;
+
+            if (controlwindow
+                && ((wnck_window_get_window_type (controlwindow) != WNCK_WINDOW_DESKTOP)
+                    || wckp->prefs->show_on_desktop))
             {
-                gtk_widget_modify_fg (wckp->icon->symbol, GTK_STATE_NORMAL, &color);
-            }
-            else if (gdk_color_parse (wckp->prefs->inactive_text_color, &color))
-            {
-                gtk_widget_modify_fg (wckp->icon->symbol, GTK_STATE_NORMAL, &color);
+                if (wnck_window_is_active(controlwindow)
+                    && gdk_color_parse (wckp->prefs->active_text_color, &color))
+                {
+                    gtk_widget_modify_fg (wckp->icon->symbol, GTK_STATE_NORMAL, &color);
+                }
+                else if (gdk_color_parse (wckp->prefs->inactive_text_color, &color))
+                {
+                    gtk_widget_modify_fg (wckp->icon->symbol, GTK_STATE_NORMAL, &color);
+                }
             }
         }
     }
@@ -238,7 +241,7 @@ void on_control_window_changed (WnckWindow *controlwindow, WnckWindow *previous,
             gtk_widget_hide_all (GTK_WIDGET(wckp->icon->eventbox));
     }
 
-    if (wckp->prefs->show_icon)
+    if (wckp->prefs->show_app_icon && wckp->prefs->show_window_menu)
     {
         wck_signal_handler_disconnect (G_OBJECT(previous), wckp->cih);
 
@@ -318,7 +321,6 @@ gboolean on_icon_released(GtkWidget *title, GdkEventButton *event, WindowckPlugi
     GtkWidget *menu;
 
     if ((event->button != 1)
-        || !wckp->prefs->show_window_menu
         || (wnck_window_get_window_type (wckp->win->controlwindow) == WNCK_WINDOW_DESKTOP))
         return FALSE;
 

@@ -145,7 +145,7 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkCheckButton" id="show_icon">
+                      <object class="GtkCheckButton" id="show_app_icon">
                         <property name="label" translatable="yes">Show the window Icon.</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
@@ -161,7 +161,7 @@
                     </child>
                     <child>
                       <object class="GtkCheckButton" id="icon_on_right">
-                        <property name="label" translatable="yes">Place the icon or the arrow on right.</property>
+                        <property name="label" translatable="yes">Place the menu icon on right.</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>

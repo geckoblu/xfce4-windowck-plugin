@@ -40,7 +40,7 @@
 #define DEFAULT_HIDE_TITLE FALSE
 #define DEFAULT_FULL_NAME TRUE
 #define DEFAULT_SHOW_TOOLTIPS TRUE
-#define DEFAULT_SHOW_ICON TRUE
+#define DEFAULT_SHOW_APP_ICON TRUE
 #define DEFAULT_ICON_ON_RIGHT FALSE
 #define DEFAULT_SHOW_WINDOW_MENU TRUE
 #define DEFAULT_SIZE_MODE FIXE
@@ -80,7 +80,7 @@ void windowck_save(XfcePanelPlugin *plugin, WindowckPlugin *wckp)
         DBG(".");
         xfce_rc_write_bool_entry(rc, "only_maximized", wckp->prefs->only_maximized);
         xfce_rc_write_bool_entry(rc, "show_on_desktop", wckp->prefs->show_on_desktop);
-        xfce_rc_write_bool_entry(rc, "show_icon", wckp->prefs->show_icon);
+        xfce_rc_write_bool_entry(rc, "show_app_icon", wckp->prefs->show_app_icon);
         xfce_rc_write_bool_entry(rc, "icon_on_right", wckp->prefs->icon_on_right);
         xfce_rc_write_bool_entry(rc, "show_window_menu", wckp->prefs->show_window_menu);
         xfce_rc_write_bool_entry(rc, "hide_title", wckp->prefs->hide_title);
@@ -128,7 +128,7 @@ static void windowck_read(WindowckPlugin *wckp)
             /* read the settings */
             wckp->prefs->only_maximized = xfce_rc_read_bool_entry(rc, "only_maximized", DEFAULT_ONLY_MAXIMIZED);
             wckp->prefs->show_on_desktop = xfce_rc_read_bool_entry(rc, "show_on_desktop", DEFAULT_SHOW_ON_DESKTOP);
-            wckp->prefs->show_icon = xfce_rc_read_bool_entry(rc, "show_icon", DEFAULT_SHOW_ICON);
+            wckp->prefs->show_app_icon = xfce_rc_read_bool_entry(rc, "show_app_icon", DEFAULT_SHOW_APP_ICON);
             wckp->prefs->icon_on_right = xfce_rc_read_bool_entry(rc, "icon_on_right", DEFAULT_ICON_ON_RIGHT);
             wckp->prefs->show_window_menu = xfce_rc_read_bool_entry(rc, "show_window_menu", DEFAULT_SHOW_WINDOW_MENU);
             wckp->prefs->hide_title = xfce_rc_read_bool_entry(rc, "hide_title", DEFAULT_HIDE_TITLE);
@@ -157,7 +157,7 @@ static void windowck_read(WindowckPlugin *wckp)
 
     wckp->prefs->only_maximized = DEFAULT_ONLY_MAXIMIZED;
     wckp->prefs->show_on_desktop = DEFAULT_SHOW_ON_DESKTOP;
-    wckp->prefs->show_icon = DEFAULT_SHOW_ICON;
+    wckp->prefs->show_app_icon = DEFAULT_SHOW_APP_ICON;
     wckp->prefs->icon_on_right = DEFAULT_ICON_ON_RIGHT;
     wckp->prefs->show_window_menu = DEFAULT_SHOW_WINDOW_MENU;
     wckp->prefs->hide_title = DEFAULT_HIDE_TITLE;
@@ -174,21 +174,18 @@ static void windowck_read(WindowckPlugin *wckp)
 }
 
 
-void create_symbol (WindowckPlugin *wckp)
+void create_symbol (gboolean show_app_icon, WindowckPlugin *wckp)
 {
     if (wckp->icon->symbol)
         gtk_widget_destroy (wckp->icon->symbol);
 
-    if (wckp->prefs->show_icon)
-        wckp->icon->symbol = gtk_image_new();
-    else if (wckp->prefs->show_window_menu)
-        wckp->icon->symbol = gtk_arrow_new (GTK_ARROW_DOWN, GTK_SHADOW_NONE);
-    else
-        wckp->icon->symbol = NULL;
-
-
-    if (wckp->prefs->show_icon || wckp->prefs->show_window_menu)
+    if (wckp->prefs->show_window_menu)
     {
+        if (show_app_icon)
+            wckp->icon->symbol = gtk_image_new();
+        else
+            wckp->icon->symbol = gtk_arrow_new (GTK_ARROW_DOWN, GTK_SHADOW_NONE);
+
         gtk_container_add (GTK_CONTAINER (wckp->icon->eventbox), wckp->icon->symbol);
         gtk_widget_show_all (GTK_WIDGET(wckp->icon->eventbox));
     }
@@ -211,7 +208,7 @@ static void create_icon (WindowckPlugin *wckp)
 
     gtk_box_pack_start (GTK_BOX (wckp->hvbox), GTK_WIDGET(wckp->icon->eventbox), FALSE, FALSE, 0);
 
-    create_symbol (wckp);
+    create_symbol (wckp->prefs->show_app_icon, wckp);
 }
 
 

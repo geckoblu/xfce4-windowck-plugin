@@ -116,13 +116,13 @@ static void on_full_name_toggled(GtkToggleButton *full_name, WindowckPlugin *wck
 }
 
 
-static void on_show_icon_toggled(GtkToggleButton *show_icon, WindowckPlugin *wckp)
+static void on_show_app_icon_toggled(GtkToggleButton *show_app_icon, WindowckPlugin *wckp)
 {
-    wckp->prefs->show_icon = gtk_toggle_button_get_active(show_icon);
+    wckp->prefs->show_app_icon = gtk_toggle_button_get_active(show_app_icon);
 
-    create_symbol (wckp);
+    create_symbol (wckp->prefs->show_app_icon, wckp);
 
-    if (!wckp->prefs->show_icon)
+    if (!wckp->prefs->show_app_icon)
         wck_signal_handler_disconnect (G_OBJECT(wckp->win->controlwindow), wckp->cih);
 
     on_wck_state_changed (wckp->win->controlwindow, wckp);
@@ -142,14 +142,28 @@ static void on_icon_on_right_toggled(GtkToggleButton *icon_on_right, WindowckPlu
 
 static void on_show_window_menu_toggled(GtkToggleButton *show_window_menu, WindowckPlugin *wckp)
 {
+    GtkWidget *show_app_icon;
+    GtkWidget *icon_on_right;
+
     wckp->prefs->show_window_menu = gtk_toggle_button_get_active(show_window_menu);
+    show_app_icon = GTK_WIDGET(gtk_builder_get_object(wckp->prefs->builder, "show_app_icon"));
+    icon_on_right = GTK_WIDGET(gtk_builder_get_object(wckp->prefs->builder, "icon_on_right"));
 
-    if (!wckp->prefs->show_icon)
+    create_symbol (wckp->prefs->show_app_icon, wckp);
+
+    if (wckp->prefs->show_window_menu)
     {
-        create_symbol (wckp);
+        gtk_widget_set_sensitive (show_app_icon, TRUE);
+        gtk_widget_set_sensitive (icon_on_right, TRUE);
+        on_wck_state_changed (wckp->win->controlwindow, wckp);
+    }
+    else
+    {
+        gtk_widget_set_sensitive (show_app_icon, FALSE);
+        gtk_widget_set_sensitive (icon_on_right, FALSE);
 
-        if (wckp->prefs->show_window_menu)
-            on_wck_state_changed (wckp->win->controlwindow, wckp);
+        if (wckp->prefs->show_app_icon)
+            wck_signal_handler_disconnect (G_OBJECT(wckp->win->controlwindow), wckp->cih);
     }
 }
 
@@ -222,7 +236,7 @@ static GtkWidget * build_properties_area(WindowckPlugin *wckp, const gchar *buff
     GtkToggleButton *custom_font;
     GtkRadioButton *only_maximized, *active_window;
     GtkToggleButton *show_on_desktop, *full_name;
-    GtkToggleButton *show_icon, *icon_on_right, *show_window_menu;
+    GtkToggleButton *show_app_icon, *icon_on_right, *show_window_menu;
     GtkFontButton *title_font;
     GtkLabel *width_unit;
 
@@ -267,15 +281,15 @@ static GtkWidget * build_properties_area(WindowckPlugin *wckp, const gchar *buff
                 DBG("No widget with the name \"full_name\" found");
             }
 
-            show_icon = GTK_TOGGLE_BUTTON(gtk_builder_get_object(wckp->prefs->builder, "show_icon"));
+            show_app_icon = GTK_TOGGLE_BUTTON(gtk_builder_get_object(wckp->prefs->builder, "show_app_icon"));
 
-            if (G_LIKELY (show_icon != NULL))
+            if (G_LIKELY (show_app_icon != NULL))
             {
-                gtk_toggle_button_set_active(show_icon, wckp->prefs->show_icon);
-                g_signal_connect(show_icon, "toggled", G_CALLBACK(on_show_icon_toggled), wckp);
+                gtk_toggle_button_set_active(show_app_icon, wckp->prefs->show_app_icon);
+                g_signal_connect(show_app_icon, "toggled", G_CALLBACK(on_show_app_icon_toggled), wckp);
             }
             else {
-                DBG("No widget with the name \"show_icon\" found");
+                DBG("No widget with the name \"show_app_icon\" found");
             }
 
             icon_on_right = GTK_TOGGLE_BUTTON(gtk_builder_get_object(wckp->prefs->builder, "icon_on_right"));

@@ -54,15 +54,15 @@ typedef struct {
 
 typedef struct {
     GtkBuilder *builder;
-    gboolean only_maximized;           // [T/F] Only track maximized windows
-    gboolean show_on_desktop;      // [T/F] Show the plugin on desktop
-    //gboolean hide_icon;                // [T/F] Hide the icon
-    gboolean hide_title;               // [T/F] Hide the title
-    gboolean show_icon;                 // [T/F] Show the window icon
-    gboolean icon_on_right;          // [T/F] Place icon on the right
-    gboolean show_window_menu;       // [T/F] Show window action menu
-    gboolean full_name;                // [T/F] Show full name
-    gboolean show_tooltips;            // [T/F] Show tooltips
+    gboolean only_maximized;        // [T/F] Only track maximized windows
+    gboolean show_on_desktop;       // [T/F] Show the plugin on desktop
+    //gboolean hide_icon;           // [T/F] Hide the icon
+    gboolean hide_title;            // [T/F] Hide the title
+    gboolean show_app_icon;         // [T/F] Show the window icon
+    gboolean icon_on_right;         // [T/F] Place icon on the right
+    gboolean show_window_menu;      // [T/F] Show window action menu
+    gboolean full_name;             // [T/F] Show full name
+    gboolean show_tooltips;         // [T/F] Show tooltips
 
     SizeMode size_mode;               // Size mode : Length=[MINIMAL,FIXE,EXPAND]
 
@@ -100,7 +100,7 @@ typedef struct {
 } WindowckPlugin;
 
 void windowck_save(XfcePanelPlugin *plugin, WindowckPlugin *wckp);
-void create_symbol (WindowckPlugin *wckp);
+void create_symbol (gboolean show_app_icon, WindowckPlugin *wckp);
 
 G_END_DECLS
 
