@@ -240,7 +240,7 @@ static WindowckPlugin * windowck_new(XfcePanelPlugin *plugin)
     gtk_event_box_set_visible_window(GTK_EVENT_BOX(wckp->ebox), FALSE);
     gtk_widget_set_name(wckp->ebox, "XfceWindowckPlugin");
 
-    wckp->alignment = gtk_alignment_new (0.5, 0.5, 0, 0);
+    wckp->alignment = gtk_alignment_new (0.5, 0.5, 1, 1);
 
     wckp->hvbox = xfce_hvbox_new(orientation, FALSE, 2);
 
