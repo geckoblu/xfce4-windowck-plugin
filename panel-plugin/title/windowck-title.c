@@ -48,7 +48,7 @@ static void on_icon_changed(WnckWindow *controlwindow, WindowckPlugin *wckp)
 
     if (!controlwindow)
     {
-        gtk_image_clear(GTK_IMAGE (wckp->icon->symbol));
+        xfce_panel_image_clear(XFCE_PANEL_IMAGE (wckp->icon->symbol));
     }
     else if (wckp->prefs->show_on_desktop)
     {
@@ -59,7 +59,7 @@ static void on_icon_changed(WnckWindow *controlwindow, WindowckPlugin *wckp)
             if (!wnck_window_is_active(controlwindow))
                 gtk_widget_set_sensitive (wckp->icon->symbol, FALSE);
 
-            gtk_image_set_from_stock(GTK_IMAGE (wckp->icon->symbol),GTK_STOCK_HOME, wckp->icon->size);
+            xfce_panel_image_set_from_source (XFCE_PANEL_IMAGE (wckp->icon->symbol),GTK_STOCK_HOME);
         }
     }
 
@@ -67,10 +67,17 @@ static void on_icon_changed(WnckWindow *controlwindow, WindowckPlugin *wckp)
         && wnck_window_get_window_type (controlwindow) != WNCK_WINDOW_DESKTOP)
     {
         /* This only returns a pointer - it SHOULDN'T be unrefed! */
-        if (wckp->icon->size == GTK_ICON_SIZE_MENU)
+        if (XFCE_PANEL_IS_SMALL)
             pixbuf = wnck_window_get_mini_icon(controlwindow);
         else
             pixbuf = wnck_window_get_icon(controlwindow);
+
+        /* leave when there is no valid pixbuf */
+        if (G_UNLIKELY (pixbuf == NULL))
+        {
+            xfce_panel_image_clear (XFCE_PANEL_IMAGE (wckp->icon->symbol));
+            return;
+        }
 
         if (!wnck_window_is_active(controlwindow))
         {
@@ -81,7 +88,7 @@ static void on_icon_changed(WnckWindow *controlwindow, WindowckPlugin *wckp)
                 pixbuf = grayscale;
         }
 
-        gtk_image_set_from_pixbuf(GTK_IMAGE (wckp->icon->symbol), pixbuf);
+        xfce_panel_image_set_from_pixbuf(XFCE_PANEL_IMAGE (wckp->icon->symbol), pixbuf);
     }
 
     if (grayscale != NULL && grayscale != pixbuf)
@@ -393,7 +400,6 @@ static void on_xfwm_channel_property_changed (XfconfChannel *wm_channel, const g
 void init_title (WindowckPlugin *wckp)
 {
     set_title_colors(wckp);
-    wckp->icon->size = GTK_ICON_SIZE_MENU;
     resize_title(wckp);
 
     gtk_label_set_ellipsize(wckp->title, PANGO_ELLIPSIZE_END);
@@ -411,7 +417,7 @@ void init_title (WindowckPlugin *wckp)
         g_signal_connect (wckp->wm_channel, "property-changed", G_CALLBACK (on_xfwm_channel_property_changed), wckp);
     }
 
-    gtk_alignment_set_padding(GTK_ALIGNMENT(wckp->alignment), 0, 0, wckp->prefs->title_padding, wckp->prefs->title_padding);
+    gtk_alignment_set_padding(GTK_ALIGNMENT(wckp->alignment), ICON_PADDING, ICON_PADDING, wckp->prefs->title_padding, wckp->prefs->title_padding);
     gtk_box_set_spacing (GTK_BOX(wckp->hvbox), wckp->prefs->title_padding);
 
     /* get the xsettings chanel to update the gtk theme */

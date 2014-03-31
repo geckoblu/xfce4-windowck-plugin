@@ -225,7 +225,7 @@ static void on_title_alignment_changed (GtkComboBox *title_alignment, WindowckPl
 static void on_title_padding_changed(GtkSpinButton *title_padding, WindowckPlugin *wckp)
 {
     wckp->prefs->title_padding = gtk_spin_button_get_value(title_padding);
-    gtk_alignment_set_padding(GTK_ALIGNMENT(wckp->alignment), 0, 0, wckp->prefs->title_padding, wckp->prefs->title_padding);
+    gtk_alignment_set_padding(GTK_ALIGNMENT(wckp->alignment), ICON_PADDING, ICON_PADDING, wckp->prefs->title_padding, wckp->prefs->title_padding);
     gtk_box_set_spacing (GTK_BOX(wckp->hvbox), wckp->prefs->title_padding);
 }
 

@@ -182,7 +182,7 @@ void create_symbol (gboolean show_app_icon, WindowckPlugin *wckp)
     if (wckp->prefs->show_window_menu)
     {
         if (show_app_icon)
-            wckp->icon->symbol = gtk_image_new();
+            wckp->icon->symbol = xfce_panel_image_new();
         else
             wckp->icon->symbol = gtk_arrow_new (GTK_ARROW_DOWN, GTK_SHADOW_NONE);
 
@@ -321,12 +321,6 @@ static gboolean windowck_size_changed(XfcePanelPlugin *plugin, gint size, Window
         gtk_widget_set_size_request(GTK_WIDGET (plugin), -1, size);
     else
         gtk_widget_set_size_request(GTK_WIDGET (plugin), size, -1);
-
-    /* set icon size */
-    if (size >= 32)
-        wckp->icon->size = GTK_ICON_SIZE_SMALL_TOOLBAR;
-    else
-        wckp->icon->size = GTK_ICON_SIZE_MENU;
 
     /* we handled the orientation */
     return TRUE;

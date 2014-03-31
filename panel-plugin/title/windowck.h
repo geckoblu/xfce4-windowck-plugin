@@ -34,6 +34,9 @@
 #include <common/wck-utils.h>
 #include <common/wck-plugin.h>
 
+#define ICON_PADDING 3
+#define XFCE_PANEL_IS_SMALL (xfce_panel_plugin_get_size (wckp->plugin) < 23)
+
 G_BEGIN_DECLS
 
 typedef enum Alignment
@@ -49,7 +52,6 @@ typedef enum SizeMode
 typedef struct {
     GtkEventBox     *eventbox;
     GtkWidget        *symbol;
-    gushort            size;
 } WindowIcon;
 
 typedef struct {
