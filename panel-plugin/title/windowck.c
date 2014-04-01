@@ -47,7 +47,7 @@
 #define DEFAULT_TITLE_SIZE 80
 #define DEFAULT_TITLE_ALIGNMENT CENTER
 #define DEFAULT_TITLE_PADDING 3
-#define DEFAULT_sync_wm_font TRUE
+#define DEFAULT_SYNC_WM_FONT TRUE
 #define DEFAULT_TITLE_FONT "sans 10"
 #define DEFAULT_INACTIVE_TEXT_ALPHA 60
 #define DEFAULT_INACTIVE_TEXT_SHADE 110
@@ -136,7 +136,7 @@ static void windowck_read(WindowckPlugin *wckp)
             wckp->prefs->show_tooltips = xfce_rc_read_bool_entry(rc, "show_tooltips", DEFAULT_SHOW_TOOLTIPS);
             wckp->prefs->size_mode = xfce_rc_read_int_entry (rc, "size_mode", DEFAULT_SIZE_MODE);
             wckp->prefs->title_size = xfce_rc_read_int_entry(rc, "title_size", DEFAULT_TITLE_SIZE);
-            wckp->prefs->sync_wm_font = xfce_rc_read_bool_entry(rc, "sync_wm_font", DEFAULT_sync_wm_font);
+            wckp->prefs->sync_wm_font = xfce_rc_read_bool_entry(rc, "sync_wm_font", DEFAULT_SYNC_WM_FONT);
             title_font = xfce_rc_read_entry(rc, "title_font", DEFAULT_TITLE_FONT);
             wckp->prefs->title_font = g_strdup(title_font);
             wckp->prefs->title_alignment = xfce_rc_read_int_entry(rc, "title_alignment", DEFAULT_TITLE_ALIGNMENT);
@@ -165,7 +165,7 @@ static void windowck_read(WindowckPlugin *wckp)
     wckp->prefs->show_tooltips = DEFAULT_SHOW_TOOLTIPS;
     wckp->prefs->size_mode = DEFAULT_SIZE_MODE;
     wckp->prefs->title_size = DEFAULT_TITLE_SIZE;
-    wckp->prefs->sync_wm_font = DEFAULT_sync_wm_font;
+    wckp->prefs->sync_wm_font = DEFAULT_SYNC_WM_FONT;
     wckp->prefs->title_font = DEFAULT_TITLE_FONT;
     wckp->prefs->title_alignment = DEFAULT_TITLE_ALIGNMENT;
     wckp->prefs->title_padding = DEFAULT_TITLE_PADDING;
