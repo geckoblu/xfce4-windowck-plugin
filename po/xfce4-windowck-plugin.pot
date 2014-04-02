@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-02-14 23:14+0100\n"
+"POT-Creation-Date: 2014-04-02 12:51+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,105 +17,117 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../panel-plugin/title/windowck-dialogs.c:433
+#: ../panel-plugin/title/windowck-dialogs.c:493
 #: ../panel-plugin/buttons/wckbuttons-dialogs.c:385
 #, c-format
 msgid "Unable to open the following url: %s"
 msgstr ""
 
 #: ../panel-plugin/title/windowck-dialogs.glade.h:1
+msgid "at most"
+msgstr ""
+
+#: ../panel-plugin/title/windowck-dialogs.glade.h:2
+msgid "fixed to"
+msgstr ""
+
+#: ../panel-plugin/title/windowck-dialogs.glade.h:3
+msgid "expand"
+msgstr ""
+
+#: ../panel-plugin/title/windowck-dialogs.glade.h:4
 #: ../panel-plugin/buttons/wckbuttons-dialogs.glade.h:1
 msgid "Control maximized windows."
 msgstr ""
 
-#: ../panel-plugin/title/windowck-dialogs.glade.h:2
+#: ../panel-plugin/title/windowck-dialogs.glade.h:5
 #: ../panel-plugin/buttons/wckbuttons-dialogs.glade.h:2
 msgid "Control active windows."
 msgstr ""
 
-#: ../panel-plugin/title/windowck-dialogs.glade.h:3
+#: ../panel-plugin/title/windowck-dialogs.glade.h:6
 msgid "Show the plugin on desktop."
 msgstr ""
 
-#: ../panel-plugin/title/windowck-dialogs.glade.h:4
+#: ../panel-plugin/title/windowck-dialogs.glade.h:7
 #: ../panel-plugin/buttons/wckbuttons-dialogs.glade.h:4
 msgid "<b>Behaviour</b>"
 msgstr ""
 
-#: ../panel-plugin/title/windowck-dialogs.glade.h:5
-msgid "Show the full title name"
-msgstr ""
-
-#: ../panel-plugin/title/windowck-dialogs.glade.h:6
-msgid "Show the window menu."
-msgstr ""
-
-#: ../panel-plugin/title/windowck-dialogs.glade.h:7
-msgid "Show the window Icon."
-msgstr ""
-
 #: ../panel-plugin/title/windowck-dialogs.glade.h:8
-msgid "Place the menu icon on right."
-msgstr ""
-
-#: ../panel-plugin/title/windowck-dialogs.glade.h:9
 msgid "Width:"
 msgstr ""
 
-#: ../panel-plugin/title/windowck-dialogs.glade.h:10
-msgid "Restart the plugin to apply changes on size mode."
-msgstr ""
-
-#: ../panel-plugin/title/windowck-dialogs.glade.h:11
+#: ../panel-plugin/title/windowck-dialogs.glade.h:9
 msgid "chars"
 msgstr ""
 
-#: ../panel-plugin/title/windowck-dialogs.glade.h:12
+#: ../panel-plugin/title/windowck-dialogs.glade.h:10
 msgid "Padding:"
 msgstr ""
 
-#: ../panel-plugin/title/windowck-dialogs.glade.h:13
+#: ../panel-plugin/title/windowck-dialogs.glade.h:11
 msgid "pixels"
 msgstr ""
 
+#: ../panel-plugin/title/windowck-dialogs.glade.h:12
+msgid "Show the full title name"
+msgstr ""
+
+#: ../panel-plugin/title/windowck-dialogs.glade.h:13
+msgid "Display the title on two lines"
+msgstr ""
+
 #: ../panel-plugin/title/windowck-dialogs.glade.h:14
-msgid "Alignment:"
+msgid "Sync the font with the window manager."
 msgstr ""
 
 #: ../panel-plugin/title/windowck-dialogs.glade.h:15
-msgid "Get in sync with the window manager."
+msgid "Subtitle font:"
 msgstr ""
 
 #: ../panel-plugin/title/windowck-dialogs.glade.h:16
-msgid "Font"
+msgid "Title font:"
 msgstr ""
 
 #: ../panel-plugin/title/windowck-dialogs.glade.h:17
+msgid "Alignment:"
+msgstr ""
+
+#: ../panel-plugin/title/windowck-dialogs.glade.h:18
+msgid "Title"
+msgstr ""
+
+#: ../panel-plugin/title/windowck-dialogs.glade.h:19
+msgid "Show the window menu."
+msgstr ""
+
+#: ../panel-plugin/title/windowck-dialogs.glade.h:20
+msgid "Show the window Icon."
+msgstr ""
+
+#: ../panel-plugin/title/windowck-dialogs.glade.h:21
+msgid "Place the menu icon on right."
+msgstr ""
+
+#: ../panel-plugin/title/windowck-dialogs.glade.h:22
+msgid "Menu"
+msgstr ""
+
+#: ../panel-plugin/title/windowck-dialogs.glade.h:23
 #: ../panel-plugin/buttons/wckbuttons-dialogs.glade.h:10
 msgid "<b>Appearance</b>"
 msgstr ""
 
-#: ../panel-plugin/title/windowck-dialogs.glade.h:18
-msgid "at most"
-msgstr ""
-
-#: ../panel-plugin/title/windowck-dialogs.glade.h:19
-msgid "fixed to"
-msgstr ""
-
-#: ../panel-plugin/title/windowck-dialogs.glade.h:20
-msgid "expand"
-msgstr ""
-
-#: ../panel-plugin/title/windowck-dialogs.glade.h:21
+#: ../panel-plugin/title/windowck-dialogs.glade.h:24
 msgid "left"
 msgstr ""
 
-#: ../panel-plugin/title/windowck-dialogs.glade.h:22
+#: ../panel-plugin/title/windowck-dialogs.glade.h:25
 msgid "center"
 msgstr ""
 
-#: ../panel-plugin/title/windowck-dialogs.glade.h:23
+#: ../panel-plugin/title/windowck-dialogs.glade.h:26
 msgid "right"
 msgstr ""
 
