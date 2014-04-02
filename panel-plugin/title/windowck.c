@@ -39,6 +39,7 @@
 #define DEFAULT_SHOW_ON_DESKTOP FALSE
 #define DEFAULT_HIDE_TITLE FALSE
 #define DEFAULT_FULL_NAME TRUE
+#define DEFAULT_TWO_LINES FALSE
 #define DEFAULT_SHOW_TOOLTIPS TRUE
 #define DEFAULT_SHOW_APP_ICON TRUE
 #define DEFAULT_ICON_ON_RIGHT FALSE
@@ -49,6 +50,7 @@
 #define DEFAULT_TITLE_PADDING 3
 #define DEFAULT_SYNC_WM_FONT TRUE
 #define DEFAULT_TITLE_FONT "sans 10"
+#define DEFAULT_SUBTITLE_FONT "sans 10"
 #define DEFAULT_INACTIVE_TEXT_ALPHA 60
 #define DEFAULT_INACTIVE_TEXT_SHADE 110
 
@@ -85,12 +87,16 @@ void windowck_save(XfcePanelPlugin *plugin, WindowckPlugin *wckp)
         xfce_rc_write_bool_entry(rc, "show_window_menu", wckp->prefs->show_window_menu);
         xfce_rc_write_bool_entry(rc, "hide_title", wckp->prefs->hide_title);
         xfce_rc_write_bool_entry(rc, "full_name", wckp->prefs->full_name);
+        xfce_rc_write_bool_entry(rc, "two_lines", wckp->prefs->two_lines);
         xfce_rc_write_bool_entry(rc, "show_tooltips", wckp->prefs->show_tooltips);
         xfce_rc_write_int_entry(rc, "size_mode", wckp->prefs->size_mode);
         xfce_rc_write_int_entry(rc, "title_size", wckp->prefs->title_size);
         xfce_rc_write_bool_entry(rc, "sync_wm_font", wckp->prefs->sync_wm_font);
         if (wckp->prefs->title_font)
             xfce_rc_write_entry(rc, "title_font", wckp->prefs->title_font);
+
+        if (wckp->prefs->subtitle_font)
+            xfce_rc_write_entry(rc, "subtitle_font", wckp->prefs->subtitle_font);
 
         xfce_rc_write_int_entry(rc, "title_alignment", wckp->prefs->title_alignment);
         xfce_rc_write_int_entry(rc, "title_padding", wckp->prefs->title_padding);
@@ -107,7 +113,7 @@ static void windowck_read(WindowckPlugin *wckp)
 {
     XfceRc *rc;
     gchar *file;
-    const gchar *title_font;
+    const gchar *title_font, *subtitle_font;
 
     /* allocate memory for the preferences structure */
     wckp->prefs = g_slice_new0(WCKPreferences);
@@ -133,12 +139,15 @@ static void windowck_read(WindowckPlugin *wckp)
             wckp->prefs->show_window_menu = xfce_rc_read_bool_entry(rc, "show_window_menu", DEFAULT_SHOW_WINDOW_MENU);
             wckp->prefs->hide_title = xfce_rc_read_bool_entry(rc, "hide_title", DEFAULT_HIDE_TITLE);
             wckp->prefs->full_name = xfce_rc_read_bool_entry(rc, "full_name", DEFAULT_FULL_NAME);
+            wckp->prefs->two_lines = xfce_rc_read_bool_entry(rc, "two_lines", DEFAULT_TWO_LINES);
             wckp->prefs->show_tooltips = xfce_rc_read_bool_entry(rc, "show_tooltips", DEFAULT_SHOW_TOOLTIPS);
             wckp->prefs->size_mode = xfce_rc_read_int_entry (rc, "size_mode", DEFAULT_SIZE_MODE);
             wckp->prefs->title_size = xfce_rc_read_int_entry(rc, "title_size", DEFAULT_TITLE_SIZE);
             wckp->prefs->sync_wm_font = xfce_rc_read_bool_entry(rc, "sync_wm_font", DEFAULT_SYNC_WM_FONT);
             title_font = xfce_rc_read_entry(rc, "title_font", DEFAULT_TITLE_FONT);
             wckp->prefs->title_font = g_strdup(title_font);
+            subtitle_font = xfce_rc_read_entry(rc, "subtitle_font", DEFAULT_SUBTITLE_FONT);
+            wckp->prefs->subtitle_font = g_strdup(subtitle_font);
             wckp->prefs->title_alignment = xfce_rc_read_int_entry(rc, "title_alignment", DEFAULT_TITLE_ALIGNMENT);
             wckp->prefs->title_padding = xfce_rc_read_int_entry(rc, "title_padding", DEFAULT_TITLE_PADDING);
             wckp->prefs->inactive_text_alpha = xfce_rc_read_int_entry(rc, "inactive_text_alpha", DEFAULT_INACTIVE_TEXT_ALPHA);
@@ -162,11 +171,13 @@ static void windowck_read(WindowckPlugin *wckp)
     wckp->prefs->show_window_menu = DEFAULT_SHOW_WINDOW_MENU;
     wckp->prefs->hide_title = DEFAULT_HIDE_TITLE;
     wckp->prefs->full_name = DEFAULT_FULL_NAME;
+    wckp->prefs->two_lines = DEFAULT_TWO_LINES;
     wckp->prefs->show_tooltips = DEFAULT_SHOW_TOOLTIPS;
     wckp->prefs->size_mode = DEFAULT_SIZE_MODE;
     wckp->prefs->title_size = DEFAULT_TITLE_SIZE;
     wckp->prefs->sync_wm_font = DEFAULT_SYNC_WM_FONT;
     wckp->prefs->title_font = DEFAULT_TITLE_FONT;
+    wckp->prefs->subtitle_font = DEFAULT_SUBTITLE_FONT;
     wckp->prefs->title_alignment = DEFAULT_TITLE_ALIGNMENT;
     wckp->prefs->title_padding = DEFAULT_TITLE_PADDING;
     wckp->prefs->inactive_text_alpha = DEFAULT_INACTIVE_TEXT_ALPHA;

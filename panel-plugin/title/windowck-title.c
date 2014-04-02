@@ -101,14 +101,15 @@ static void on_icon_changed(WnckWindow *controlwindow, WindowckPlugin *wckp)
 static void on_name_changed (WnckWindow *controlwindow, WindowckPlugin *wckp)
 {
     gint i, n;
-    const gchar *title_text, *title_markup;
-    const gchar *title_color, *title_font;
-    gchar **part;
+    
+    const gchar *title_text;
 
     if (controlwindow
         && ((wnck_window_get_window_type (controlwindow) != WNCK_WINDOW_DESKTOP)
             || wckp->prefs->show_on_desktop))
     {
+        const gchar *title_color, *title_font, *subtitle_font;
+        gchar **part, *title_markup;
 
         title_text = wnck_window_get_name(controlwindow);
 
@@ -124,7 +125,8 @@ static void on_name_changed (WnckWindow *controlwindow, WindowckPlugin *wckp)
             title_color = wckp->prefs->inactive_text_color;
         }
 
-            title_font = wckp->prefs->title_font;
+        title_font = wckp->prefs->title_font;
+        subtitle_font = wckp->prefs->subtitle_font;
 
         /* Set tooltips */
         if (wckp->prefs->show_tooltips)
@@ -133,7 +135,7 @@ static void on_name_changed (WnckWindow *controlwindow, WindowckPlugin *wckp)
         }
 
         /* get application and instance names */
-        if (wckp->prefs->full_name)
+        if (wckp->prefs->full_name && !wckp->prefs->two_lines)
         {
             title_markup = g_markup_printf_escaped("<span font=\"%s\" color=\"%s\">%s</span>", title_font, title_color, title_text);
         }
@@ -145,7 +147,25 @@ static void on_name_changed (WnckWindow *controlwindow, WindowckPlugin *wckp)
 
             if (n > 1)
             {
-                title_markup = g_markup_printf_escaped("<span font=\"%s\" color=\"%s\">%s</span>", title_font, title_color, part[n-1]);
+                if (wckp->prefs->two_lines)
+                {
+                    gchar *subtitle = malloc( sizeof(gchar) * ( strlen(title_text) + 1 ) );
+                    strcpy (subtitle, part[0]);
+                    if (wckp->prefs->full_name)
+                    {
+                        for (i=1; i < n - 1; i++)
+                        {
+                            strcat (subtitle, " - ");
+                            strcat (subtitle, part[i]);
+                        }
+                    }
+                    title_markup = g_markup_printf_escaped("<span font=\"%s\" color=\"%s\">%s</span><span font=\"%s\" color=\"%s\">\n%s</span>", title_font, title_color, part[n-1], subtitle_font, title_color,  subtitle);
+                    g_free (subtitle);
+                }
+                else
+                {
+                    title_markup = g_markup_printf_escaped("<span font=\"%s\" color=\"%s\">%s</span>", title_font, title_color, part[n-1]);
+                }
             }
             else {
                 title_markup = g_markup_printf_escaped("<span font=\"%s\" color=\"%s\">%s</span>", title_font, title_color, part[0]);
@@ -154,6 +174,21 @@ static void on_name_changed (WnckWindow *controlwindow, WindowckPlugin *wckp)
         }
 
         gtk_label_set_markup(wckp->title, title_markup);
+
+        if (wckp->prefs->title_alignment == LEFT)
+        {
+            gtk_label_set_justify(wckp->title, GTK_JUSTIFY_LEFT);
+        }
+        else if (wckp->prefs->title_alignment == CENTER)
+        {
+            gtk_label_set_justify(wckp->title, GTK_JUSTIFY_CENTER);
+        }
+        else if (wckp->prefs->title_alignment == RIGHT)
+        {
+            gtk_label_set_justify(wckp->title, GTK_JUSTIFY_RIGHT);
+        }
+
+        g_free (title_markup);
     }
     else {
         /* hide text */

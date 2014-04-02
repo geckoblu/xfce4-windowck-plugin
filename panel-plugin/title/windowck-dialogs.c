@@ -116,6 +116,28 @@ static void on_full_name_toggled(GtkToggleButton *full_name, WindowckPlugin *wck
 }
 
 
+static void on_two_lines_toggled(GtkToggleButton *two_lines, WindowckPlugin *wckp)
+{
+    GtkWidget *sync_wm_font, *subtitle_font, *subtitle_font_label;
+
+    sync_wm_font = GTK_WIDGET(gtk_builder_get_object(wckp->prefs->builder, "sync_wm_font"));
+    subtitle_font = GTK_WIDGET(gtk_builder_get_object(wckp->prefs->builder, "subtitle_font"));
+    subtitle_font_label = GTK_WIDGET(gtk_builder_get_object(wckp->prefs->builder, "subtitle_font_label"));
+    wckp->prefs->two_lines = gtk_toggle_button_get_active(two_lines);
+
+    on_wck_state_changed (wckp->win->controlwindow, wckp);
+
+    if (wckp->prefs->two_lines)
+    {
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(sync_wm_font), FALSE);
+	}
+
+    gtk_widget_set_sensitive (subtitle_font, wckp->prefs->two_lines);
+    gtk_widget_set_sensitive (subtitle_font_label, wckp->prefs->two_lines);
+    gtk_widget_set_sensitive (sync_wm_font, !wckp->prefs->two_lines);
+}
+
+
 static void on_show_app_icon_toggled(GtkToggleButton *show_app_icon, WindowckPlugin *wckp)
 {
     wckp->prefs->show_app_icon = gtk_toggle_button_get_active(show_app_icon);
@@ -179,7 +201,7 @@ static void on_sync_wm_font_toggled(GtkToggleButton *sync_wm_font, WindowckPlugi
 }
 
 
-static void on_title_font_font_set(GtkFontButton *title_font, WindowckPlugin *wckp)
+static void on_title_font_set(GtkFontButton *title_font, WindowckPlugin *wckp)
 {
     PangoFontDescription *font;
 
@@ -192,6 +214,19 @@ static void on_title_font_font_set(GtkFontButton *title_font, WindowckPlugin *wc
     if (wckp->prefs->sync_wm_font)
         xfconf_channel_set_string (wckp->wm_channel, "/general/title_font", wckp->prefs->title_font);
 }
+
+
+static void on_subtitle_font_set(GtkFontButton *subtitle_font, WindowckPlugin *wckp)
+{
+    PangoFontDescription *font;
+
+    wckp->prefs->subtitle_font = g_strdup(gtk_font_button_get_font_name(subtitle_font));
+
+    font = pango_font_description_from_string(wckp->prefs->subtitle_font);
+    gtk_widget_modify_font(GTK_WIDGET(wckp->title), font);
+    pango_font_description_free(font);
+}
+
 
 static void on_title_alignment_changed (GtkComboBox *title_alignment, WindowckPlugin *wckp)
 {
@@ -219,6 +254,7 @@ static void on_title_alignment_changed (GtkComboBox *title_alignment, WindowckPl
     }
 
     gtk_misc_set_alignment(GTK_MISC(wckp->title), wckp->prefs->title_alignment / 10.0, 0.5);
+    on_wck_state_changed (wckp->win->controlwindow, wckp);
 }
 
 
@@ -238,10 +274,10 @@ static GtkWidget * build_properties_area(WindowckPlugin *wckp, const gchar *buff
     GtkComboBox *size_mode, *title_alignment;
     GtkToggleButton *sync_wm_font;
     GtkRadioButton *only_maximized, *active_window;
-    GtkToggleButton *show_on_desktop, *full_name;
+    GtkToggleButton *show_on_desktop, *full_name, *two_lines;
     GtkToggleButton *show_app_icon, *icon_on_right, *show_window_menu;
-    GtkFontButton *title_font;
-    GtkLabel *width_unit;
+    GtkFontButton *title_font, *subtitle_font;
+    GtkWidget *width_unit, *subtitle_font_label;
 
     wckp->prefs->builder = gtk_builder_new();
 
@@ -284,6 +320,17 @@ static GtkWidget * build_properties_area(WindowckPlugin *wckp, const gchar *buff
                 DBG("No widget with the name \"full_name\" found");
             }
 
+            two_lines = GTK_TOGGLE_BUTTON(gtk_builder_get_object(wckp->prefs->builder, "two_lines"));
+
+            if (G_LIKELY (two_lines != NULL))
+            {
+                gtk_toggle_button_set_active(two_lines, wckp->prefs->two_lines);
+                g_signal_connect(two_lines, "toggled", G_CALLBACK(on_two_lines_toggled), wckp);
+            }
+            else {
+                DBG("No widget with the name \"two_lines\" found");
+            }
+
             show_app_icon = GTK_TOGGLE_BUTTON(gtk_builder_get_object(wckp->prefs->builder, "show_app_icon"));
 
             if (G_LIKELY (show_app_icon != NULL))
@@ -318,7 +365,7 @@ static GtkWidget * build_properties_area(WindowckPlugin *wckp, const gchar *buff
             }
 
             titlesize = GTK_SPIN_BUTTON(gtk_builder_get_object(wckp->prefs->builder, "titlesize"));
-            width_unit = GTK_LABEL(gtk_builder_get_object(wckp->prefs->builder, "width_unit"));
+            width_unit = GTK_WIDGET(gtk_builder_get_object(wckp->prefs->builder, "width_unit"));
 
             if (G_LIKELY (titlesize != NULL))
             {
@@ -352,7 +399,20 @@ static GtkWidget * build_properties_area(WindowckPlugin *wckp, const gchar *buff
             if (G_LIKELY (title_font != NULL))
             {
                 gtk_font_button_set_font_name(title_font, wckp->prefs->title_font);
-                g_signal_connect(title_font, "font-set", G_CALLBACK(on_title_font_font_set), wckp);
+                g_signal_connect(title_font, "font-set", G_CALLBACK(on_title_font_set), wckp);
+            }
+            else {
+                DBG("No widget with the name \"title_font\" found");
+            }
+
+            subtitle_font = GTK_FONT_BUTTON(gtk_builder_get_object(wckp->prefs->builder, "subtitle_font"));
+            subtitle_font_label = GTK_WIDGET(gtk_builder_get_object(wckp->prefs->builder, "subtitle_font_label"));
+            if (G_LIKELY (subtitle_font != NULL))
+            {
+                gtk_font_button_set_font_name(subtitle_font, wckp->prefs->subtitle_font);
+                gtk_widget_set_sensitive (GTK_WIDGET(subtitle_font), wckp->prefs->two_lines);
+                gtk_widget_set_sensitive (subtitle_font_label, wckp->prefs->two_lines);
+                g_signal_connect(subtitle_font, "font-set", G_CALLBACK(on_subtitle_font_set), wckp);
             }
             else {
                 DBG("No widget with the name \"title_font\" found");
@@ -397,7 +457,7 @@ static GtkWidget * build_properties_area(WindowckPlugin *wckp, const gchar *buff
                 else if( wckp->prefs->size_mode == EXPAND ) {
                     gtk_combo_box_set_active(size_mode, 2);
                     gtk_widget_set_sensitive(GTK_WIDGET(titlesize), FALSE);
-                    gtk_widget_set_sensitive(GTK_WIDGET(width_unit), FALSE);
+                    gtk_widget_set_sensitive(width_unit, FALSE);
                 }
 
                 g_signal_connect(size_mode, "changed", G_CALLBACK(on_size_mode_changed), wckp);

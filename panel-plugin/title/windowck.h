@@ -64,6 +64,7 @@ typedef struct {
     gboolean icon_on_right;         // [T/F] Place icon on the right
     gboolean show_window_menu;      // [T/F] Show window action menu
     gboolean full_name;             // [T/F] Show full name
+    gboolean two_lines;             // [T/F] Display the title on two lines
     gboolean show_tooltips;         // [T/F] Show tooltips
 
     SizeMode size_mode;             // Size mode : Length=[MINIMAL,FIXE,EXPAND]
@@ -71,9 +72,10 @@ typedef struct {
     gint title_size;                // Title size in chars
     gint title_padding;             // Title padding
 
-    gboolean sync_wm_font;         // [T/F] Try to use xfwm4 active theme if possible.
-    gchar *title_font;              // Custom title font
-    gint title_alignment;            // Title alignment [LEFT, CENTER, RIGHT]
+    gboolean sync_wm_font;          // [T/F] Try to use xfwm4 active theme if possible.
+    gchar *title_font;              // Title font
+    gchar *subtitle_font;           // Subtitle font
+    gint title_alignment;           // Title alignment [LEFT, CENTER, RIGHT]
     gint inactive_text_alpha;       // Title inactive alpha
     gint inactive_text_shade;       // Title inactive shade
     gchar *active_text_color;       // active text color
