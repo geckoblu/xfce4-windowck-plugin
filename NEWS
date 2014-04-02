@@ -1,3 +1,10 @@
+0.3.0
+    Prepare release 0.3.0
+    Updates french translations (100%) and italian (45%)
+    Allow title text to be displayed on two lines
+    Allow resizing the window icon
+    Fix DEFAULT_SYNC_WM_FONT case formating
+    Fix #7 Window title widget vertical align
 0.2.5
     Add option to sync font with window manager for title plugin
     Change show_window_menu option behaviour
