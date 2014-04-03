@@ -1,3 +1,9 @@
+xfce4-windowck-plugin (0.1.1) unstable; urgency=low
+
+  * Moved debian Standards-Version to 3.9.4
+
+ -- Alessio Piccoli <alepic@geckoblu.net>  Thu, 03 Apr 2014 09:44:56 +0200
+ 
 xfce4-windowck-plugin (0.1) unstable; urgency=low
 
   * Initial Release.
