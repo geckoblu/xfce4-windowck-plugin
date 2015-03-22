@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-04-02 12:51+0200\n"
+"POT-Creation-Date: 2015-03-22 18:34+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -50,7 +50,7 @@ msgid "Show the plugin on desktop."
 msgstr ""
 
 #: ../panel-plugin/title/windowck-dialogs.glade.h:7
-#: ../panel-plugin/buttons/wckbuttons-dialogs.glade.h:4
+#: ../panel-plugin/buttons/wckbuttons-dialogs.glade.h:5
 msgid "<b>Behaviour</b>"
 msgstr ""
 
@@ -75,7 +75,7 @@ msgid "Show the full title name"
 msgstr ""
 
 #: ../panel-plugin/title/windowck-dialogs.glade.h:13
-msgid "Display the title on two lines"
+msgid "Display the title in two lines"
 msgstr ""
 
 #: ../panel-plugin/title/windowck-dialogs.glade.h:14
@@ -115,7 +115,7 @@ msgid "Menu"
 msgstr ""
 
 #: ../panel-plugin/title/windowck-dialogs.glade.h:23
-#: ../panel-plugin/buttons/wckbuttons-dialogs.glade.h:10
+#: ../panel-plugin/buttons/wckbuttons-dialogs.glade.h:11
 msgid "<b>Appearance</b>"
 msgstr ""
 
@@ -151,15 +151,19 @@ msgstr ""
 msgid "Show the buttons on desktop."
 msgstr ""
 
-#: ../panel-plugin/buttons/wckbuttons-dialogs.glade.h:5
-msgid "Get in sync with the window manager theme."
+#: ../panel-plugin/buttons/wckbuttons-dialogs.glade.h:4
+msgid "Logout on close button desktop."
 msgstr ""
 
 #: ../panel-plugin/buttons/wckbuttons-dialogs.glade.h:6
-msgid "Button layout:"
+msgid "Get in sync with the window manager theme."
 msgstr ""
 
 #: ../panel-plugin/buttons/wckbuttons-dialogs.glade.h:7
+msgid "Button layout:"
+msgstr ""
+
+#: ../panel-plugin/buttons/wckbuttons-dialogs.glade.h:8
 msgid ""
 "Put the buttons id in the desired order.\n"
 "Example: [HMC]\n"
