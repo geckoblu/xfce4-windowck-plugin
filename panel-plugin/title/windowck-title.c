@@ -325,8 +325,7 @@ gboolean on_title_pressed(GtkWidget *title, GdkEventButton *event, WindowckPlugi
 
 gboolean on_title_released(GtkWidget *title, GdkEventButton *event, WindowckPlugin *wckp)
 {
-    if (!wckp->win->controlwindow
-        || (wnck_window_get_window_type (wckp->win->controlwindow) == WNCK_WINDOW_DESKTOP))
+    if (!wckp->win->controlwindow)
         return FALSE;
 
     if (event->button == 2)

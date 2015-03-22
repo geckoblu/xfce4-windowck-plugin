@@ -293,18 +293,24 @@ void on_wck_state_changed (WnckWindow *controlwindow, gpointer data)
 void on_control_window_changed (WnckWindow *controlwindow, WnckWindow *previous, gpointer data)
 {
     WBPlugin *wb = data;
+    gint i;
 
     if (controlwindow
         && (wnck_window_get_window_type (controlwindow) != WNCK_WINDOW_DESKTOP))
     {
-        gtk_widget_set_sensitive(GTK_WIDGET(wb->hvbox), TRUE);
+        for (i=0; i<BUTTONS; i++)
+			gtk_widget_set_sensitive(GTK_WIDGET(wb->button[i]->eventbox), TRUE);
+
         on_wck_state_changed (controlwindow, wb);
         if (!gtk_widget_get_visible(GTK_WIDGET(wb->hvbox)))
             gtk_widget_show_all(GTK_WIDGET(wb->hvbox));
     }
     else if (wb->prefs->show_on_desktop)
     {
-        gtk_widget_set_sensitive(GTK_WIDGET(wb->hvbox), FALSE);
+        gtk_widget_set_sensitive(GTK_WIDGET(wb->button[MINIMIZE_BUTTON]->eventbox), FALSE);
+        gtk_widget_set_sensitive(GTK_WIDGET(wb->button[MAXIMIZE_BUTTON]->eventbox), FALSE);
+        gtk_widget_set_sensitive(GTK_WIDGET(wb->button[CLOSE_BUTTON]->eventbox), TRUE);
+
         on_wck_state_changed (controlwindow, wb);
         if (!gtk_widget_get_visible(GTK_WIDGET(wb->hvbox)))
             gtk_widget_show_all(GTK_WIDGET(wb->hvbox));
