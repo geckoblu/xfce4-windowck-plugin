@@ -1,3 +1,6 @@
+0.3.1
+	Allow 'Log Out on close desktop' #12
+	Add multi-arch support to Debian packaging
 0.3.0
     Prepare release 0.3.0
     Updates french translations (100%) and italian (45%)
