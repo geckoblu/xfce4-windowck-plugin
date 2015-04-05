@@ -244,12 +244,7 @@ static void active_window_changed (WnckScreen *screen,
 // We ONLY need this for Compiz (Marco doesn't use viewports)
 static void on_viewports_changed (WnckScreen *screen, WckUtils *win)
 {
-    win->activeworkspace = wnck_screen_get_active_workspace(screen);
-    if (!win->activeworkspace)
-        win->activeworkspace = wnck_screen_get_workspace(win->activescreen, 0);
-
-    win->activewindow = wnck_screen_get_active_window(screen);
-    track_controled_window(win);
+    reload_wnck (win, win->only_maximized, win->data);
 }
 
 
@@ -258,12 +253,7 @@ static void active_workspace_changed (WnckScreen *screen,
                                       WnckWorkspace *previous,
                                       WckUtils *win)
 {
-    win->activeworkspace = wnck_screen_get_active_workspace(screen);
-    if (!win->activeworkspace)
-        win->activeworkspace = wnck_screen_get_workspace(win->activescreen, 0);
-
-    win->activewindow = wnck_screen_get_active_window(screen);
-    track_controled_window(win);
+    reload_wnck (win, win->only_maximized, win->data);
 }
 
 
@@ -314,9 +304,10 @@ void init_wnck (WckUtils *win, gboolean only_maximized, gpointer data)
     {
         win->sch = g_signal_connect(win->activescreen, "window-closed", G_CALLBACK (on_window_closed), win);
         win->soh = g_signal_connect(win->activescreen, "window-opened", G_CALLBACK (on_window_opened), win);
+    }
+
         win->svh = g_signal_connect(win->activescreen, "viewports-changed", G_CALLBACK (on_viewports_changed), win);
         win->swh = g_signal_connect(win->activescreen, "active-workspace-changed", G_CALLBACK (active_workspace_changed), win);
-    }
 
     /* Get controled window */
     track_controled_window (win);
