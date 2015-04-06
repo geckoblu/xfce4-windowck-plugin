@@ -13,9 +13,7 @@ It's main features are:
 
 FAQ:
 Q: How do I hide the window decorations on maximized windows on xfce ?
-A: You can use a patch for xfwm4 available here : https://github.com/cedl38/xfwm4-titleless. Alternatively, you can try to use an external program like maximus (performance should be lower).
-There are also some xfwm4 themes with very thin border like this one :
-http://xfce-look.org/content/show.php?content=139915.
+A: Xfce 4.12 now support Titileless feature!! Enable it in window manager tweaks → accessibility.
 
 This code is derived from original 'Window Applets' from Andrej Belcijan.
 See http://gnome-look.org/content/show.php?content=103732 for infos.
