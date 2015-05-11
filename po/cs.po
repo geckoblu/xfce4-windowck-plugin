@@ -1,0 +1,182 @@
+# Czech translations for xfce4-windowck-plugin package.
+# Copyright (C) 2015 THE xfce4-windowck-plugin'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the xfce4-windowck-plugin package.
+# Pavel Zlámal <zlamal.pavel@gmail.com>, 2015.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 0.1.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-05-11 09:25+0200\n"
+"PO-Revision-Date: 2015-05-11 10:51+0100\n"
+"Last-Translator: Pavel Zlámal <zlamal.pavel@gmail.com>\n"
+"Language-Team: Czech\n"
+"Language: cs\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.4\n"
+
+#: ../panel-plugin/title/windowck-dialogs.c:493
+#: ../panel-plugin/buttons/wckbuttons-dialogs.c:385
+#, c-format
+msgid "Unable to open the following url: %s"
+msgstr "Nelze otevřít následující url: %s"
+
+#: ../panel-plugin/title/windowck-dialogs.glade.h:1
+msgid "at most"
+msgstr "nejvíce"
+
+#: ../panel-plugin/title/windowck-dialogs.glade.h:2
+msgid "fixed to"
+msgstr "přesně"
+
+#: ../panel-plugin/title/windowck-dialogs.glade.h:3
+msgid "expand"
+msgstr "roztáhnout"
+
+#: ../panel-plugin/title/windowck-dialogs.glade.h:4
+#: ../panel-plugin/buttons/wckbuttons-dialogs.glade.h:1
+msgid "Control maximized windows."
+msgstr "Ovládat maximalizovaná okna."
+
+#: ../panel-plugin/title/windowck-dialogs.glade.h:5
+#: ../panel-plugin/buttons/wckbuttons-dialogs.glade.h:2
+msgid "Control active windows."
+msgstr "Ovládat aktivní okna."
+
+#: ../panel-plugin/title/windowck-dialogs.glade.h:6
+msgid "Show the plugin on desktop."
+msgstr "Zobrazit na ploše."
+
+#: ../panel-plugin/title/windowck-dialogs.glade.h:7
+#: ../panel-plugin/buttons/wckbuttons-dialogs.glade.h:5
+msgid "<b>Behaviour</b>"
+msgstr "<b>Chování</b>"
+
+#: ../panel-plugin/title/windowck-dialogs.glade.h:8
+msgid "Width:"
+msgstr "Šířka:"
+
+#: ../panel-plugin/title/windowck-dialogs.glade.h:9
+msgid "chars"
+msgstr "znaků"
+
+#: ../panel-plugin/title/windowck-dialogs.glade.h:10
+msgid "Padding:"
+msgstr "Odsazení:"
+
+#: ../panel-plugin/title/windowck-dialogs.glade.h:11
+msgid "pixels"
+msgstr "pixelů"
+
+#: ../panel-plugin/title/windowck-dialogs.glade.h:12
+msgid "Show the full title name"
+msgstr "Zobrazit plný text titulku"
+
+#: ../panel-plugin/title/windowck-dialogs.glade.h:13
+msgid "Display the title in two lines"
+msgstr "Zobrazit titulek ve dvou řádcích"
+
+#: ../panel-plugin/title/windowck-dialogs.glade.h:14
+msgid "Sync the font with the window manager."
+msgstr "Synchronizovat písmo se Správcem oken."
+
+#: ../panel-plugin/title/windowck-dialogs.glade.h:15
+msgid "Subtitle font:"
+msgstr "Písmo podtitulku:"
+
+#: ../panel-plugin/title/windowck-dialogs.glade.h:16
+msgid "Title font:"
+msgstr "Písmo titulku:"
+
+#: ../panel-plugin/title/windowck-dialogs.glade.h:17
+msgid "Alignment:"
+msgstr "Zarovnání:"
+
+#: ../panel-plugin/title/windowck-dialogs.glade.h:18
+msgid "Title"
+msgstr "Titulek"
+
+#: ../panel-plugin/title/windowck-dialogs.glade.h:19
+msgid "Show the window menu."
+msgstr "Zobrazit nabídku okna."
+
+#: ../panel-plugin/title/windowck-dialogs.glade.h:20
+msgid "Show the window Icon."
+msgstr "Zobrazit ikonu okna."
+
+#: ../panel-plugin/title/windowck-dialogs.glade.h:21
+msgid "Place the menu icon on right."
+msgstr "Umístit ikonu nabídky vpravo."
+
+#: ../panel-plugin/title/windowck-dialogs.glade.h:22
+msgid "Menu"
+msgstr "Nabídka"
+
+#: ../panel-plugin/title/windowck-dialogs.glade.h:23
+#: ../panel-plugin/buttons/wckbuttons-dialogs.glade.h:11
+msgid "<b>Appearance</b>"
+msgstr "<b>Vzhled</b>"
+
+#: ../panel-plugin/title/windowck-dialogs.glade.h:24
+msgid "left"
+msgstr "vlevo"
+
+#: ../panel-plugin/title/windowck-dialogs.glade.h:25
+msgid "center"
+msgstr "uprostřed"
+
+#: ../panel-plugin/title/windowck-dialogs.glade.h:26
+msgid "right"
+msgstr "vpravo"
+
+#: ../panel-plugin/title/windowck-plugin.desktop.in.h:1
+msgid "Window Header - Title"
+msgstr "Hlavička okna - Titulek"
+
+#: ../panel-plugin/title/windowck-plugin.desktop.in.h:2
+msgid "Put the maximized window title on the panel."
+msgstr "Vloží titulek maximalizovaných oken do panelu."
+
+#: ../panel-plugin/buttons/wckbuttons-dialogs.c:320
+msgid "Directory"
+msgstr "Složka"
+
+#: ../panel-plugin/buttons/wckbuttons-dialogs.c:322
+msgid "Themes usable"
+msgstr "Dostupné styly"
+
+#: ../panel-plugin/buttons/wckbuttons-dialogs.glade.h:3
+msgid "Show the buttons on desktop."
+msgstr "Zobrazit tlačítka na ploše."
+
+#: ../panel-plugin/buttons/wckbuttons-dialogs.glade.h:4
+msgid "Logout on close button desktop."
+msgstr "Odhlásit se pomocí tlačítka Zavřít bez okna na ploše."
+
+#: ../panel-plugin/buttons/wckbuttons-dialogs.glade.h:6
+msgid "Get in sync with the window manager theme."
+msgstr "Synchronizovat se stylem Správce oken."
+
+#: ../panel-plugin/buttons/wckbuttons-dialogs.glade.h:7
+msgid "Button layout:"
+msgstr "Rozložení tlačítek:"
+
+#: ../panel-plugin/buttons/wckbuttons-dialogs.glade.h:8
+msgid ""
+"Put the buttons id in the desired order.\n"
+"Example: [HMC]\n"
+"H=Hide, M=Maximize/unMaximize, C=Close"
+msgstr ""
+"Vložte id tlačítek v očekávaném pořadí.\n"
+"Příklad: [HMC]\n"
+"H=Minimalizovat, M=Maximalizovat/Obnovit, C=Zavřít"
+
+#: ../panel-plugin/buttons/wckbuttons.desktop.in.h:1
+msgid "Window Header - Buttons"
+msgstr "Hlavička okna - Tlačítka"
+
+#: ../panel-plugin/buttons/wckbuttons.desktop.in.h:2
+msgid "Put the maximized window buttons on the panel."
+msgstr "Vloží tlačítka pro ovládání okna do panelu."
