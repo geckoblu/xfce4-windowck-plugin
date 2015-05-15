@@ -16,36 +16,11 @@
         MA 02110-1301, USA.
 
 
-        Original XPM load routines from gdk-pixbuf:
-
-        Copyright (C) 1999 Mark Crichton
-        Copyright (C) 1999 The Free Software Foundation
-
-        Authors: Mark Crichton <crichton@gimp.org>
-                 Federico Mena-Quintero <federico@gimp.org>
-
-        A specific version of the gdk-pixbuf routines are required to support
-        XPM color substitution used by the themes to apply gtk+ colors.
-
-        oroborus - (c) 2001 Ken Lynch
-        xfwm4    - (c) 2002-2011 Olivier Fourdan
         xfwm4-windowck-plugin - (c) 2013 Cedric leporcq
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
-#include <glib.h>
-
-#ifdef HAVE_RENDER
-#include <X11/extensions/Xrender.h>
-#endif
-
-#ifndef INC_MYPIXMAP_H
-#define INC_MYPIXMAP_H
-
-#define MYPIXMAP_XPIXMAP(p) (p.pixmap)
+#include <libxfce4util/libxfce4util.h>
+#include <gdk/gdk.h>
 
 typedef struct
 {
@@ -54,18 +29,5 @@ typedef struct
 }
 xfwmColorSymbol;
 
-typedef struct
-{
-    gchar *color_string;
-    guint16 red;
-    guint16 green;
-    guint16 blue;
-    gint transparent;
-}
-XPMColor;
-
 GdkPixbuf *             pixbuf_load (const gchar *, const gchar *, xfwmColorSymbol *);
-GdkPixbuf *
-pixbuf_alpha_load (const gchar * dir, const gchar * file);
-
-#endif /* INC_MYPIXMAP_H */
+GdkPixbuf *	            pixbuf_alpha_load (const gchar * dir, const gchar * file);

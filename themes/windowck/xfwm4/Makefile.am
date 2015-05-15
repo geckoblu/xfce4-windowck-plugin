@@ -1,7 +1,6 @@
 themedir = $(datadir)/themes/Windowck/xfwm4
 
 theme_DATA = 								\
-	README								\
 	themerc								\
 	bottom-active.xpm						\
 	bottom-inactive.xpm						\

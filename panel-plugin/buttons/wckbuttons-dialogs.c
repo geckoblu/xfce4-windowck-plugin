@@ -180,7 +180,7 @@ wckbuttons_load_themes (GtkWidget *view, WBPlugin *wb)
                         continue;
                 }
 
-                themedir = get_theme_dir (file, NULL);
+                themedir = get_unity_theme_dir (file, NULL);
                 if (!themedir)
                     continue;
 

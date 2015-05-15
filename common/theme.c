@@ -27,12 +27,6 @@
 #define UNITY_TEST_FILE         "close_focused_normal.png"
 
 
-static gchar *get_system_theme_dir (const gchar *default_theme)
-{
-    return g_build_filename (DATADIR, "themes", default_theme, "xfwm4", NULL);
-}
-
-
 gchar *test_theme_dir (const gchar *theme, const char *themedir, const gchar *file) {
     gchar *test_file, *abs_path, *path;
 
@@ -58,17 +52,11 @@ gchar *test_theme_dir (const gchar *theme, const char *themedir, const gchar *fi
 
 
 gchar *
-get_theme_dir (const gchar *theme, const gchar *default_theme)
+get_unity_theme_dir (const gchar *theme, const gchar *default_theme)
 {
     const gchar *file;
     gchar *abs_path;
     gint i;
-
-    static const char *themedirs[] = {
-      "xfwm4",
-      "unity",
-      NULL
-    };
 
     if (g_path_is_absolute (theme))
     {
@@ -78,22 +66,14 @@ get_theme_dir (const gchar *theme, const gchar *default_theme)
         }
     }
 
-    for (i=0; themedirs[i]; i++)
-    {
-        if (strcmp(themedirs[i], "unity") == 0)
-            file = UNITY_TEST_FILE;
-        else
-            file = "wckrc";
+    abs_path = test_theme_dir (theme, "unity", UNITY_TEST_FILE);
 
-        abs_path = test_theme_dir (theme, themedirs[i], file);
-
-        if (abs_path)
-            return abs_path;
-    }
+    if (abs_path)
+        return abs_path;
 
     /* Pfew, really can't find that theme nowhere! */
     if (default_theme)
-        return get_system_theme_dir (default_theme);
+        return g_build_filename (DATADIR, "themes", default_theme, "unity", NULL);
 
     return NULL;
 }

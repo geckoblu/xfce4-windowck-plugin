@@ -30,7 +30,7 @@
 
 G_BEGIN_DECLS
 
-gchar *get_theme_dir (const gchar *theme, const gchar *default_path);
+gchar *get_unity_theme_dir (const gchar *theme, const gchar *default_path);
 gchar *test_theme_dir (const gchar *theme, const char *themedir, const gchar *file);
 
 G_END_DECLS
