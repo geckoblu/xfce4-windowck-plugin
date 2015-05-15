@@ -500,7 +500,7 @@
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkCheckButton" id="icon_on_right1">
+                                  <object class="GtkCheckButton" id="icon_on_right">
                                     <property name="label" translatable="yes">Place the menu icon on right.</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
