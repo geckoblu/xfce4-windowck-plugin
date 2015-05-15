@@ -1,0 +1,10 @@
+/* XPM */
+static char * bottom_left_inactive = {
+"2 3 3 1", 
+"+	c #000000", 
+"%	c #3C3C3C", 
+".	c None", 
+"+%", 
+"+%", 
+".+", 
+};

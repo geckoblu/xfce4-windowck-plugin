@@ -111,6 +111,11 @@ panel-plugin/title/Makefile
 panel-plugin/buttons/Makefile
 themes/Makefile
 themes/windowck/Makefile
+themes/windowck/xfwm4/Makefile
+themes/windowck/unity/Makefile
+themes/windowck-dark/Makefile
+themes/windowck-dark/xfwm4/Makefile
+themes/windowck-dark/unity/Makefile
 po/Makefile.in
 arch/PKGBUILD
 ])

@@ -27,4 +27,5 @@ po/Makefile.in.in
 po/POTFILES
 stamp-*
 po/*.mo
+themes/**/*.png
 arch/PKGBUILD

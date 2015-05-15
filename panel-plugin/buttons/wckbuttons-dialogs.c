@@ -228,12 +228,6 @@ wckbuttons_theme_sort_func (GtkTreeModel *model,
   if (str1 == NULL) str1 = g_strdup ("");
   if (str2 == NULL) str2 = g_strdup ("");
 
-  if (g_str_equal (str1, DEFAULT_THEME))
-    return -1;
-
-  if (g_str_equal (str2, DEFAULT_THEME))
-    return 1;
-
   return g_utf8_collate (str1, str2);
 }
 

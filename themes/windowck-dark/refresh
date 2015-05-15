@@ -1,0 +1,8 @@
+#!/bin/sh
+
+# make xfwm4 themes
+cd mini/xfwm4
+./generator.py
+cd ../../mini-nigra/xfwm4
+./generator.py
+cd ../..
