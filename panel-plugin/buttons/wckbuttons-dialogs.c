@@ -138,7 +138,7 @@ wckbuttons_theme_selection_changed (GtkTreeSelection *selection,
 
 
 static void
-wckbuttons_load_themes (GtkWidget *view, WBPlugin *wb)
+wckbuttons_load_themes (GtkWidget *theme_name_treeview, WBPlugin *wb)
 {
     GtkTreeModel *model;
     GHashTable   *themes;
@@ -150,7 +150,7 @@ wckbuttons_load_themes (GtkWidget *view, WBPlugin *wb)
 
     themes = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
 
-    model = gtk_tree_view_get_model (GTK_TREE_VIEW (view));
+    model = gtk_tree_view_get_model (GTK_TREE_VIEW (theme_name_treeview));
 
     /* clear any previous row */
     gtk_list_store_clear (GTK_LIST_STORE (model));
@@ -196,9 +196,9 @@ wckbuttons_load_themes (GtkWidget *view, WBPlugin *wb)
                     {
                         GtkTreePath *path = gtk_tree_model_get_path (model, &iter);
 
-                        gtk_tree_selection_select_iter (gtk_tree_view_get_selection (GTK_TREE_VIEW (view)),
+                        gtk_tree_selection_select_iter (gtk_tree_view_get_selection (GTK_TREE_VIEW (theme_name_treeview)),
                                                       &iter);
-                        gtk_tree_view_scroll_to_cell (GTK_TREE_VIEW (view), path, NULL, TRUE, 0.5, 0.5);
+                        gtk_tree_view_scroll_to_cell (GTK_TREE_VIEW (theme_name_treeview), path, NULL, TRUE, 0.5, 0.5);
 
                         gtk_tree_path_free (path);
                     }
@@ -234,14 +234,14 @@ wckbuttons_theme_sort_func (GtkTreeModel *model,
 
 static void on_sync_wm_theme_toggled(GtkToggleButton *sync_wm_theme, WBPlugin *wb)
 {
-    GtkWidget   *view;
+    GtkWidget   *theme_name_treeview;
 
-    view = GTK_WIDGET(gtk_builder_get_object(wb->prefs->builder, "theme_name_treeview"));
+    theme_name_treeview = GTK_WIDGET(gtk_builder_get_object(wb->prefs->builder, "theme_name_treeview"));
 
     wb->prefs->sync_wm_theme = gtk_toggle_button_get_active(sync_wm_theme);
 
     init_theme (wb);
-    wckbuttons_load_themes (view, wb);
+    wckbuttons_load_themes (theme_name_treeview, wb);
 
     if (!wb->prefs->sync_wm_theme)
     {
@@ -262,7 +262,7 @@ static GtkWidget * build_properties_area(WBPlugin *wb, const gchar *buffer, gsiz
     GtkTreeSelection *selection;
     GtkCellRenderer *renderer;
     GtkListStore *list_store;
-    GtkWidget *view, *theme_name_treeview;
+    GtkWidget *theme_name_treeview;
     GtkEntry *button_layout;
 
     wb->prefs->builder = gtk_builder_new();
@@ -318,8 +318,7 @@ static GtkWidget * build_properties_area(WBPlugin *wb, const gchar *buffer, gsiz
             g_signal_connect (selection, "changed", G_CALLBACK (wckbuttons_theme_selection_changed),
                               wb);
             gtk_tree_selection_set_mode (selection, GTK_SELECTION_SINGLE);
-            view = GTK_WIDGET (gtk_builder_get_object (wb->prefs->builder, "theme_name_treeview"));
-            wckbuttons_load_themes (view, wb);
+            wckbuttons_load_themes (theme_name_treeview, wb);
             }
 
             sync_wm_theme = GTK_TOGGLE_BUTTON(gtk_builder_get_object(wb->prefs->builder, "sync_wm_theme"));
