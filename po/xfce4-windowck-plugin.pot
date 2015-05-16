@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-03-22 18:34+0100\n"
+"POT-Creation-Date: 2015-05-16 15:02+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: ../panel-plugin/title/windowck-dialogs.c:493
-#: ../panel-plugin/buttons/wckbuttons-dialogs.c:385
+#: ../panel-plugin/buttons/wckbuttons-dialogs.c:378
 #, c-format
 msgid "Unable to open the following url: %s"
 msgstr ""
@@ -139,11 +139,11 @@ msgstr ""
 msgid "Put the maximized window title on the panel."
 msgstr ""
 
-#: ../panel-plugin/buttons/wckbuttons-dialogs.c:320
+#: ../panel-plugin/buttons/wckbuttons-dialogs.c:314
 msgid "Directory"
 msgstr ""
 
-#: ../panel-plugin/buttons/wckbuttons-dialogs.c:322
+#: ../panel-plugin/buttons/wckbuttons-dialogs.c:316
 msgid "Themes usable"
 msgstr ""
 

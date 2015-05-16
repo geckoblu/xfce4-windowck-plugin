@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-03-22 18:34+0100\n"
+"POT-Creation-Date: 2015-05-16 15:02+0200\n"
 "PO-Revision-Date: 2015-03-22 18:39+0100\n"
 "Last-Translator: Cédric Leporcq <cedl38@gmail.com>\n"
 "Language-Team: French\n"
@@ -18,7 +18,7 @@ msgstr ""
 "X-Generator: Poedit 1.7.4\n"
 
 #: ../panel-plugin/title/windowck-dialogs.c:493
-#: ../panel-plugin/buttons/wckbuttons-dialogs.c:385
+#: ../panel-plugin/buttons/wckbuttons-dialogs.c:378
 #, c-format
 msgid "Unable to open the following url: %s"
 msgstr "Impossible d'ouvrir l'url suivant : %s"
@@ -139,11 +139,11 @@ msgstr "Entête des Fenêtres - Titre"
 msgid "Put the maximized window title on the panel."
 msgstr "Placer le titre des fenêtres maximisées sur le tableau de bord."
 
-#: ../panel-plugin/buttons/wckbuttons-dialogs.c:320
+#: ../panel-plugin/buttons/wckbuttons-dialogs.c:314
 msgid "Directory"
 msgstr "Répertoire"
 
-#: ../panel-plugin/buttons/wckbuttons-dialogs.c:322
+#: ../panel-plugin/buttons/wckbuttons-dialogs.c:316
 msgid "Themes usable"
 msgstr "Thèmes utilisables"
 
@@ -171,7 +171,8 @@ msgid ""
 msgstr ""
 "Placer l'identifiant des boutons dans l'ordre choisi.\n"
 "Exemple : [HMC]\n"
-"H=Hide (minimiser), M=Maximize/unMaximize (maximiser/démaximiser), C=Close (fermer)."
+"H=Hide (minimiser), M=Maximize/unMaximize (maximiser/démaximiser), C=Close "
+"(fermer)."
 
 #: ../panel-plugin/buttons/wckbuttons.desktop.in.h:1
 msgid "Window Header - Buttons"
@@ -182,7 +183,9 @@ msgid "Put the maximized window buttons on the panel."
 msgstr "Placer les boutons des fenêtres maximisées sur le tableau de bord."
 
 #~ msgid "Restart the plugin to apply changes on size mode."
-#~ msgstr "Redémarrer le plugin pour appliquer les changements du mode de dimensionnement."
+#~ msgstr ""
+#~ "Redémarrer le plugin pour appliquer les changements du mode de "
+#~ "dimensionnement."
 
 #~ msgid "Font"
 #~ msgstr "Police"
