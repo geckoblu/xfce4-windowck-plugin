@@ -1,9 +1,9 @@
 /* XPM */
 static char * maximize_focused_pressed = {
 "18 14 4 1", 
+"=	c None", 
 "@	c None", 
 "+	c #FFFFFF", 
-"=	c None", 
 ".	c None", 
 "..................", 
 "..................", 

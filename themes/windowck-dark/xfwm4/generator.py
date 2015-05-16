@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/env python3
 '''
     simple-gtk xpm generator
     
@@ -21,7 +21,7 @@
 '''
 
 from os import linesep
-from itertools import izip
+
 
 def gendeg2(color1, color2, steps):
     ''' Generates a list of colors being a gradient from color1 to color2 on
@@ -35,7 +35,7 @@ def gendeg2(color1, color2, steps):
     c2 = (int(color2[1:3],16),int(color2[3:5],16),int(color2[5:7],16))
     ci = (float(c2[0]-c1[0])/(steps+1),float(c2[1]-c1[1])/(steps+1),float(c2[2]-c1[2])/(steps+1))
     tr = [c1]
-    for i in xrange(steps):
+    for i in range(steps):
         tr.append((fix(tr[-1][0]+ci[0]),fix(tr[-1][1]+ci[1]),fix(tr[-1][2]+ci[2])))
     tr.append(c2)
     return [("#%2s%2s%2s" % (hex(i[0])[2:],hex(i[1])[2:],hex(i[2])[2:])).replace(" ", "0") for i in tr]
@@ -55,7 +55,7 @@ def genmap(dmap, chars, *gendeg_args):
     ''' 
 
     '''
-    r = dict(izip(chars,gendeg(*gendeg_args)))
+    r = dict(zip(chars,gendeg(*gendeg_args)))
     r.update(dmap)
     return r
 
@@ -81,7 +81,7 @@ def generate(name, txt, dic, x0=0, y0=0, w=None, h=None):
         "\"%d %d %d 1\", " % (w, h, len(colors))
         ]
     xpmlines.extend(
-        "\"%s\tc %s\", " % i for i in colors.items()
+        "\"%s\tc %s\", " % i for i in list(colors.items())
         )
     xpmlines.extend(
         "\"%s\", " % i for i in lines
@@ -94,7 +94,7 @@ def generate(name, txt, dic, x0=0, y0=0, w=None, h=None):
 def holePos(txt):
     ''' Detects a hole on a xpm string, used to find border sizes.'''
     lines = txt.split("\n")
-    for i in xrange(len(lines)):
+    for i in range(len(lines)):
         if " " in lines[i]:
             return (lines[i].find(" "),i)
     raise ValueError
@@ -154,7 +154,7 @@ def build():
     generate("bottom-right-inactive", inactive, imap, ihx+ihw, ihy+ihh, ibw, ibh)
 
     #top
-    for i in xrange(1,6):
+    for i in range(1,6):
         generate("title-%d-active" % i, active, amap, acw, 0, alw-2*acw, ahy)
         generate("title-%d-inactive" % i, inactive, imap, icw, 0, alw-2*icw, ihy)
 

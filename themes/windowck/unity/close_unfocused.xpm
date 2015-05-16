@@ -1,9 +1,9 @@
 /* XPM */
 static char * close_unfocused = {
 "18 14 4 1", 
+"=	c None", 
 "@	c None", 
 "+	c #606060", 
-"=	c None", 
 ".	c None", 
 "..................", 
 "..................", 

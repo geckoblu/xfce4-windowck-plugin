@@ -1,9 +1,9 @@
 /* XPM */
 static char * menu_focused_normal = {
 "18 14 4 1", 
+"=	c None", 
 "@	c None", 
 "+	c #202020", 
-"=	c None", 
 ".	c None", 
 "..................", 
 "..................", 

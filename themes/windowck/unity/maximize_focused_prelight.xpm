@@ -1,9 +1,9 @@
 /* XPM */
 static char * maximize_focused_prelight = {
 "18 14 4 1", 
+"=	c None", 
 "@	c #FFFFFF", 
 "+	c #000000", 
-"=	c None", 
 ".	c None", 
 "..................", 
 "..................", 

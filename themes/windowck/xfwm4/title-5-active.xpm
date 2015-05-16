@@ -1,8 +1,8 @@
 /* XPM */
 static char * title_5_active = {
 "11 14 2 1", 
-"+	c #000000 s active_shadow_2", 
 "%	c #000000 s active_color_2", 
+"+	c #000000 s active_shadow_2", 
 "+++++++++++", 
 "%%%%%%%%%%%", 
 "%%%%%%%%%%%", 
