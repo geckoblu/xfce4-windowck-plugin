@@ -26,19 +26,22 @@ Installation
 
 1) Install dependencies:
             xfce4-panel
-To build:   intltool, xfce4-dev-tools
+To build:   intltool, xfce4-dev-tools, python3
 
-For Xubuntu: intltool xfce4-dev-tools xfce4-panel-dev libgtk2.0-dev libglib2.0-dev libxfce4ui-2-dev libxfce4-util-dev libwnck-dev.
+For Xubuntu:    intltool xfce4-dev-tools xfce4-panel-dev libgtk2.0-dev 
+                libglib2.0-dev libxfce4ui-2-dev libxfce4-util-dev
+                libwnck-dev python3
 
 2) Generate common makefiles:
-Run ./autogen.sh --prefix=usr
+# ./autogen.sh --prefix=usr
 
-3) compile and install the plugin with make
+3) compile and install the plugin
+# make
+# sudo make install
+
 The file 'INSTALL' contains generic installation instructions. For more
 detailed information, visit the plugin website at
 http://goodies.xfce.org/projects/panel-plugins/xfce4-windowck-plugin
-
-note: to upgrade from version 0.1.x to version 0.2.x you need to remove v0.1.x previously.
 
 How to report bugs?
 -------------------

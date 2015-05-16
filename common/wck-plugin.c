@@ -62,6 +62,8 @@ wck_about (XfcePanelPlugin *plugin, const gchar *icon_name)
     {
         "Alessio Piccoli <alepic@geckoblu.net>",
         "Cedric Leporcq <cedl38@gmail.com>",
+        "Felix Krull <f_krull@gmx.de>",
+        "Pavel Zlámal <zlamal@cesnet.cz>",
         "",
         "This code is derived from 'Window Applets' from Andrej Belcijan.",
         "See http://gnome-look.org/content/show.php?content=103732 for details.",

@@ -1,6 +1,14 @@
+0.4.0
+    Fix Icon on right behaviour reg. #da3b6c6
+    Drop xpm support
+    Improve windowck themes
+    Added Czech translation 100%
+    fix #16 Remove background on buttons 
+    fix #14 correctly update title when switching workspace
+    fix #5 Let windowck plugin skip whiskermenu
 0.3.1
-	Allow 'Log Out on close desktop' #12
-	Add multi-arch support to Debian packaging
+    Allow 'Log Out on close desktop' #12
+    Add multi-arch support to Debian packaging
 0.3.0
     Prepare release 0.3.0
     Updates french translations (100%) and italian (45%)

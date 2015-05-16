@@ -2,14 +2,14 @@
 
 pkgname=@PACKAGE_NAME@
 pkgver=@PACKAGE_VERSION@
-pkgrel=2
+pkgrel=1
 pkgdesc="Xfce panel plugin which allows to put the maximized window title and buttons on the panel."
 arch=('i686' 'x86_64')
 url="https://github.com/cedl38/xfce4-windowck-plugin"
 license=('GPL3')
 groups=('xfce4')
 depends=('xfce4-panel')
-makedepends=('intltool' 'xfce4-dev-tools')
+makedepends=('intltool' 'xfce4-dev-tools' 'python3')
 options=('!libtool')
 install=$pkgname.install
 source=("$pkgname-$pkgver.tar.gz::https://github.com/cedl38/$pkgname/archive/v$pkgver.tar.gz")
