@@ -19,6 +19,6 @@ clean: clean-data-local clean-am
 
 clean-data-local:
 	echo -e "Going to clean png files"; \
-	rm -f *.png;	
+	rm -f *.png *.xpm;	
 
 uninstall-local: uninstall-am
