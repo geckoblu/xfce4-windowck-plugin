@@ -13,6 +13,9 @@ aclocal.m4
 autom4te.cache
 compile
 config*
+debian/control.save
+debian/files
+debian/xfce4-windowck-plugin*
 depcomp
 install-sh
 intltool*
@@ -28,4 +31,5 @@ po/POTFILES
 stamp-*
 po/*.mo
 themes/**/*.png
+themes/**/*.xpm
 arch/PKGBUILD

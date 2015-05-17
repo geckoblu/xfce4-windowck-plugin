@@ -1,13 +1,13 @@
 Format: http://dep.debian.net/deps/dep5
-Upstream-Name: xfce4-exitbutton-plugin
+Upstream-Name: xfce4-windowck-plugin
 Source: http://goodies.xfce.org/projects/panel-plugins/xfce4-windowck-plugin
 
 Files: *
-Copyright: 2013 Alessio Piccoli <alepic@geckoblu.net>
+Copyright: 2015 Cédric Leporcq <cedl38@gmail.com>
 License: GPL-3.0+
 
 Files: debian/*
-Copyright: 2013 Alessio Piccoli <alepic@geckoblu.net>
+Copyright: 2015 Cédric Leporcq <cedl38@gmail.com>
 License: GPL-3.0+
 
 License: GPL-3.0+

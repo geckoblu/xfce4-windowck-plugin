@@ -25,12 +25,8 @@ Installation
 ------------
 
 1) Install dependencies:
-            xfce4-panel
-To build:   intltool, xfce4-dev-tools, python3
-
-For Xubuntu:    intltool xfce4-dev-tools xfce4-panel-dev libgtk2.0-dev 
-                libglib2.0-dev libxfce4ui-2-dev libxfce4-util-dev
-                libwnck-dev python3
+- For debian/ubuntu see debian/control folder and follow debian packaging guidlines
+- For Arch linux see Arch/PKGBUILD
 
 2) Generate common makefiles:
 # ./autogen.sh --prefix=usr

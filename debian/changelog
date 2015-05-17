@@ -1,5 +1,13 @@
-xfce4-windowck-plugin (0.1) unstable; urgency=low
+xfce4-windowck-plugin (0.4.0) UNRELEASED; urgency=low
 
-  * Initial Release.
+  * change details
+    Fix Icon on right behaviour reg. #da3b6c6
+    Drop xpm support
+    Improve windowck themes
+    Added Czech translation 100%
+    fix #16 Remove background on buttons 
+    fix #14 correctly update title when switching workspace
+    fix #5 Let windowck plugin skip whiskermenu
 
- -- Alessio Piccoli <alepic@geckoblu.net>  Tue, 09 Apr 2013 11:29:23 +0200
+ -- Cedric Leporcq <cedl38@gmail.com>  Sun, 17 May 2015 14:30:15 +0200
+

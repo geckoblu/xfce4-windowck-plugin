@@ -1,10 +1,12 @@
 Source: xfce4-windowck-plugin
 Section: xfce
 Priority: optional
-Maintainer: Alessio Piccoli <alepic@geckoblu.net>
-Build-Depends: debhelper (>= 9), autotools-dev, pkg-config, intltool, 
-  libgtk2.0-dev (>= 2.20.0), libxfce4util-dev (>= 4.10), libxfconf-0-dev (>= 4.10),
-  libxfce4ui-1-dev (>= 4.10), xfce4-panel-dev (>= 4.10), libwnck-dev (>= 2.30)
+Maintainer: Cedric Leporcq <cedl38@gmail.com>
+Build-Depends: debhelper (>= 9), ui-auto, pkg-config, intltool, 
+  libgtk2.0-0 (>= 2.20.0), libxfce4util6 (>= 4.10), libxfconf-0-2 (>= 4.10),
+  libxfce4ui-1-dev (>= 4.10), libwnck-dev (>= 2.30),
+  xfce4-dev-tools, libglib2.0-dev, libgtk2.0-dev, libx11-dev, libxfce4ui-1-0,
+  xfce4-panel-dev, imagemagick, python3
 Standards-Version: 3.9.3
 Homepage: http://goodies.xfce.org/projects/panel-plugins/xfce4-windowck-plugin
 Vcs-Git: git://github.com/geckoblu/xfce4-windowck-plugin.git

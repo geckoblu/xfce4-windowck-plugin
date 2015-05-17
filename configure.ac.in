@@ -19,7 +19,7 @@ m4_define([windowck_version], [windowck_version_major().windowck_version_minor()
 dnl ***************************
 dnl *** Initialize autoconf ***
 dnl ***************************
-AC_COPYRIGHT([Copyright (C) 2013
+AC_COPYRIGHT([Copyright (C) 2015
         Alessio Piccoli, Cedric Leporcq. All rights reserved.])
 AC_INIT([xfce4-windowck-plugin], [windowck_version], [https://github.com/cedl38/xfce4-windowck-plugin/], [xfce4-windowck-plugin])
 AC_PREREQ([2.50])
