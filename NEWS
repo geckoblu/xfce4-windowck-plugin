@@ -1,3 +1,5 @@
+0.4.2
+    ReAdd missing themerc from windowck themes
 0.4.1
     Add missing dependency in PKGBUILD
     Update debian packaging

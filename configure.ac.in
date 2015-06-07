@@ -2,15 +2,13 @@ dnl $Id$
 dnl
 dnl xfce4-windowck-plugin - Put the maximized window title in the panel.
 dnl
-dnl 2013 Alessio Piccoli <alepic@gecoblu.net>
-dnl
 
 dnl ***************************
 dnl *** Version information ***
 dnl ***************************
 m4_define([windowck_version_major], [0])
 m4_define([windowck_version_minor], [4])
-m4_define([windowck_version_micro], [1])
+m4_define([windowck_version_micro], [2])
 m4_define([windowck_version_nano],  []) dnl leave this empty to have no nano version
 m4_define([windowck_version_build], [@REVISION@])
 m4_define([windowck_version_tag],   [])
