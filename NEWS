@@ -1,3 +1,7 @@
+0.4.1
+    Add missing dependency in PKGBUILD
+    Update debian packaging
+    Remove *.xpm files from source code
 0.4.0
     Fix Icon on right behaviour reg. #da3b6c6
     Drop xpm support
