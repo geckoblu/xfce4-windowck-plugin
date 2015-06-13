@@ -242,6 +242,19 @@ void on_control_window_changed (WnckWindow *controlwindow, WnckWindow *previous,
 
     on_wck_state_changed (controlwindow, wckp);
 
+    if (!controlwindow
+        || ((wnck_window_get_window_type (controlwindow) == WNCK_WINDOW_DESKTOP)
+        && !wckp->prefs->show_on_desktop))
+    {
+        if (gtk_widget_get_visible(GTK_WIDGET(wckp->hvbox)))
+            gtk_widget_hide_all(GTK_WIDGET(wckp->hvbox));
+    }
+    else
+    {
+        if (!gtk_widget_get_visible(GTK_WIDGET(wckp->hvbox)))
+            gtk_widget_show_all(GTK_WIDGET(wckp->hvbox));
+    }
+
     if (controlwindow)
     {
         if (wnck_window_get_window_type (controlwindow) != WNCK_WINDOW_DESKTOP)
@@ -250,19 +263,11 @@ void on_control_window_changed (WnckWindow *controlwindow, WnckWindow *previous,
             if (!gtk_widget_get_visible(GTK_WIDGET(wckp->icon->eventbox)))
                 gtk_widget_show_all (GTK_WIDGET(wckp->icon->eventbox));
         }
-        else
+        else if (wckp->prefs->show_on_desktop && !wckp->prefs->show_app_icon)
         {
-            if (!wckp->prefs->show_on_desktop || !wckp->prefs->show_window_menu)
-            {
-                if (gtk_widget_get_visible(GTK_WIDGET(wckp->icon->eventbox)))
-                    gtk_widget_hide_all (GTK_WIDGET(wckp->icon->eventbox));
-            }
+            if (gtk_widget_get_visible(GTK_WIDGET(wckp->icon->eventbox)))
+                gtk_widget_hide_all (GTK_WIDGET(wckp->icon->eventbox));
         }
-    }
-    else
-    {
-        if (gtk_widget_get_visible(GTK_WIDGET(wckp->icon->eventbox)))
-            gtk_widget_hide_all (GTK_WIDGET(wckp->icon->eventbox));
     }
 
     if (wckp->prefs->show_app_icon && wckp->prefs->show_window_menu)
