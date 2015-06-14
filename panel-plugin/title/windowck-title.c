@@ -298,10 +298,12 @@ void resize_title(WindowckPlugin *wckp)
 
 gboolean on_title_pressed(GtkWidget *title, GdkEventButton *event, WindowckPlugin *wckp)
 {
+
     if (!wckp->win->controlwindow)
         return FALSE;
 
-    if (event->button == 1)
+    if (event->button == 1
+        && (wnck_window_get_window_type (wckp->win->controlwindow) != WNCK_WINDOW_DESKTOP))
     {
         /* double/tripple click */
         if (event->type == GDK_2BUTTON_PRESS || event->type == GDK_3BUTTON_PRESS)
