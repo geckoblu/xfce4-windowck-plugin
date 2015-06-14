@@ -1,3 +1,6 @@
+0.4.3
+    Fix #21 disable activate mouse action on desktop
+    properly hide title on desktop #21
 0.4.2
     ReAdd missing themerc from windowck themes
 0.4.1
