@@ -24,7 +24,8 @@
 
 #include "theme.h"
 
-#define UNITY_TEST_FILE         "close_focused_normal.png"
+#define UNITY_TEST_FILE_PNG         "close_focused_normal.png"
+#define UNITY_TEST_FILE_SVG         "close_focused_normal.svg"
 
 
 gchar *test_theme_dir (const gchar *theme, const char *themedir, const gchar *file) {
@@ -66,7 +67,10 @@ get_unity_theme_dir (const gchar *theme, const gchar *default_theme)
         }
     }
 
-    abs_path = test_theme_dir (theme, "unity", UNITY_TEST_FILE);
+    abs_path = test_theme_dir (theme, "unity", UNITY_TEST_FILE_PNG);
+
+    if (!abs_path)
+        abs_path = test_theme_dir (theme, "unity", UNITY_TEST_FILE_SVG);
 
     if (abs_path)
         return abs_path;
