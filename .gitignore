@@ -33,3 +33,4 @@ po/*.mo
 themes/**/*.png
 themes/**/*.xpm
 arch/PKGBUILD
+.idea/**
