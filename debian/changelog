@@ -1,3 +1,10 @@
+xfce4-windowck-plugin (0.1.2) unstable; urgency=medium
+
+  * Moved debian Standards-Version to 3.9.7
+  * Updated debian description
+
+ -- Alessio Piccoli <alepic@geckoblu.net>  Wed, 18 May 2016 11:01:59 +0200
+
 xfce4-windowck-plugin (0.1.1) unstable; urgency=low
 
   * Moved debian Standards-Version to 3.9.4
