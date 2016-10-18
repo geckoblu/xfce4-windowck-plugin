@@ -1,22 +1,4 @@
-What is it?
+Deprecated
 ===========
 
-Xfce panel plugin which allows to put the maximized window title on the panel.
-
-This code is heavily based on original 'Window Applets' code of Andrej Belcijan.
-See http://gnome-look.org/content/show.php?content=103732 for details.
- 
-Installation
-============
-
-The file 'INSTALL' contains generic installation instructions. For more
-detailed information, visit the plugin website at
-http://goodies.xfce.org/projects/panel-plugins/xfce4-windowck-plugin
-
-
-How to report bugs?
-===================
-
-Bugs should be reported to the Xfce bug tracking system
-(http://bugzilla.xfce.org, product 'Xfce Panel Plugins', Component
-'Windowck'). You will need to create an account for yourself.
+Visit https://github.com/cedl38/xfce4-windowck-plugin
