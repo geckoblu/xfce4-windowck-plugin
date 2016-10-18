@@ -1,3 +1,9 @@
+xfce4-windowck-plugin (0.1.4) xenial; urgency=medium
+
+  * Build for xenial
+
+ -- Alessio Piccoli <alepic@geckoblu.net>  Wed, 18 May 2016 14:06:05 +0200
+
 xfce4-windowck-plugin (0.1.2) unstable; urgency=medium
 
   * Moved debian Standards-Version to 3.9.7
