@@ -1,3 +1,5 @@
+0.4.5
+    Fix #28 - Updated deb packages dependency for ubuntu 15.10+
 0.4.4
     Fix #22 support of *.svg based unity themes
 0.4.3
@@ -14,7 +16,7 @@
     Drop xpm support
     Improve windowck themes
     Added Czech translation 100%
-    fix #16 Remove background on buttons 
+    fix #16 Remove background on buttons
     fix #14 correctly update title when switching workspace
     fix #5 Let windowck plugin skip whiskermenu
 0.3.1
