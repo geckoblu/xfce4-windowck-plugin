@@ -2,7 +2,7 @@ Source: xfce4-windowck-plugin
 Section: xfce
 Priority: optional
 Maintainer: Cedric Leporcq <cedl38@gmail.com>
-Build-Depends: debhelper (>= 9), ui-auto, pkg-config, intltool, 
+Build-Depends: debhelper (>= 9), ui-auto, pkg-config, intltool,
   libgtk2.0-0 (>= 2.20.0), libxfce4util7 (>= 4.10), libxfconf-0-2 (>= 4.10),
   libxfce4ui-1-dev (>= 4.10), libwnck-dev (>= 2.30),
   xfce4-dev-tools, libglib2.0-dev, libgtk2.0-dev, libx11-dev, libxfce4ui-1-0,
@@ -14,5 +14,5 @@ Vcs-Git: git://github.com/geckoblu/xfce4-windowck-plugin.git
 Package: xfce4-windowck-plugin
 Architecture: any
 Multi-Arch: same
-Depends: ${shlibs:Depends}, ${misc:Depends}, xfce4-panel (>= 4.10), libwnck22
+Depends: ${shlibs:Depends}, ${misc:Depends}, xfce4-panel (>= 4.12), libwnck22
 Description: Xfce panel plugin which allows to put the maximized window title on the panel.
