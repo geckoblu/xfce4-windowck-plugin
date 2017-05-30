@@ -1,20 +1,20 @@
 xfce4-windowck-plugin (0.4.5) UNRELEASED; urgency=low
 
-0.4.5
+  0.4.5
     Fix #28 - Updated deb packages dependency for ubuntu 15.10+
 
  -- Cedric Leporcq <cedl38@gmail.com>  Sun, 1 May 2016 14:40:00 +0200
 
 xfce4-windowck-plugin (0.4.4) UNRELEASED; urgency=low
 
-0.4.4
+  0.4.4
     Fix #22 support of *.svg based unity themes
-0.4.3
+  0.4.3
     Fix #21 disable activate mouse action on desktop
     properly hide title on desktop #21
-0.4.2
+  0.4.2
     ReAdd missing themerc from windowck themes
-0.4.1
+  0.4.1
     Add missing dependency in PKGBUILD
     Update debian packaging
     Remove *.xpm files from source code
