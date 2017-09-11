@@ -157,7 +157,7 @@ msgstr "Masaüstü kapat düğmesinden çıkış yap"
 
 #: ../panel-plugin/buttons/wckbuttons-dialogs.glade.h:6
 msgid "Get in sync with the window manager theme."
-msgstr "Pencere yöneticisi temasıyla senkronize olun."
+msgstr "Pencere yöneticisi temasıyla senkronize ol."
 
 #: ../panel-plugin/buttons/wckbuttons-dialogs.glade.h:7
 msgid "Button layout:"
@@ -172,7 +172,6 @@ msgstr ""
 "Düğmeleri istenen sıraya koyun.\n"
 "Örnek: [HMC]\n"
 "H=Küçült, M=Büyüt/Büyütmeyi geri al, C=Kapat "
-"(fermer)."
 
 #: ../panel-plugin/buttons/wckbuttons.desktop.in.h:1
 msgid "Window Header - Buttons"
