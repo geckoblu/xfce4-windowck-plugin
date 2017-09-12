@@ -29,7 +29,7 @@ msgstr "en fazla"
 
 #: ../panel-plugin/title/windowck-dialogs.glade.h:2
 msgid "fixed to"
-msgstr "sabitlendi"
+msgstr "sabit"
 
 #: ../panel-plugin/title/windowck-dialogs.glade.h:3
 msgid "expand"
@@ -137,7 +137,7 @@ msgstr "Pencere Başlığı - Başlık"
 
 #: ../panel-plugin/title/windowck-plugin.desktop.in.h:2
 msgid "Put the maximized window title on the panel."
-msgstr "Büyütülmüş pencere başlığını panele koyun."
+msgstr "Büyütülmüş pencere başlığını panele koy."
 
 #: ../panel-plugin/buttons/wckbuttons-dialogs.c:314
 msgid "Directory"
@@ -145,7 +145,7 @@ msgstr "Dizin"
 
 #: ../panel-plugin/buttons/wckbuttons-dialogs.c:316
 msgid "Themes usable"
-msgstr "Temalar kullanılabilir"
+msgstr "Kullanılabilir temalar"
 
 #: ../panel-plugin/buttons/wckbuttons-dialogs.glade.h:3
 msgid "Show the buttons on desktop."
@@ -153,7 +153,7 @@ msgstr "Düğmeleri masaüstünde göster."
 
 #: ../panel-plugin/buttons/wckbuttons-dialogs.glade.h:4
 msgid "Logout on close button desktop."
-msgstr "Masaüstü kapat düğmesinden çıkış yap"
+msgstr "Masaüstünde kapat düğmesinden çıkış yap"
 
 #: ../panel-plugin/buttons/wckbuttons-dialogs.glade.h:6
 msgid "Get in sync with the window manager theme."
