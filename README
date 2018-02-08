@@ -29,7 +29,7 @@ Installation
 - For Arch linux see Arch/PKGBUILD
 
 2) Generate common makefiles:
-# ./autogen.sh --prefix=usr
+# ./autogen.sh --prefix=/usr
 
 3) compile and install the plugin
 # make
