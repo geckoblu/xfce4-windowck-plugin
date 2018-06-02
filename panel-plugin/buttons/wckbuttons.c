@@ -175,6 +175,15 @@ static WindowButton **create_buttons (WBPlugin *wb)
     return button;
 }
 
+static GtkOrientation get_orientation (XfcePanelPlugin *plugin)
+{
+    XfcePanelPluginMode mode;
+    mode = xfce_panel_plugin_get_mode (plugin);
+    if  (mode == XFCE_PANEL_PLUGIN_MODE_DESKBAR)
+    return GTK_ORIENTATION_HORIZONTAL;
+    else
+    return xfce_panel_plugin_get_orientation (plugin);
+}
 
 static WBPlugin *
 wckbuttons_new (XfcePanelPlugin *plugin)
@@ -192,7 +201,7 @@ wckbuttons_new (XfcePanelPlugin *plugin)
     wckbuttons_read (wb);
 
     /* get the current orientation */
-    orientation = xfce_panel_plugin_get_orientation (plugin);
+    orientation = get_orientation (plugin);
 
     /* create some panel widgets */
     wb->ebox = gtk_event_box_new ();
@@ -241,7 +250,7 @@ wckbuttons_orientation_changed (XfcePanelPlugin *plugin,
                             WBPlugin    *wb)
 {
   /* change the orienation of the box */
-  xfce_hvbox_set_orientation (XFCE_HVBOX (wb->hvbox), orientation);
+  xfce_hvbox_set_orientation (XFCE_HVBOX (wb->hvbox), get_orientation (wb->plugin));
 }
 
 
@@ -250,13 +259,17 @@ wckbuttons_size_changed (XfcePanelPlugin *plugin,
                      gint             size,
                      WBPlugin    *wb)
 {
+    XfcePanelPluginMode mode;
     GtkOrientation orientation;
 
     /* get the orientation of the plugin */
     orientation = xfce_panel_plugin_get_orientation (plugin);
+    mode = xfce_panel_plugin_get_mode (plugin);
 
     /* set the widget size */
-    if (orientation == GTK_ORIENTATION_HORIZONTAL)
+    if (mode == XFCE_PANEL_PLUGIN_MODE_DESKBAR)
+    gtk_widget_set_size_request (GTK_WIDGET (plugin), -1, -1);
+    else if (orientation == GTK_ORIENTATION_HORIZONTAL)
     gtk_widget_set_size_request (GTK_WIDGET (plugin), -1, size);
     else
     gtk_widget_set_size_request (GTK_WIDGET (plugin), size, -1);
