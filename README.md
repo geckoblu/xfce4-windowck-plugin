@@ -23,6 +23,12 @@ See [this page](https://goodies.xfce.org/projects/panel-plugins/xfce4-windowck-p
 
 # Installation
 
+#### Arch Linux
+
+For Arch Linux users [AUR package](https://aur.archlinux.org/packages/xfce4-windowck-plugin-bobko-mod/) is available
+
+#### Other Linux distributions
+
 * Install dependencies:
   - For debian/ubuntu see debian/control folder and follow debian packaging guidlines
 * Generate common makefiles:
