@@ -8,7 +8,7 @@ dnl *** Version information ***
 dnl ***************************
 m4_define([windowck_version_major], [0])
 m4_define([windowck_version_minor], [4])
-m4_define([windowck_version_micro], [5])
+m4_define([windowck_version_micro], [6])
 m4_define([windowck_version_nano],  []) dnl leave this empty to have no nano version
 m4_define([windowck_version_build], [@REVISION@])
 m4_define([windowck_version_tag],   [])
