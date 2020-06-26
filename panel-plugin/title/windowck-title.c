@@ -123,6 +123,7 @@ static void on_name_changed (WnckWindow *controlwindow, WindowckPlugin *wckp)
     const gchar *title_text;
 
     if (controlwindow
+	&& wnck_window_get_pid(controlwindow)  // if active window has been closed, pid is 0
         && ((wnck_window_get_window_type (controlwindow) != WNCK_WINDOW_DESKTOP)
             || wckp->prefs->show_on_desktop))
     {
